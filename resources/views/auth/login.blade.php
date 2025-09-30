@@ -6,15 +6,11 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Accedi • Pizzeria</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <style>
-            body { background: #f8fafc; }
-            .login-card { max-width: 420px; margin: 5rem auto; }
-            .logo svg { width: 56px; height: 56px; }
-        </style>
+        
     </head>
-    <body>
+    <body class="login-page">
         @include('layouts.navigation')
-        <div class="card login-card shadow-sm">
+    <div class="card login-card shadow-sm">
             <div class="card-body">
             <div class="logo d-flex align-items-center justify-content-center mb-3" aria-label="Logo pizza">
                 <!-- Logo pizza semplice -->
@@ -26,7 +22,7 @@
                     <circle cx="36" cy="36" r="3" fill="#991b1b"/>
                 </svg>
             </div>
-            <h1 class="h5 text-center mb-3">Accedi</h1>
+            
 
             @if (session('status'))
                 <div class="alert alert-success" role="status">{{ session('status') }}</div>

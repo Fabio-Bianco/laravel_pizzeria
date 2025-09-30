@@ -1,14 +1,9 @@
 <x-app-layout>
-        <x-slot name="header">
-                <h2 class="h4 mb-0">Modifica categoria</h2>
-        </x-slot>
-
         <div class="row justify-content-center py-4">
             <div class="col-12 col-lg-8 col-xl-6">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <div class="card-header bg-white">
                         <span class="h6 mb-0">Dettagli categoria</span>
-                        <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-secondary btn-sm">Indietro</a>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('admin.categories.update', $category) }}" method="POST" novalidate>

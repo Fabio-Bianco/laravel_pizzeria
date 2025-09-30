@@ -28,5 +28,8 @@
                 </div>
             </div>
         </div>
+        @unless (request()->routeIs('dashboard'))
+            <x-fab-nav />
+        @endunless
     </body>
 </html>

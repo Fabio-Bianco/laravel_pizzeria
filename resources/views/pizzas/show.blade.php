@@ -1,9 +1,8 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="h4 mb-0">Pizza: {{ $pizza->name }}</h2>
-    </x-slot>
-
     <div class="container py-4">
+        <div class="d-flex align-items-center mb-3">
+            <x-back-link :href="route('admin.pizzas.index')" />
+        </div>
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8">
                 <div class="card shadow-sm mb-3">

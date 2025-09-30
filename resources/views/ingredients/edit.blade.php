@@ -4,9 +4,8 @@
 <div class="row justify-content-center py-4">
     <div class="col-12 col-lg-8 col-xl-6">
         <div class="card shadow-sm">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h1 class="h5 mb-0">Modifica ingrediente</h1>
-                <a href="{{ route('admin.ingredients.index') }}" class="btn btn-outline-secondary btn-sm">Indietro</a>
+            <div class="card-header bg-white">
+                <span class="h6 mb-0">Dettagli ingrediente</span>
             </div>
             <div class="card-body">
                 <form action="{{ route('admin.ingredients.update', $ingredient) }}" method="POST" novalidate>

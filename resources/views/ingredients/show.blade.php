@@ -1,8 +1,4 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="h4 mb-0">Ingrediente: {{ $ingredient->name }}</h2>
-    </x-slot>
-
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8">

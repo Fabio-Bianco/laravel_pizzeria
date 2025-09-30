@@ -1,6 +1,6 @@
 <section>
     <header class="mb-3">
-        <h2 class="h5 mb-1">Informazioni profilo</h2>
+        
         <p class="text-muted small mb-0">Aggiorna i dati del tuo profilo e l'indirizzo email.</p>
     </header>
 

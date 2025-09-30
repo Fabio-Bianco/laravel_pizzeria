@@ -1,8 +1,4 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="h4 mb-0">Nuovo Ingrediente</h2>
-    </x-slot>
-
     <div class="col-12 col-lg-6 mx-auto py-4">
     <form action="{{ route('admin.ingredients.store') }}" method="POST" class="bg-white p-4 rounded shadow-sm">
             @csrf

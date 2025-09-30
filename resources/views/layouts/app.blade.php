@@ -21,15 +21,8 @@
             <!-- Page Heading -->
             @isset($header)
                 <header class="bg-white border-bottom">
-                    <div class="container py-3 d-flex justify-content-between align-items-center">
-                        <div>
-                            {{ $header }}
-                        </div>
-                        @php($isDashboard = request()->routeIs('dashboard'))
-                        @php($isLogin = request()->routeIs('login'))
-                        @if (!$isDashboard && !$isLogin)
-                            <button type="button" class="btn btn-outline-secondary" onclick="history.back()">Indietro</button>
-                        @endif
+                    <div class="container py-3">
+                        {{ $header }}
                     </div>
                 </header>
             @endisset
@@ -37,6 +30,9 @@
             <!-- Page Content -->
             <main class="container my-4">
                 {{ $slot }}
+                @unless (request()->routeIs('dashboard'))
+                    <x-fab-nav />
+                @endunless
             </main>
         </div>
     </body>

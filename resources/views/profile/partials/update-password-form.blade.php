@@ -1,6 +1,6 @@
 <section>
     <header class="mb-3">
-        <h2 class="h5 mb-1">Aggiorna password</h2>
+        
         <p class="text-muted small mb-0">Usa una password lunga e casuale per maggiore sicurezza.</p>
     </header>
 

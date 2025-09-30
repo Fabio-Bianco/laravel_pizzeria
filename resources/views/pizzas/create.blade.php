@@ -4,9 +4,8 @@
 <div class="row justify-content-center py-4">
     <div class="col-12 col-lg-10 col-xl-8">
         <div class="card shadow-sm">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h1 class="h5 mb-0">Aggiungi pizza</h1>
-                <a href="{{ route('admin.pizzas.index') }}" class="btn btn-outline-secondary btn-sm">Indietro</a>
+            <div class="card-header bg-white">
+                <span class="h6 mb-0">Dettagli pizza</span>
             </div>
             <div class="card-body">
                 <form action="{{ route('admin.pizzas.store') }}" method="POST" novalidate>

@@ -1,6 +1,6 @@
 <section>
     <header class="mb-3">
-        <h2 class="h5 mb-1">Elimina account</h2>
+        
         <p class="text-muted small mb-0">L'eliminazione è permanente. Scarica eventuali dati prima di procedere.</p>
     </header>
 
@@ -15,7 +15,7 @@
             @csrf
             @method('delete')
 
-            <h2 class="h5">Sei sicuro di voler eliminare il tuo account?</h2>
+            
 
             <p class="text-muted small mt-1">Una volta eliminato, tutti i dati saranno persi. Inserisci la password per confermare.</p>
 

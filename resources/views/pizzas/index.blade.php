@@ -1,8 +1,6 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="h4 mb-0">Pizze</h2>
-    </x-slot>
     <div class="container py-4">
+        <x-back-link :href="route('dashboard')" label="Home" fixed />
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <a href="{{ route('admin.pizzas.create') }}" class="btn btn-primary">Aggiungi pizza</a>
             @if (session('status'))
