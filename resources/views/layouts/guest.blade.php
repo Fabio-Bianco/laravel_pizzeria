@@ -28,7 +28,8 @@
                 </div>
             </div>
         </div>
-        @unless (request()->routeIs('dashboard'))
+        @php($hideFabGuest = request()->routeIs('dashboard') || request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*') || request()->routeIs('verification.*'))
+        @unless ($hideFabGuest)
             <x-fab-nav />
         @endunless
     </body>

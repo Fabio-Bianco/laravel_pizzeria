@@ -7,8 +7,8 @@
                         <div>
                             <strong>Allergeni:</strong>
                             <ul class="mt-2">
-                                @forelse ($ingredient->allergens as $a)
-                                    <li>{{ $a->name }}</li>
+                                @forelse ($ingredient->allergens as $allergen)
+                                    <li>{{ $allergen->name }}</li>
                                 @empty
                                     <li class="text-muted">Nessuno</li>
                                 @endforelse

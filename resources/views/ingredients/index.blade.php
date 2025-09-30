@@ -1,6 +1,5 @@
 <x-app-layout>
     <div class="container py-4">
-        <x-back-link :href="route('dashboard')" label="Home" fixed />
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <a href="{{ route('admin.ingredients.create') }}" class="btn btn-primary">Aggiungi ingrediente</a>
             @if (session('status'))

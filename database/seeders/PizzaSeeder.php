@@ -33,20 +33,20 @@ class PizzaSeeder extends Seeder
             ],
         ];
 
-        foreach ($recipes as $r) {
-            $categoryId = optional(Category::where('name', $r['category'])->first())->id;
+        foreach ($recipes as $recipe) {
+            $categoryId = optional(Category::where('name', $recipe['category'])->first())->id;
             $pizza = Pizza::firstOrCreate(
-                ['slug' => Str::slug($r['name'])],
+                ['slug' => Str::slug($recipe['name'])],
                 [
-                    'name' => $r['name'],
-                    'price' => $r['price'],
+                    'name' => $recipe['name'],
+                    'price' => $recipe['price'],
                     'description' => null,
                     'category_id' => $categoryId,
                 ]
             );
 
-            $ingIds = Ingredient::whereIn('name', $r['ingredients'])->pluck('id');
-            $pizza->ingredients()->sync($ingIds);
+            $ingredientIds = Ingredient::whereIn('name', $recipe['ingredients'])->pluck('id');
+            $pizza->ingredients()->sync($ingredientIds);
         }
 
         // Aggiungi almeno 10 pizze totali (se ne abbiamo meno, creiamo pizze random)
@@ -57,15 +57,15 @@ class PizzaSeeder extends Seeder
             $categories = Category::pluck('id');
             $allIngredientIds = Ingredient::pluck('id');
 
-            Pizza::factory()->count($toCreate)->make()->each(function (Pizza $p) use ($categories, $allIngredientIds) {
-                $p->category_id = $categories->random();
+            Pizza::factory()->count($toCreate)->make()->each(function (Pizza $pizza) use ($categories, $allIngredientIds) {
+                $pizza->category_id = $categories->random();
                 // Prezzo random ragionevole
-                if (!$p->price || $p->price < 4) {
-                    $p->price = fake()->randomFloat(2, 5, 16);
+                if (!$pizza->price || $pizza->price < 4) {
+                    $pizza->price = fake()->randomFloat(2, 5, 16);
                 }
-                $p->save();
-                $attach = $allIngredientIds->shuffle()->take(rand(3, 6));
-                $p->ingredients()->sync($attach);
+                $pizza->save();
+                $ingredientsToAttach = $allIngredientIds->shuffle()->take(rand(3, 6));
+                $pizza->ingredients()->sync($ingredientsToAttach);
             });
         }
     }

@@ -21,8 +21,8 @@
                     <div class="mb-3">
                         <label for="allergens" class="form-label">Allergeni</label>
                         <select id="allergens" name="allergens[]" multiple class="form-select @error('allergens') is-invalid @enderror" size="6">
-                            @foreach ($allergens as $a)
-                                <option value="{{ $a->id }}" @selected($ingredient->allergens->pluck('id')->contains($a->id))>{{ $a->name }}</option>
+                            @foreach ($allergens as $allergen)
+                                <option value="{{ $allergen->id }}" @selected($ingredient->allergens->pluck('id')->contains($allergen->id))>{{ $allergen->name }}</option>
                             @endforeach
                         </select>
                         @error('allergens')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror

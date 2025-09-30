@@ -28,9 +28,10 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="container my-4">
+            @php($hideFab = request()->routeIs('dashboard') || request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*') || request()->routeIs('verification.*'))
+            <main class="container my-4 {{ $hideFab ? '' : 'has-fab' }}">
                 {{ $slot }}
-                @unless (request()->routeIs('dashboard'))
+                @unless ($hideFab)
                     <x-fab-nav />
                 @endunless
             </main>

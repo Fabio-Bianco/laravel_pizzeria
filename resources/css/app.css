@@ -6,10 +6,13 @@
 .x-fab-group {
 	position: fixed;
 	right: 1rem;
-	bottom: 1rem;
+	bottom: 2rem;
 	z-index: 1030;
 	display: flex;
 	gap: .5rem;
+	opacity: 0;
+	transform: translateY(8px);
+	transition: opacity .25s ease, transform .25s ease, filter .25s ease;
 }
 
 .x-back-fixed {
@@ -21,8 +24,25 @@
 }
 
 @media (max-width: 575.98px) {
-	.x-fab-group { right: .75rem; bottom: .75rem; }
-	.x-back-fixed { right: .75rem; bottom: .75rem; }
+	.x-fab-group { right: .75rem; bottom: 1rem; }
+    
+}
+
+/* Align FAB to container gutter (Bootstrap container widths) */
+@media (min-width: 576px) { /* container max-width: 540px */
+	.x-fab-group { right: calc((100vw - 540px) / 2 + 1rem); }
+}
+@media (min-width: 768px) { /* 720px */
+	.x-fab-group { right: calc((100vw - 720px) / 2 + 1rem); }
+}
+@media (min-width: 992px) { /* 960px */
+	.x-fab-group { right: calc((100vw - 960px) / 2 + 1rem); }
+}
+@media (min-width: 1200px) { /* 1140px */
+	.x-fab-group { right: calc((100vw - 1140px) / 2 + 1rem); }
+}
+@media (min-width: 1400px) { /* 1320px */
+	.x-fab-group { right: calc((100vw - 1320px) / 2 + 1rem); }
 }
 
 /* Login page tweaks */
@@ -30,6 +50,21 @@ body.login-page { background: #f8fafc; }
 .login-card { max-width: 420px; margin: 5rem auto; }
 .logo svg { width: 56px; height: 56px; }
 
+/* Navbar brand logo */
+.brand-logo svg {
+	width: 28px;
+	height: 28px;
+	display: block;
+}
+
 /* Dashboard emoji size */
 .x-emoji { font-size: 2rem; }
+
+/* FAB reveal/idle states */
+.x-fab-group.x-fab-reveal { opacity: 1; transform: translateY(0); }
+.x-fab-group.x-fab-idle { filter: saturate(0.8) opacity(0.7); }
+
+/* Give space to content when FAB is present */
+.has-fab { padding-bottom: 5rem; }
+@media (max-width: 575.98px) { .has-fab { padding-bottom: 6rem; } }
 

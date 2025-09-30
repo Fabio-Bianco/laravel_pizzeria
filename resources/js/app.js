@@ -49,4 +49,30 @@ document.addEventListener('DOMContentLoaded', () => {
 import { initPizzaIngredientQuickCreate } from './features/pizzas';
 document.addEventListener('DOMContentLoaded', () => {
 	initPizzaIngredientQuickCreate();
+	// FAB reveal/idle behavior
+	const fab = document.querySelector('.x-fab-group');
+	if (fab) {
+		let idleTimer;
+		const setReveal = () => fab.classList.add('x-fab-reveal');
+		const setIdle = () => fab.classList.add('x-fab-idle');
+		const unsetIdle = () => fab.classList.remove('x-fab-idle');
+
+		// Reveals on first paint
+		requestAnimationFrame(setReveal);
+
+		const onActive = () => {
+			unsetIdle();
+			clearTimeout(idleTimer);
+			idleTimer = setTimeout(setIdle, 1500);
+		};
+
+		window.addEventListener('scroll', onActive, { passive: true });
+		window.addEventListener('pointermove', onActive, { passive: true });
+		window.addEventListener('keydown', onActive);
+
+		// Start idle timer if page is long (scrollable)
+		if (document.documentElement.scrollHeight > window.innerHeight + 100) {
+			idleTimer = setTimeout(setIdle, 1500);
+		}
+	}
 });

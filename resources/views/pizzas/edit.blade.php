@@ -35,8 +35,8 @@
                             <label for="category_id" class="form-label">Categoria</label>
                             <select id="category_id" name="category_id" class="form-select @error('category_id') is-invalid @enderror">
                                 <option value="">-</option>
-                                @foreach ($categories as $c)
-                                    <option value="{{ $c->id }}" @selected(old('category_id', $pizza->category_id) == $c->id)>{{ $c->name }}</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}" @selected(old('category_id', $pizza->category_id) == $category->id)>{{ $category->name }}</option>
                                 @endforeach
                             </select>
                             @error('category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -48,8 +48,8 @@
                                 <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#newIngredientModal">+ Nuovo ingrediente</button>
                             </div>
                                             <select id="ingredients" name="ingredients[]" multiple class="form-select" data-choices placeholder="Seleziona ingredienti..." data-store-url="{{ route('admin.ingredients.store') }}">
-                                @foreach ($ingredients as $i)
-                                    <option value="{{ $i->id }}" @selected($pizza->ingredients->pluck('id')->contains($i->id))>{{ $i->name }}</option>
+                                @foreach ($ingredients as $ingredient)
+                                    <option value="{{ $ingredient->id }}" @selected($pizza->ingredients->pluck('id')->contains($ingredient->id))>{{ $ingredient->name }}</option>
                                 @endforeach
                             </select>
                             @error('ingredients')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror

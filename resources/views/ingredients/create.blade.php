@@ -10,8 +10,8 @@
             <div class="mb-3">
                 <x-input-label for="allergens" value="Allergeni" />
                 <select id="allergens" name="allergens[]" multiple class="form-select" size="6">
-                    @foreach ($allergens as $a)
-                        <option value="{{ $a->id }}" @selected(collect(old('allergens', []))->contains($a->id))>{{ $a->name }}</option>
+                    @foreach ($allergens as $allergen)
+                        <option value="{{ $allergen->id }}" @selected(collect(old('allergens', []))->contains($allergen->id))>{{ $allergen->name }}</option>
                     @endforeach
                 </select>
                 <x-input-error :messages="$errors->get('allergens')" class="mt-2 text-danger" />

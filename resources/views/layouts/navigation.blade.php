@@ -1,6 +1,17 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
   <div class="container">
-  <a class="navbar-brand fw-semibold me-2" href="{{ route('dashboard') }}" aria-label="Home Pannello di controllo">Pizzeria</a>
+  <a class="navbar-brand d-inline-flex align-items-center me-2" href="{{ route('dashboard') }}" aria-label="Home Pannello di controllo">
+      <span class="brand-logo" aria-hidden="true">
+        <!-- Logo pizza (stesso del login) -->
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="30" fill="#fcd34d" stroke="#b45309" stroke-width="2"/>
+            <path d="M32 2 A30 30 0 0 1 62 32 L32 32 Z" fill="#ef4444"/>
+            <circle cx="24" cy="24" r="3" fill="#991b1b"/>
+            <circle cx="40" cy="22" r="3" fill="#991b1b"/>
+            <circle cx="36" cy="36" r="3" fill="#991b1b"/>
+        </svg>
+      </span>
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

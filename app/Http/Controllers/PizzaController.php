@@ -87,16 +87,16 @@ class PizzaController extends Controller
     // Helpers
     private function generateUniqueSlug(string $name, ?int $ignoreId = null): string
     {
-        $base = Str::slug($name);
-        $slug = $base;
-        $i = 2;
+        $baseSlug = Str::slug($name);
+        $slug = $baseSlug;
+        $suffixCounter = 2;
         while (
             Pizza::where('slug', $slug)
-                ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
+                ->when($ignoreId, fn($query) => $query->where('id', '!=', $ignoreId))
                 ->exists()
         ) {
-            $slug = $base.'-'.$i;
-            $i++;
+            $slug = $baseSlug.'-'.$suffixCounter;
+            $suffixCounter++;
         }
         return $slug;
     }

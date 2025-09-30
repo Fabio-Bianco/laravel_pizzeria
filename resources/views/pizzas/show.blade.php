@@ -1,8 +1,5 @@
 <x-app-layout>
     <div class="container py-4">
-        <div class="d-flex align-items-center mb-3">
-            <x-back-link :href="route('admin.pizzas.index')" />
-        </div>
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8">
                 <div class="card shadow-sm mb-3">
@@ -15,8 +12,8 @@
                         <div class="mt-3">
                             <strong>Ingredienti:</strong>
                             <ul class="mt-2">
-                                @forelse ($pizza->ingredients as $i)
-                                    <li>{{ $i->name }}</li>
+                                @forelse ($pizza->ingredients as $ingredient)
+                                    <li>{{ $ingredient->name }}</li>
                                 @empty
                                     <li class="text-muted">Nessuno</li>
                                 @endforelse
