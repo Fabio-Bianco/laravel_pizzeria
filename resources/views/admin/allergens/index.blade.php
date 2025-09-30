@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-page-header title="Allergeni" :items="[['label' => 'Allergeni']]" />
     <div class="container py-4">
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <a href="{{ route('admin.allergens.create') }}" class="btn btn-primary">Aggiungi allergene</a>

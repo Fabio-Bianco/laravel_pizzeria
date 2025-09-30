@@ -13,12 +13,12 @@ class AllergenController extends Controller
     public function index(): View
     {
         $allergens = Allergen::latest()->paginate(10);
-        return view('allergens.index', compact('allergens'));
+        return view('admin.allergens.index', compact('allergens'));
     }
 
     public function create(): View
     {
-        return view('allergens.create');
+        return view('admin.allergens.create');
     }
 
     public function store(Request $request): RedirectResponse
@@ -34,12 +34,12 @@ class AllergenController extends Controller
 
     public function show(Allergen $allergen): View
     {
-        return view('allergens.show', compact('allergen'));
+        return view('admin.allergens.show', compact('allergen'));
     }
 
     public function edit(Allergen $allergen): View
     {
-        return view('allergens.edit', compact('allergen'));
+        return view('admin.allergens.edit', compact('allergen'));
     }
 
     public function update(Request $request, Allergen $allergen): RedirectResponse

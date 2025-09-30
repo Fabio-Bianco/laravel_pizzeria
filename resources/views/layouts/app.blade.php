@@ -22,7 +22,7 @@
             @isset($header)
                 <header class="bg-white border-bottom">
                     <div class="container py-3">
-                        {{ $header }}
+                            {{ $header }}
                     </div>
                 </header>
             @endisset
@@ -30,7 +30,11 @@
             <!-- Page Content -->
             @php($hideFab = request()->routeIs('dashboard') || request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*') || request()->routeIs('verification.*'))
             <main class="container my-4 {{ $hideFab ? '' : 'has-fab' }}">
-                {{ $slot }}
+                @if (isset($slot))
+                    {{ $slot }}
+                @else
+                    @yield('content')
+                @endif
                 @unless ($hideFab)
                     <x-fab-nav />
                 @endunless

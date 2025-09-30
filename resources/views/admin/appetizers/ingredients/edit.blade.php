@@ -1,6 +1,7 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
+<x-slot name="header">
+    <x-page-header :title="'Modifica: ' . $ingredient->name" :items="[['label' => 'Ingredienti', 'url' => route('admin.ingredients.index')], ['label' => $ingredient->name], ['label' => 'Modifica']]" :backUrl="route('admin.ingredients.index')" />
+</x-slot>
 <div class="row justify-content-center py-4">
     <div class="col-12 col-lg-8 col-xl-6">
         <div class="card shadow-sm">
@@ -37,4 +38,4 @@
         </div>
     </div>
 </div>
-@endsection
+    </x-app-layout>

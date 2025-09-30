@@ -14,13 +14,13 @@ class IngredientController extends Controller
     public function index(): View
     {
         $ingredients = Ingredient::with('allergens')->latest()->paginate(10);
-        return view('ingredients.index', compact('ingredients'));
+        return view('admin.ingredients.index', compact('ingredients'));
     }
 
     public function create(): View
     {
         $allergens = Allergen::orderBy('name')->get();
-        return view('ingredients.create', compact('allergens'));
+        return view('admin.ingredients.create', compact('allergens'));
     }
 
     public function store(Request $request)
@@ -48,14 +48,14 @@ class IngredientController extends Controller
     public function show(Ingredient $ingredient): View
     {
         $ingredient->load('allergens');
-        return view('ingredients.show', compact('ingredient'));
+        return view('admin.ingredients.show', compact('ingredient'));
     }
 
     public function edit(Ingredient $ingredient): View
     {
         $allergens = Allergen::orderBy('name')->get();
         $ingredient->load('allergens');
-        return view('ingredients.edit', compact('ingredient', 'allergens'));
+        return view('admin.ingredients.edit', compact('ingredient', 'allergens'));
     }
 
     public function update(Request $request, Ingredient $ingredient): RedirectResponse

@@ -10,6 +10,8 @@ use Database\Seeders\CategorySeeder;
 use Database\Seeders\IngredientSeeder;
 use Database\Seeders\PizzaSeeder;
 use Database\Seeders\CustomUserSeeder;
+use Database\Seeders\AppetizerSeeder;
+use Database\Seeders\BeverageSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -35,6 +37,8 @@ class DatabaseSeeder extends Seeder
             AllergenSeeder::class,
             IngredientSeeder::class,
             PizzaSeeder::class,
+            AppetizerSeeder::class,
+            BeverageSeeder::class,
         ]);
     }
 }

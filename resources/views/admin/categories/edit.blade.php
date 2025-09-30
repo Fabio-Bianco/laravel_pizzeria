@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-page-header :title="'Modifica: ' . $category->name" :items="[['label' => 'Categorie', 'url' => route('admin.categories.index')], ['label' => $category->name], ['label' => 'Modifica']]" :backUrl="route('admin.categories.index')" />
         <div class="row justify-content-center py-4">
             <div class="col-12 col-lg-8 col-xl-6">
                 <div class="card shadow-sm">

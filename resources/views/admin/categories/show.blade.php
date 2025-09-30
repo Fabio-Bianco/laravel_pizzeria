@@ -1,7 +1,9 @@
 <x-app-layout>
+    <x-page-header :title="$category->name" :items="[['label' => 'Categorie', 'url' => route('admin.categories.index')], ['label' => $category->name]]" :backUrl="route('admin.categories.index')" />
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8">
+                
                 <div class="card shadow-sm mb-3">
                     <div class="card-body">
                         @if($category->description)

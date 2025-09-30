@@ -1,6 +1,5 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
+<x-page-header :title="'Modifica: ' . $allergen->name" :items="[['label' => 'Allergeni', 'url' => route('admin.allergens.index')], ['label' => $allergen->name], ['label' => 'Modifica']]" :backUrl="route('admin.allergens.index')" />
 <div class="row justify-content-center py-4">
     <div class="col-12 col-lg-8 col-xl-6">
         <div class="card shadow-sm">
@@ -27,4 +26,4 @@
         </div>
     </div>
 </div>
-@endsection
+</x-app-layout>

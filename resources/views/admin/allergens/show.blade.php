@@ -1,10 +1,11 @@
 <x-app-layout>
+    <x-page-header :title="$allergen->name" :items="[['label' => 'Allergeni', 'url' => route('admin.allergens.index')], ['label' => $allergen->name]]" :backUrl="route('admin.allergens.index')" />
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8">
                 <div class="card shadow-sm mb-3">
                     <div class="card-body">
-                        <p class="text-muted mb-0">Nessun dettaglio aggiuntivo.</p>
+                        <p class="mb-0 text-muted">Questo allergene può essere associato a uno o più ingredienti.</p>
                     </div>
                 </div>
                 <div class="d-flex gap-2">

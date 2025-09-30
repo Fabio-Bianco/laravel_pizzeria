@@ -1,83 +1,61 @@
-/**
- * features/pizzas.js
- *
- * Gestisce la UI delle pagine Pizza (create/edit):
- * - Inizializzazione del modal "Nuovo ingrediente"
- * - Creazione rapida ingrediente via fetch API
- * - Aggiornamento della select multipla (Choices.js) selezionando l'ingrediente creato
- *
- * Dipendenze: Bootstrap (modal), Choices.js (per select avanzate)
- */
-
-// Inizializza la funzionalità solo se trova gli elementi attesi nel DOM
 export function initPizzaIngredientQuickCreate() {
-  // Selezori principali
-  const modalEl = document.getElementById('newIngredientModal');
-  const saveBtn = document.getElementById('ni_save');
-  const nameInput = document.getElementById('ni_name');
+  const modal = document.getElementById('newIngredientModal');
+  if (!modal) return;
+
+  const input = modal.querySelector('#ni_name');
+  const saveBtn = modal.querySelector('#ni_save');
   const select = document.getElementById('ingredients');
 
-  // Se non siamo in una pagina pizza con questi elementi, esci senza errori
-  if (!modalEl || !saveBtn || !nameInput || !select) return;
+  const getChoices = () => select && select._choices ? select._choices : null;
 
-  // Ricava l'endpoint di store dal data-attribute nel select
-  const storeUrl = select.getAttribute('data-store-url');
-  if (!storeUrl) return;
+  const close = () => {
+    const bsModal = window.bootstrap.Modal.getInstance(modal) || new window.bootstrap.Modal(modal);
+    bsModal.hide();
+  };
 
-  // Helper: leggi token CSRF
-  function getCsrfToken() {
-    const meta = document.querySelector('meta[name="csrf-token"]');
-    return meta ? meta.getAttribute('content') : '';
-  }
-
-  // Click handler del bottone "Crea"
   saveBtn.addEventListener('click', async () => {
-    const name = nameInput.value.trim();
+    const name = (input.value || '').trim();
     if (!name) {
-      nameInput.focus();
+      alert('Inserisci un nome ingrediente');
+      input.focus();
       return;
     }
 
+    const url = select.getAttribute('data-store-url');
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
     try {
-      // Invio richiesta al controller per creare un nuovo ingrediente
-      const res = await fetch(storeUrl, {
+      const res = await fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': getCsrfToken(),
+          'X-CSRF-TOKEN': token,
           'Accept': 'application/json',
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, allergens: [] }),
       });
 
       if (!res.ok) {
-        throw new Error('Risposta non valida dal server');
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || 'Errore creazione ingrediente');
       }
 
-      const data = await res.json();
-
-      // Aggiorna la select: se esiste Choices attivo, usa la sua API
-      // altrimenti aggiungi un <option> standard e selezionalo
-      // eslint-disable-next-line no-underscore-dangle
-      const choicesInstance = select._choices;
-      if (choicesInstance) {
-        choicesInstance.setChoices([
-          { value: data.id, label: data.name, selected: true },
-        ], 'value', 'label', true);
+      const ing = await res.json(); // { id, name }
+      const choices = getChoices();
+      if (choices) {
+        choices.setChoices([{ value: String(ing.id), label: ing.name, selected: true }], 'value', 'label', true);
       } else {
-        const opt = new Option(data.name, data.id, true, true);
+        // fallback senza Choices
+        const opt = new Option(ing.name, ing.id, true, true);
         select.add(opt);
       }
 
-      // Chiudi il modal e ripulisci l'input
-      const bsModal = window.bootstrap?.Modal.getInstance(modalEl) || new window.bootstrap.Modal(modalEl);
-      bsModal.hide();
-      nameInput.value = '';
-    } catch (err) {
-      // Notifica semplice: in produzione potresti usare un alert Bootstrap
-      // o messaggi inline nella form
-      // eslint-disable-next-line no-alert
-      alert('Impossibile creare ingrediente.');
+      input.value = '';
+      close();
+    } catch (e) {
+      alert(e.message);
     }
   });
+
+  modal.addEventListener('shown.bs.modal', () => input?.focus());
 }

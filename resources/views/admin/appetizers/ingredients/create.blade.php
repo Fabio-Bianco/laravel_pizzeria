@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-page-header title="Nuovo ingrediente" :items="[['label' => 'Ingredienti', 'url' => route('admin.ingredients.index')], ['label' => 'Nuovo']]" :backUrl="route('admin.ingredients.index')" />
     <div class="col-12 col-lg-6 mx-auto py-4">
     <form action="{{ route('admin.ingredients.store') }}" method="POST" class="bg-white p-4 rounded shadow-sm">
             @csrf
