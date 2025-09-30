@@ -31,6 +31,17 @@ document.addEventListener('DOMContentLoaded', () => {
 		// eslint-disable-next-line no-underscore-dangle
 		el._choices = instance;
 	});
+
+		// Intercetta i form che richiedono conferma (data-confirm)
+		document.querySelectorAll('form[data-confirm]')?.forEach((form) => {
+			form.addEventListener('submit', (e) => {
+				const msg = form.getAttribute('data-confirm') || 'Sei sicuro?';
+				// eslint-disable-next-line no-alert
+				if (!window.confirm(msg)) {
+					e.preventDefault();
+				}
+			});
+		});
 });
 
 // Moduli specifici delle feature

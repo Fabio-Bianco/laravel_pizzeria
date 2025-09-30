@@ -1,18 +1,26 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Allergene: {{ $allergen->name }}</h2>
+        <h2 class="h4 mb-0">Allergene: {{ $allergen->name }}</h2>
     </x-slot>
 
-    <div class="max-w-3xl mx-auto py-6 sm:px-6 lg:px-8 space-y-4">
-        <div class="bg-white p-6 rounded shadow"></div>
-        <div class="flex gap-2">
-            <a href="{{ route('admin.allergens.edit', $allergen) }}" class="px-4 py-2 bg-yellow-500 text-white rounded">Modifica</a>
-            <form action="{{ route('admin.allergens.destroy', $allergen) }}" method="POST" onsubmit="return confirm('Sicuro?')">
-                @csrf
-                @method('DELETE')
-                <button class="px-4 py-2 bg-red-600 text-white rounded">Elimina</button>
-            </form>
-            <a href="{{ route('admin.allergens.index') }}" class="px-4 py-2 bg-gray-200 rounded">Torna all'elenco</a>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <p class="text-muted mb-0">Nessun dettaglio aggiuntivo.</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('admin.allergens.edit', $allergen) }}" class="btn btn-warning">Modifica</a>
+                    <form action="{{ route('admin.allergens.destroy', $allergen) }}" method="POST" data-confirm="Sicuro?">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger" type="submit">Elimina</button>
+                    </form>
+                    <a href="{{ route('admin.allergens.index') }}" class="btn btn-outline-secondary">Torna all'elenco</a>
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>

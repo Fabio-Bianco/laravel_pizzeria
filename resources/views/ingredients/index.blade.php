@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Ingredienti</h2>
+        <h2 class="h4 mb-0">Ingredienti</h2>
     </x-slot>
-    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="container py-4">
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <a href="{{ route('admin.ingredients.create') }}" class="btn btn-primary">Aggiungi ingrediente</a>
             @if (session('status'))
@@ -24,7 +24,7 @@
                             @endif
                             <div class="mt-auto d-flex gap-2 justify-content-end">
                                 <a href="{{ route('admin.ingredients.edit', $ingredient) }}" class="btn btn-sm btn-warning">Modifica</a>
-                                <form action="{{ route('admin.ingredients.destroy', $ingredient) }}" method="POST" onsubmit="return confirm('Sicuro?')">
+                                <form action="{{ route('admin.ingredients.destroy', $ingredient) }}" method="POST" data-confirm="Sicuro?">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-sm btn-danger" type="submit">Elimina</button>
@@ -40,6 +40,8 @@
             @endforelse
         </div>
 
-        <div class="mt-4">{{ $ingredients->links() }}</div>
+        <nav class="mt-4 d-flex justify-content-center" aria-label="Paginazione ingredienti">
+            {{ $ingredients->links() }}
+        </nav>
     </div>
 </x-app-layout>

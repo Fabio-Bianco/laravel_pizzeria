@@ -1,13 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Categorie</h2>
+        <h2 class="h4 mb-0">Categorie</h2>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="container py-4">
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">Aggiungi categoria</a>
             @if (session('status'))
-                <div class="text-success">{{ session('status') }}</div>
+                <div class="alert alert-success mb-0 py-1 px-2">{{ session('status') }}</div>
             @endif
         </div>
 
@@ -24,7 +24,7 @@
                             @endif
                             <div class="mt-auto d-flex gap-2 justify-content-end">
                                 <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-sm btn-warning">Modifica</a>
-                                <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" onsubmit="return confirm('Sicuro?')">
+                                <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" data-confirm="Sicuro?">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-sm btn-danger" type="submit">Elimina</button>
@@ -40,6 +40,8 @@
             @endforelse
         </div>
 
-        <div class="mt-4">{{ $categories->links() }}</div>
+        <nav class="mt-4 d-flex justify-content-center" aria-label="Paginazione categorie">
+            {{ $categories->links() }}
+        </nav>
     </div>
 </x-app-layout>

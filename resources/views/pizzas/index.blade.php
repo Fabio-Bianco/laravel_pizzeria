@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Pizze</h2>
+        <h2 class="h4 mb-0">Pizze</h2>
     </x-slot>
-    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="container py-4">
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <a href="{{ route('admin.pizzas.create') }}" class="btn btn-primary">Aggiungi pizza</a>
             @if (session('status'))
@@ -27,7 +27,7 @@
                             @endif
                             <div class="mt-auto d-flex gap-2 justify-content-end">
                                 <a href="{{ route('admin.pizzas.edit', $pizza) }}" class="btn btn-sm btn-warning">Modifica</a>
-                                <form action="{{ route('admin.pizzas.destroy', $pizza) }}" method="POST" onsubmit="return confirm('Sicuro?')">
+                                <form action="{{ route('admin.pizzas.destroy', $pizza) }}" method="POST" data-confirm="Sicuro?">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-sm btn-danger" type="submit">Elimina</button>
