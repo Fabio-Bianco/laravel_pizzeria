@@ -18,12 +18,14 @@ class PizzaController extends Controller
     public function index(Request $request): View
     {
         $q = Pizza::query()
-            ->with(['category'])
+            ->with(['category', 'ingredients.allergens'])
+            ->withCount('ingredients')
+            // Full-text like search on name and notes (description dropped from schema)
             ->when($request->filled('search'), function ($qq) use ($request) {
                 $term = '%'.$request->string('search')->trim().'%';
                 $qq->where(function ($w) use ($term) {
                     $w->where('name', 'like', $term)
-                      ->orWhere('description', 'like', $term);
+                      ->orWhere('notes', 'like', $term);
                 });
             })
             ->when($request->filled('category'), fn($qq) =>

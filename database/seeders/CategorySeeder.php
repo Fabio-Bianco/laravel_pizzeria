@@ -11,14 +11,14 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $items = [
-            ['name' => 'Classiche', 'description' => 'Le pizze più amate'],
-            ['name' => 'Bianche', 'description' => 'Senza pomodoro'],
-            ['name' => 'Speciali', 'description' => 'Combinazioni gourmet'],
+            ['name' => 'Classiche', 'description' => 'Le pizze più amate', 'is_white' => false],
+            ['name' => 'Bianche',   'description' => 'Senza pomodoro',     'is_white' => true],
+            ['name' => 'Speciali',  'description' => 'Combinazioni gourmet','is_white' => false],
         ];
         foreach ($items as $it) {
-            Category::firstOrCreate(
+            Category::updateOrCreate(
                 ['slug' => Str::slug($it['name'])],
-                ['name' => $it['name'], 'description' => $it['description'] ?? null]
+                ['name' => $it['name'], 'description' => $it['description'] ?? null, 'is_white' => $it['is_white'] ?? false]
             );
         }
     }

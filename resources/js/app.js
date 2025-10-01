@@ -47,8 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // Moduli specifici delle feature
 // Gestione pagina Pizza: modal "Nuovo ingrediente" + aggiornamento select ingredienti
 import { initPizzaIngredientQuickCreate } from './features/pizzas';
+import { initStickyHeaderSearch } from './features/stickyHeader';
+import { initCommandPalette } from './features/commandPalette';
 document.addEventListener('DOMContentLoaded', () => {
 	initPizzaIngredientQuickCreate();
+	initStickyHeaderSearch();
+	if (typeof initCommandPalette === 'function') initCommandPalette();
 	// FAB reveal/idle behavior
 	const fab = document.querySelector('.x-fab-group');
 	if (fab) {

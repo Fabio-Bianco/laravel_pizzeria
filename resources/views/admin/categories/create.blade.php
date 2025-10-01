@@ -13,6 +13,12 @@
                 <textarea id="description" name="description" class="form-control">{{ old('description') }}</textarea>
                 <x-input-error :messages="$errors->get('description')" class="mt-2 text-danger" />
             </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" value="1" id="is_white" name="is_white" @checked(old('is_white'))>
+                <label class="form-check-label" for="is_white">
+                    Bianca (senza pomodoro)
+                </label>
+            </div>
             <div class="d-flex justify-content-end gap-2">
                 <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-secondary">Annulla</a>
                 <x-primary-button class="btn btn-primary">Crea</x-primary-button>

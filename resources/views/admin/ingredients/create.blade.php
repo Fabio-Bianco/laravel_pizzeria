@@ -19,6 +19,13 @@
                 @error('allergens')<div class="text-danger small">{{ $message }}</div>@enderror
             </div>
 
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" value="1" id="is_tomato" name="is_tomato" @checked(old('is_tomato'))>
+                <label class="form-check-label" for="is_tomato">
+                    Pomodoro
+                </label>
+            </div>
+
             <div class="d-flex justify-content-end gap-2">
                 <a href="{{ route('admin.ingredients.index') }}" class="btn btn-outline-secondary">Annulla</a>
                 <button type="submit" class="btn btn-primary">Crea</button>

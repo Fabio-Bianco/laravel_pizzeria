@@ -19,6 +19,14 @@
     <div class="collapse navbar-collapse d-lg-flex justify-content-lg-end" id="mainNavbar">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-2">
         @auth
+          <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.pizzas.*') ? 'active' : '' }}" href="{{ route('admin.pizzas.index') }}">Pizze</a></li>
+          <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.ingredients.*') ? 'active' : '' }}" href="{{ route('admin.ingredients.index') }}">Ingredienti</a></li>
+          <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.allergens.*') ? 'active' : '' }}" href="{{ route('admin.allergens.index') }}">Allergeni</a></li>
+          <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}" href="{{ route('admin.categories.index') }}">Categorie</a></li>
+          <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.beverages.*') ? 'active' : '' }}" href="{{ route('admin.beverages.index') }}">Bevande</a></li>
+        @endauth
+
+        @auth
           <li class="nav-item"><a class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}" href="{{ route('profile.edit') }}">Profilo personale</a></li>
         @endauth
 

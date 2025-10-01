@@ -24,7 +24,8 @@ class PizzaFactory extends Factory
             'name' => $name,
             'slug' => Str::slug($name),
             'price' => $this->faker->randomFloat(2, 5, 30),
-            'description' => $this->faker->sentence(10),
+            // column description removed from schema
+            'notes' => $this->faker->optional(0.3)->sentence(6),
         ];
     }
 }

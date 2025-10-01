@@ -22,9 +22,9 @@ class IngredientSeeder extends Seeder
         ];
 
         foreach ($map as $name => $allergens) {
-            $ingredient = Ingredient::firstOrCreate(
+            $ingredient = Ingredient::updateOrCreate(
                 ['slug' => Str::slug($name)],
-                ['name' => $name]
+                ['name' => $name, 'is_tomato' => Str::slug($name) === 'pomodoro']
             );
 
             $ids = Allergen::whereIn('name', $allergens)->pluck('id');

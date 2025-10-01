@@ -1,100 +1,92 @@
 <x-app-layout>
   <x-slot name="header">
-    <div class="d-flex align-items-center justify-content-between">
-      <h1 class="h4 mb-0">Pizze</h1>
-      <a class="btn btn-primary" href="{{ route('admin.pizzas.create') }}">+ Nuova pizza</a>
-    </div>
+    <x-page-header title="Pizze" :items="[['label' => 'Pizze']]">
+      <x-slot name="actions">
+        <a class="btn btn-primary" href="{{ route('admin.pizzas.create') }}">+ Nuova pizza</a>
+      </x-slot>
+    </x-page-header>
   </x-slot>
 
   @include('partials.flash')
 
-  <form method="GET" class="card mb-3">
-    <div class="card-body">
-      <div class="row g-2">
-        <div class="col-12 col-md-4">
-          <input name="search" type="search" value="{{ request('search') }}" class="form-control" placeholder="Cerca per nome o descrizione…">
-        </div>
-        <div class="col-6 col-md-3">
-          <select name="category" class="form-select" data-choices>
-            <option value="">Tutte le categorie</option>
-            @foreach($filters['categories'] as $id => $name)
-              <option value="{{ $id }}" @selected((string)$id === request('category'))>{{ $name }}</option>
-            @endforeach
-          </select>
-        </div>
-        <div class="col-6 col-md-3">
-          <select name="ingredient" class="form-select" data-choices>
-            <option value="">Qualsiasi ingrediente</option>
-            @foreach($filters['ingredients'] as $id => $name)
-              <option value="{{ $id }}" @selected((string)$id === request('ingredient'))>{{ $name }}</option>
-            @endforeach
-          </select>
-        </div>
-        <div class="col-6 col-md-2">
-          <select name="sort" class="form-select" data-choices>
-            <option value="">Più recenti</option>
-            <option value="name_asc" @selected(request('sort')==='name_asc')>Nome A→Z</option>
-            <option value="name_desc" @selected(request('sort')==='name_desc')>Nome Z→A</option>
-            <option value="price_asc" @selected(request('sort')==='price_asc')>Prezzo ↑</option>
-            <option value="price_desc" @selected(request('sort')==='price_desc')>Prezzo ↓</option>
-          </select>
-        </div>
-      </div>
-      <div class="mt-3 d-flex gap-2">
-        <button class="btn btn-outline-primary" type="submit">Filtra</button>
-        <a class="btn btn-outline-secondary" href="{{ route('admin.pizzas.index') }}">Reset</a>
-      </div>
-    </div>
-  </form>
+  {{-- Toolbar filtri riutilizzabile --}}
+  <x-filter-toolbar
+    search
+    searchPlaceholder="Cerca per nome o descrizione…"
+    :selects="[
+      ['name' => 'category', 'placeholder' => 'Tutte le categorie', 'options' => ($filters['categories'] ?? [])],
+      ['name' => 'ingredient', 'placeholder' => 'Qualsiasi ingrediente', 'options' => ($filters['ingredients'] ?? [])],
+    ]"
+    :sort-options="['' => 'Più recenti', 'name_asc' => 'Nome A→Z', 'name_desc' => 'Nome Z→A', 'price_asc' => 'Prezzo ↑', 'price_desc' => 'Prezzo ↓']"
+    :reset-url="route('admin.pizzas.index')"
+  />
 
-  <div class="card">
-    <div class="table-responsive">
-      <table class="table align-middle mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>#</th>
-            <th>Pizza</th>
-            <th>Categoria</th>
-            <th>Prezzo</th>
-            <th class="text-end">Azioni</th>
-          </tr>
-        </thead>
-        <tbody>
-          @forelse($pizzas as $p)
-            <tr>
-              <td>{{ $p->id }}</td>
-              <td class="d-flex align-items-center gap-2">
-                @if($p->image_path)
-                  <img src="{{ asset('storage/'.$p->image_path) }}" alt="{{ $p->name }}" class="rounded" style="width:48px;height:48px;object-fit:cover;">
+  {{-- Griglia card pizze --}}
+  <div class="row g-3" aria-live="polite">
+    @forelse($pizzas as $p)
+      <div class="col-12 col-md-6 col-lg-4">
+  <div class="card h-100 d-flex" role="article" aria-label="Scheda pizza {{ $p->name }}">
+          @if($p->image_path)
+            <img src="{{ asset('storage/'.$p->image_path) }}" alt="Immagine pizza {{ $p->name }}" class="card-img-top" style="height:180px;object-fit:cover;">
+          @endif
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <a href="{{ route('admin.pizzas.show', $p) }}" class="fw-semibold text-decoration-none">{{ $p->name }}</a>
+              <div class="d-flex align-items-center gap-2">
+                @if($p->category?->is_white)
+                  <span class="badge text-bg-warning-subtle text-warning-emphasis" title="Pizza bianca">Bianca</span>
                 @endif
-                <div>
-                  <a href="{{ route('admin.pizzas.show', $p) }}" class="fw-semibold text-decoration-none">{{ $p->name }}</a>
-                  @if($p->description)
-                    <div class="text-muted small">{{ \Illuminate\Support\Str::limit($p->description, 80) }}</div>
-                  @endif
-                </div>
-              </td>
-              <td>{{ $p->category?->name ?? '-' }}</td>
-              <td>€ {{ number_format($p->price, 2, ',', '.') }}</td>
-              <td class="text-end">
-                <a class="btn btn-sm btn-outline-secondary" href="{{ route('admin.pizzas.edit', $p) }}">Modifica</a>
+                <span class="badge text-bg-secondary">{{ $p->category?->name ?? '—' }}</span>
+              </div>
+            </div>
+            
+              @php($ingredientNames = $p->ingredients->pluck('name'))
+              @php($ingStr = $ingredientNames->isNotEmpty() ? $ingredientNames->join(', ') : 'Nessuno')
+              <div class="text-muted small mb-2" title="{{ $ingStr }}">
+                {{ \Illuminate\Support\Str::limit($ingStr, 80) }}
+            </div>
+              @php(
+                $allergenNames = collect($p->ingredients)
+                  ->flatMap(fn($ing) => $ing->allergens->pluck('name'))
+                  ->unique()
+                  ->values()
+              )
+              @php($allStr = $allergenNames->isNotEmpty() ? $allergenNames->join(', ') : 'Nessuno')
+              <div class="text-muted small mb-2" title="{{ $allStr }}">
+              <span class="fw-semibold">Allergeni:</span>
+              {{ \Illuminate\Support\Str::limit($allStr, 80) }}
+            </div>
+            @if(!empty($p->notes))
+              <div class="alert alert-warning py-1 px-2 mb-2 small" role="note">
+                <span class="fw-semibold">Nota:</span> {{ $p->notes }}
+              </div>
+            @endif
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <div class="d-flex align-items-center gap-2">
+                @php($priceStr = '€ '.number_format($p->price, 2, ',', '.'))
+                <span class="fw-semibold" aria-label="Prezzo {{ $priceStr }}"><span class="visually-hidden">Prezzo:</span> {{ $priceStr }}</span>
+              </div>
+              <div class="d-flex gap-2">
+                <a class="btn btn-sm btn-outline-secondary" href="{{ route('admin.pizzas.edit', $p) }}" aria-label="Modifica pizza {{ $p->name }}">Modifica</a>
                 <form class="d-inline" method="POST" action="{{ route('admin.pizzas.destroy', $p) }}" data-confirm="Sicuro?">
                   @csrf @method('DELETE')
-                  <button class="btn btn-sm btn-outline-danger" type="submit">Elimina</button>
+                  <button class="btn btn-sm btn-outline-danger" type="submit" aria-label="Elimina pizza {{ $p->name }}">Elimina</button>
                 </form>
-              </td>
-            </tr>
-          @empty
-            <tr><td colspan="5" class="text-center text-muted py-4">Nessuna pizza trovata.</td></tr>
-          @endforelse
-        </tbody>
-      </table>
-    </div>
-
-    @if($pizzas->hasPages())
-      <div class="card-footer">
-        {{ $pizzas->links() }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    @endif
+    @empty
+      <div class="col-12">
+        <div class="alert alert-info text-center mb-0">Nessuna pizza trovata.</div>
+      </div>
+    @endforelse
   </div>
+
+  @if($pizzas->hasPages())
+    <div class="mt-3 d-flex justify-content-center">
+      {{ $pizzas->links() }}
+    </div>
+  @endif
 </x-app-layout>

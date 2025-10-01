@@ -30,16 +30,16 @@
                 <select id="category_id" name="category_id" class="form-select @error('category_id') is-invalid @enderror" data-choices>
                   <option value="">-</option>
                   @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>{{ $category->name }}</option>
+                    <option value="{{ $category->id }}" data-is-white="{{ $category->is_white ? '1' : '0' }}" @selected(old('category_id') == $category->id)>{{ $category->name }}</option>
                   @endforeach
                 </select>
                 @error('category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
               </div>
 
               <div class="col-12">
-                <label for="description" class="form-label">Descrizione</label>
-                <textarea id="description" name="description" rows="3" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
-                @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                <label for="notes" class="form-label">Note</label>
+                <textarea id="notes" name="notes" rows="2" class="form-control @error('notes') is-invalid @enderror" placeholder="Aggiunte speciali, cottura, richiami, ecc.">{{ old('notes') }}</textarea>
+                @error('notes')<div class="invalid-feedback">{{ $message }}</div>@enderror
               </div>
 
               <div class="col-12 col-md-6">
@@ -49,10 +49,11 @@
                 </div>
                 <select id="ingredients" name="ingredients[]" multiple class="form-select @error('ingredients') is-invalid @enderror" data-choices placeholder="Seleziona ingredienti..." data-store-url="{{ route('admin.ingredients.store') }}">
                   @foreach ($ingredients as $ingredient)
-                    <option value="{{ $ingredient->id }}" @selected(collect(old('ingredients',[]))->contains($ingredient->id))>{{ $ingredient->name }}</option>
+                    <option value="{{ $ingredient->id }}" data-is-tomato="{{ $ingredient->is_tomato ? '1' : '0' }}" @selected(collect(old('ingredients',[]))->contains($ingredient->id))>{{ $ingredient->name }}</option>
                   @endforeach
                 </select>
                 @error('ingredients')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                <div id="whiteHelp" class="form-text text-warning d-none">Il pomodoro è disabilitato per le pizze bianche.</div>
               </div>
 
               <div class="col-12 col-md-6">

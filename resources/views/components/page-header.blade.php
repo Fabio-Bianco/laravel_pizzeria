@@ -26,8 +26,11 @@
             @endif
         </div>
 
-        @if($backUrl)
-            <a href="{{ $backUrl }}" class="btn btn-outline-secondary">Indietro</a>
-        @endif
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            {{ $actions ?? '' }}
+            @if($backUrl)
+                <a href="{{ $backUrl }}" class="btn btn-outline-secondary">Indietro</a>
+            @endif
+        </div>
     </div>
 </div>

@@ -40,7 +40,6 @@ class PizzaSeeder extends Seeder
                 [
                     'name' => $recipe['name'],
                     'price' => $recipe['price'],
-                    'description' => null,
                     'category_id' => $categoryId,
                 ]
             );

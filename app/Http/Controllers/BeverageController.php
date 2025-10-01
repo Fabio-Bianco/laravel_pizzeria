@@ -11,9 +11,31 @@ use Illuminate\Support\Str;
 
 class BeverageController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $beverages = Beverage::latest()->paginate(10);
+        // Persist querystring in session to restore after actions
+        if ($request->query()) {
+            session(['beverages.index.query' => $request->query()]);
+        }
+        $q = Beverage::query()
+            ->when($request->filled('search'), function ($qq) use ($request) {
+                $term = '%'.$request->string('search')->trim().'%';
+                $qq->where(function ($w) use ($term) {
+                    $w->where('name', 'like', $term)
+                      ->orWhere('description', 'like', $term);
+                });
+            })
+            ->when($request->filled('sort'), function ($qq) use ($request) {
+                return match ($request->string('sort')->toString()) {
+                    'price_asc'  => $qq->orderBy('price', 'asc'),
+                    'price_desc' => $qq->orderBy('price', 'desc'),
+                    'name_asc'   => $qq->orderBy('name', 'asc'),
+                    'name_desc'  => $qq->orderBy('name', 'desc'),
+                    default      => $qq->latest('id'),
+                };
+            }, fn($qq) => $qq->latest('id'));
+
+        $beverages = $q->paginate(10)->withQueryString();
         return view('admin.beverages.index', compact('beverages'));
     }
 
@@ -30,8 +52,9 @@ class BeverageController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
         ]);
         $data['slug'] = $this->generateUniqueSlug($data['name']);
-        Beverage::create($data);
-        return redirect()->route('admin.beverages.index')->with('status', 'Bevanda creata.');
+    Beverage::create($data);
+    $qs = session('beverages.index.query', []);
+    return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda creata.');
     }
 
     public function show(Beverage $beverage): View
@@ -52,14 +75,16 @@ class BeverageController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
         ]);
         $data['slug'] = $this->generateUniqueSlug($data['name'], $beverage->id);
-        $beverage->update($data);
-        return redirect()->route('admin.beverages.index')->with('status', 'Bevanda aggiornata.');
+    $beverage->update($data);
+    $qs = session('beverages.index.query', []);
+    return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda aggiornata.');
     }
 
     public function destroy(Beverage $beverage): RedirectResponse
     {
         $beverage->delete();
-        return redirect()->route('admin.beverages.index')->with('status', 'Bevanda eliminata.');
+        $qs = session('beverages.index.query', []);
+        return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda eliminata.');
     }
 
     private function generateUniqueSlug(string $name, ?int $ignoreId = null): string

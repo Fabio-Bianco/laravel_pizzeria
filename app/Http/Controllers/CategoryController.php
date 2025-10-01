@@ -10,9 +10,30 @@ use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $categories = Category::latest()->paginate(10);
+        // Persist querystring in session to restore after actions
+        if ($request->query()) {
+            session(['categories.index.query' => $request->query()]);
+        }
+        $q = Category::query()
+            ->withCount('pizzas')
+            ->when($request->filled('search'), function ($qq) use ($request) {
+                $term = '%'.$request->string('search')->trim().'%';
+                $qq->where(function ($w) use ($term) {
+                    $w->where('name', 'like', $term)
+                      ->orWhere('description', 'like', $term);
+                });
+            })
+            ->when($request->filled('sort'), function ($qq) use ($request) {
+                return match ($request->string('sort')->toString()) {
+                    'name_asc'  => $qq->orderBy('name', 'asc'),
+                    'name_desc' => $qq->orderBy('name', 'desc'),
+                    default     => $qq->latest('id'),
+                };
+            }, fn($qq) => $qq->latest('id'));
+
+        $categories = $q->paginate(10)->withQueryString();
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -26,13 +47,16 @@ class CategoryController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+            'is_white' => ['nullable','boolean'],
         ]);
 
         $data['slug'] = Str::slug($data['name']);
+        $data['is_white'] = $request->boolean('is_white');
 
         Category::create($data);
 
-    return redirect()->route('admin.categories.index')->with('status', 'Categoria creata.');
+    $qs = session('categories.index.query', []);
+    return redirect()->route('admin.categories.index', $qs)->with('status', 'Categoria creata.');
     }
 
     public function show(Category $category): View
@@ -50,17 +74,21 @@ class CategoryController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+            'is_white' => ['nullable','boolean'],
         ]);
 
         $data['slug'] = Str::slug($data['name']);
+        $data['is_white'] = $request->boolean('is_white');
         $category->update($data);
 
-    return redirect()->route('admin.categories.index')->with('status', 'Categoria aggiornata.');
+    $qs = session('categories.index.query', []);
+    return redirect()->route('admin.categories.index', $qs)->with('status', 'Categoria aggiornata.');
     }
 
     public function destroy(Category $category): RedirectResponse
     {
         $category->delete();
-    return redirect()->route('admin.categories.index')->with('status', 'Categoria eliminata.');
+    $qs = session('categories.index.query', []);
+    return redirect()->route('admin.categories.index', $qs)->with('status', 'Categoria eliminata.');
     }
 }

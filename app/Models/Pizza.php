@@ -11,7 +11,7 @@ class Pizza extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['category_id', 'name', 'slug', 'price', 'description'];
+    protected $fillable = ['category_id', 'name', 'slug', 'price', 'notes'];
 
     public function category(): BelongsTo
     {

@@ -17,6 +17,7 @@
     <body>
         <div class="min-vh-100 bg-light">
             @include('layouts.navigation')
+            @includeWhen(auth()->check() && request()->routeIs('admin.*'), 'layouts.sticky-header')
 
             <!-- Page Heading -->
             @isset($header)
@@ -30,6 +31,7 @@
             <!-- Page Content -->
             @php($hideFab = request()->routeIs('dashboard') || request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*') || request()->routeIs('verification.*'))
             <main class="container my-4 {{ $hideFab ? '' : 'has-fab' }}">
+                <x-command-palette />
                 @if (isset($slot))
                     {{ $slot }}
                 @else

@@ -11,10 +11,38 @@ use Illuminate\View\View;
 
 class IngredientController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $ingredients = Ingredient::with('allergens')->latest()->paginate(10);
-        return view('admin.ingredients.index', compact('ingredients'));
+        // Persist querystring in session to restore after actions
+        if ($request->query()) {
+            session(['ingredients.index.query' => $request->query()]);
+        }
+        $q = Ingredient::query()
+            ->with('allergens')
+            ->withCount('pizzas')
+            ->when($request->filled('search'), function ($qq) use ($request) {
+                $term = '%'.$request->string('search')->trim().'%';
+                $qq->where('name', 'like', $term);
+            })
+            ->when($request->filled('allergen'), function ($qq) use ($request) {
+                $allergenId = $request->integer('allergen');
+                $qq->whereHas('allergens', fn($w) => $w->where('allergens.id', $allergenId));
+            })
+            ->when($request->filled('sort'), function ($qq) use ($request) {
+                return match ($request->string('sort')->toString()) {
+                    'name_asc'   => $qq->orderBy('name', 'asc'),
+                    'name_desc'  => $qq->orderBy('name', 'desc'),
+                    default      => $qq->latest('id'),
+                };
+            }, fn($qq) => $qq->latest('id'));
+
+        $ingredients = $q->paginate(10)->withQueryString();
+
+        $filters = [
+            'allergens' => Allergen::orderBy('name')->pluck('name','id'),
+        ];
+
+        return view('admin.ingredients.index', compact('ingredients','filters'));
     }
 
     public function create(): View
@@ -29,8 +57,10 @@ class IngredientController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'allergens' => ['array'],
             'allergens.*' => ['integer', 'exists:allergens,id'],
+            'is_tomato' => ['nullable','boolean'],
         ]);
         $data['slug'] = Str::slug($data['name']);
+        $data['is_tomato'] = $request->boolean('is_tomato');
 
         $ingredient = Ingredient::create($data);
         $ingredient->allergens()->sync($request->input('allergens', []));
@@ -42,7 +72,8 @@ class IngredientController extends Controller
             ], 201);
         }
 
-        return redirect()->route('admin.ingredients.index')->with('status', 'Ingrediente creato.');
+        $qs = session('ingredients.index.query', []);
+        return redirect()->route('admin.ingredients.index', $qs)->with('status', 'Ingrediente creato.');
     }
 
     public function show(Ingredient $ingredient): View
@@ -64,18 +95,22 @@ class IngredientController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'allergens' => ['array'],
             'allergens.*' => ['integer', 'exists:allergens,id'],
+            'is_tomato' => ['nullable','boolean'],
         ]);
         $data['slug'] = Str::slug($data['name']);
+        $data['is_tomato'] = $request->boolean('is_tomato');
 
         $ingredient->update($data);
         $ingredient->allergens()->sync($request->input('allergens', []));
 
-    return redirect()->route('admin.ingredients.index')->with('status', 'Ingrediente aggiornato.');
+    $qs = session('ingredients.index.query', []);
+    return redirect()->route('admin.ingredients.index', $qs)->with('status', 'Ingrediente aggiornato.');
     }
 
     public function destroy(Ingredient $ingredient): RedirectResponse
     {
         $ingredient->delete();
-    return redirect()->route('admin.ingredients.index')->with('status', 'Ingrediente eliminato.');
+    $qs = session('ingredients.index.query', []);
+    return redirect()->route('admin.ingredients.index', $qs)->with('status', 'Ingrediente eliminato.');
     }
 }

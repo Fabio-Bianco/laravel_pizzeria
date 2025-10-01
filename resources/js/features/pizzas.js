@@ -59,3 +59,52 @@ export function initPizzaIngredientQuickCreate() {
 
   modal.addEventListener('shown.bs.modal', () => input?.focus());
 }
+
+// Client rule: disable Pomodoro ingredient when a white category is selected
+document.addEventListener('DOMContentLoaded', () => {
+  const categorySelect = document.getElementById('category_id');
+  const ingredientsSelect = document.getElementById('ingredients');
+  if (!categorySelect || !ingredientsSelect) return;
+
+  // Prefer data-is-tomato attribute (fallback to label)
+  const findTomatoOption = () => {
+    const byAttr = Array.from(ingredientsSelect.options).find((opt) => opt.getAttribute('data-is-tomato') === '1');
+    if (byAttr) return byAttr;
+    return Array.from(ingredientsSelect.options).find((opt) => (opt.text || '').trim().toLowerCase() === 'pomodoro');
+  };
+
+  const updateDisabled = () => {
+  // Detect "white" by data attribute reliably
+  const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+  const isWhite = selectedOption && selectedOption.getAttribute('data-is-white') === '1';
+    const tomatoOpt = findTomatoOption();
+    if (!tomatoOpt) return;
+
+    const help = document.getElementById('whiteHelp');
+    if (isWhite) {
+      tomatoOpt.disabled = true;
+      // If currently selected, unselect it
+      if (Array.from(ingredientsSelect.selectedOptions).some((o) => o.value === tomatoOpt.value)) {
+        tomatoOpt.selected = false;
+      }
+      if (help) help.classList.remove('d-none');
+    } else {
+      tomatoOpt.disabled = false;
+      if (help) help.classList.add('d-none');
+    }
+
+    // Sync with Choices.js if present
+    const choices = ingredientsSelect._choices;
+    if (choices) {
+      choices.setChoices(
+        Array.from(ingredientsSelect.options).map((o) => ({ value: o.value, label: o.text, selected: o.selected, disabled: o.disabled })),
+        'value',
+        'label',
+        true,
+      );
+    }
+  };
+
+  categorySelect.addEventListener('change', updateDisabled);
+  updateDisabled();
+});

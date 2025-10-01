@@ -11,9 +11,27 @@ use Illuminate\Support\Str;
 
 class AppetizerController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $appetizers = Appetizer::latest()->paginate(10);
+        $q = Appetizer::query()
+            ->when($request->filled('search'), function ($qq) use ($request) {
+                $term = '%'.$request->string('search')->trim().'%';
+                $qq->where(function ($w) use ($term) {
+                    $w->where('name', 'like', $term)
+                      ->orWhere('description', 'like', $term);
+                });
+            })
+            ->when($request->filled('sort'), function ($qq) use ($request) {
+                return match ($request->string('sort')->toString()) {
+                    'price_asc'  => $qq->orderBy('price', 'asc'),
+                    'price_desc' => $qq->orderBy('price', 'desc'),
+                    'name_asc'   => $qq->orderBy('name', 'asc'),
+                    'name_desc'  => $qq->orderBy('name', 'desc'),
+                    default      => $qq->latest('id'),
+                };
+            }, fn($qq) => $qq->latest('id'));
+
+        $appetizers = $q->paginate(10)->withQueryString();
         return view('admin.appetizers.index', compact('appetizers'));
     }
 
