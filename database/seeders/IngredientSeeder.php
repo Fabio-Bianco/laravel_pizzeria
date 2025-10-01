@@ -19,6 +19,13 @@ class IngredientSeeder extends Seeder
             'Funghi' => [],
             'Gorgonzola' => ['Lattosio'],
             'Noci' => ['Noci'],
+            'Parmigiano' => ['Lattosio'],
+            'Uova' => ['Uova'],
+            'Tonno' => [],
+            'Acciughe' => [],
+            'Olive' => [],
+            'Rucola' => [],
+            'Salame' => [],
         ];
 
         foreach ($map as $name => $allergens) {
