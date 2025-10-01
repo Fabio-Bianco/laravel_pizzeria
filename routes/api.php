@@ -7,8 +7,8 @@ use App\Http\Controllers\Api\IngredientController as ApiIngredientController;
 use App\Http\Controllers\Api\AllergenController as ApiAllergenController;
 
 Route::prefix('v1')->name('guest.')->group(function () {
-    Route::apiResource('categories', ApiCategoryController::class);
-    Route::apiResource('pizzas', ApiPizzaController::class);
-    Route::apiResource('ingredients', ApiIngredientController::class);
-    Route::apiResource('allergens', ApiAllergenController::class);
+    Route::apiResource('categories', ApiCategoryController::class)->only(['index','show']);
+    Route::apiResource('pizzas', ApiPizzaController::class)->only(['index','show']);
+    Route::apiResource('ingredients', ApiIngredientController::class)->only(['index','show']);
+    Route::apiResource('allergens', ApiAllergenController::class)->only(['index','show']);
 });

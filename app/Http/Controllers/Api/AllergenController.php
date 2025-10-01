@@ -6,12 +6,42 @@ use App\Http\Controllers\Controller;
 use App\Models\Allergen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Http\Resources\AllergenResource;
 
 class AllergenController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Allergen::latest()->paginate(15);
+        $perPage = min(max((int) $request->query('per_page', 10), 1), 50);
+        $paginator = Allergen::select('id','name','slug')
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $term = '%'.$request->string('search')->trim().'%';
+                $q->where('name', 'like', $term);
+            })
+            ->when($request->filled('sort'), function ($q) use ($request) {
+                return match ($request->string('sort')->toString()) {
+                    'name_desc' => $q->orderBy('name', 'desc'),
+                    default     => $q->orderBy('name', 'asc'),
+                };
+            }, fn($q) => $q->orderBy('name', 'asc'))
+            ->paginate($perPage)
+            ->appends($request->query());
+
+        return response()->json([
+            'data'  => AllergenResource::collection($paginator->getCollection()),
+            'meta'  => [
+                'current_page' => $paginator->currentPage(),
+                'last_page'    => $paginator->lastPage(),
+                'per_page'     => $paginator->perPage(),
+                'total'        => $paginator->total(),
+            ],
+            'links' => [
+                'first' => $paginator->url(1),
+                'last'  => $paginator->url($paginator->lastPage()),
+                'prev'  => $paginator->previousPageUrl(),
+                'next'  => $paginator->nextPageUrl(),
+            ],
+        ]);
     }
 
     public function store(Request $request)
@@ -26,7 +56,7 @@ class AllergenController extends Controller
 
     public function show(Allergen $allergen)
     {
-        return $allergen;
+        return AllergenResource::make($allergen)->response();
     }
 
     public function update(Request $request, Allergen $allergen)

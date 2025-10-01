@@ -23,3 +23,15 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 note.txt
+
+// settings.json
+"files.watcherExclude": {
+  "**/node_modules": true,
+  "**/dist": true,
+  "**/build": true
+},
+"files.exclude": {
+  "**/.git": true,
+  "**/node_modules": true,
+  "**/dist": true
+}
