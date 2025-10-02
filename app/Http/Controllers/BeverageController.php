@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBeverageRequest;
+use App\Http\Requests\UpdateBeverageRequest;
 use App\Models\Beverage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -44,13 +46,9 @@ class BeverageController extends Controller
         return view('admin.beverages.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreBeverageRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('beverages', 'name')],
-            'description' => ['nullable', 'string'],
-            'price' => ['required', 'numeric', 'min:0'],
-        ]);
+        $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name']);
     Beverage::create($data);
     $qs = session('beverages.index.query', []);
@@ -67,13 +65,9 @@ class BeverageController extends Controller
         return view('admin.beverages.edit', compact('beverage'));
     }
 
-    public function update(Request $request, Beverage $beverage): RedirectResponse
+    public function update(UpdateBeverageRequest $request, Beverage $beverage): RedirectResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('beverages', 'name')->ignore($beverage->id)],
-            'description' => ['nullable', 'string'],
-            'price' => ['required', 'numeric', 'min:0'],
-        ]);
+        $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name'], $beverage->id);
     $beverage->update($data);
     $qs = session('beverages.index.query', []);

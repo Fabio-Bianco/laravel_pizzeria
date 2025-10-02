@@ -17,6 +17,7 @@ class AppetizerController extends Controller
         $perPage = min(max((int) $request->query('per_page', 10), 1), 50);
 
         $query = Appetizer::query()
+            ->with(['ingredients.allergens'])
             ->select(['id','name','slug','price','description'])
             ->when($request->filled('search'), function ($q) use ($request) {
                 $term = '%'.$request->string('search')->trim().'%';
@@ -53,6 +54,7 @@ class AppetizerController extends Controller
      */
     public function show(Appetizer $appetizer)
     {
+        $appetizer->load(['ingredients.allergens']);
         return AppetizerResource::make($appetizer)->response();
     }
 }

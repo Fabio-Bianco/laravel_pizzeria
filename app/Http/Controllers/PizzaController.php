@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePizzaRequest;
 use App\Http\Requests\UpdatePizzaRequest;
+use App\Models\Allergen;
 use App\Models\Category;
 use App\Models\Ingredient;
 use App\Models\Pizza;
@@ -83,7 +84,8 @@ class PizzaController extends Controller
     {
         $categories = Category::orderBy('name')->get();
         $ingredients = Ingredient::orderBy('name')->get();
-        return view('admin.pizzas.create', compact('categories','ingredients'));
+        $allergens = Allergen::orderBy('name')->get();
+        return view('admin.pizzas.create', compact('categories','ingredients','allergens'));
     }
 
     /**
@@ -127,9 +129,10 @@ class PizzaController extends Controller
     {
         $categories = Category::orderBy('name')->get();
         $ingredients = Ingredient::orderBy('name')->get();
+        $allergens = Allergen::orderBy('name')->get();
         $pizza->load('ingredients'); // per preselezionare ingredienti nel form
 
-        return view('admin.pizzas.edit', compact('pizza','categories','ingredients'));
+        return view('admin.pizzas.edit', compact('pizza','categories','ingredients','allergens'));
     }
 
     /**

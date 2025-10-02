@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAllergenRequest;
+use App\Http\Requests\UpdateAllergenRequest;
 use App\Models\Allergen;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,11 +23,9 @@ class AllergenController extends Controller
         return view('admin.allergens.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreAllergenRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-        ]);
+        $data = $request->validated();
         $data['slug'] = Str::slug($data['name']);
 
         Allergen::create($data);
@@ -42,11 +42,9 @@ class AllergenController extends Controller
         return view('admin.allergens.edit', compact('allergen'));
     }
 
-    public function update(Request $request, Allergen $allergen): RedirectResponse
+    public function update(UpdateAllergenRequest $request, Allergen $allergen): RedirectResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-        ]);
+        $data = $request->validated();
         $data['slug'] = Str::slug($data['name']);
         $allergen->update($data);
     return redirect()->route('admin.allergens.index')->with('status', 'Allergene aggiornato.');

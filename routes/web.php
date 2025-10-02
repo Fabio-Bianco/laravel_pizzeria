@@ -81,6 +81,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('allergens', AllergenController::class)->names('admin.allergens');
     Route::resource('appetizers', AppetizerController::class)->names('admin.appetizers');
     Route::resource('beverages', BeverageController::class)->names('admin.beverages');
+    
+    // AJAX endpoints per form intelligenti
+    Route::get('ajax/ingredients-allergens', [IngredientController::class, 'getAllergensForIngredients'])->name('admin.ajax.ingredients-allergens');
 });
 
 require __DIR__ . '/auth.php';

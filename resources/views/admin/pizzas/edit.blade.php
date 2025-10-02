@@ -68,6 +68,49 @@
                   </div>
                 @endif
               </div>
+
+              {{-- Sezione Allergeni Intelligenti --}}
+              <div class="col-12">
+                <div class="card border-info">
+                  <div class="card-header bg-info-subtle">
+                    <h6 class="mb-0"><i class="fas fa-exclamation-triangle me-1"></i> Allergeni</h6>
+                  </div>
+                  <div class="card-body">
+                    {{-- Allergeni automatici --}}
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Allergeni automatici (da ingredienti)</label>
+                      <div id="automatic-allergens" class="border rounded p-2 bg-light">
+                        {{-- Sarà popolato via JavaScript --}}
+                      </div>
+                    </div>
+
+                    {{-- Allergeni manuali --}}
+                    <div class="mb-3">
+                      <label for="manual_allergens" class="form-label fw-bold">Allergeni aggiuntivi <small class="text-muted">(opzionale)</small></label>
+                      <div class="row" id="manual-allergens-container">
+                        @foreach($allergens as $allergen)
+                          <div class="col-md-4 col-sm-6">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" name="manual_allergens[]" value="{{ $allergen->id }}" id="allergen_{{ $allergen->id }}" 
+                                @checked(collect(old('manual_allergens', $pizza->manual_allergens ?? []))->contains($allergen->id))>
+                              <label class="form-check-label" for="allergen_{{ $allergen->id }}">{{ $allergen->name }}</label>
+                            </div>
+                          </div>
+                        @endforeach
+                      </div>
+                      @error('manual_allergens')<div class="text-danger mt-1">{{ $message }}</div>@enderror
+                    </div>
+
+                    {{-- Preview finale --}}
+                    <div class="alert alert-info mb-0">
+                      <strong>Allergeni finali che vedranno i clienti:</strong>
+                      <div id="final-allergens-preview" class="mt-1">
+                        <em class="text-muted">Caricamento...</em>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="d-flex justify-content-end gap-2 mt-4">
@@ -99,4 +142,76 @@
       </div>
     </div>
   </div>
+
+  {{-- Script per sistema allergeni intelligente --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const ingredientsSelect = document.getElementById('ingredients');
+      const automaticAllergensDiv = document.getElementById('automatic-allergens');
+      const manualAllergensContainer = document.getElementById('manual-allergens-container');
+      const finalAllergensPreview = document.getElementById('final-allergens-preview');
+      
+      let automaticAllergens = [];
+      
+      function updateAutomaticAllergens() {
+        const selectedIngredients = Array.from(ingredientsSelect.selectedOptions).map(option => option.value);
+        
+        if (selectedIngredients.length === 0) {
+          automaticAllergens = [];
+          automaticAllergensDiv.innerHTML = '<em class="text-muted">Seleziona ingredienti per vedere gli allergeni automatici</em>';
+          updateFinalPreview();
+          return;
+        }
+        
+        fetch('{{ route("admin.ajax.ingredients-allergens") }}?' + new URLSearchParams({
+          ingredient_ids: selectedIngredients
+        }))
+        .then(response => response.json())
+        .then(data => {
+          automaticAllergens = data.allergens || [];
+          
+          if (automaticAllergens.length === 0) {
+            automaticAllergensDiv.innerHTML = '<em class="text-muted">Nessun allergene automatico</em>';
+          } else {
+            automaticAllergensDiv.innerHTML = automaticAllergens.map(allergen => 
+              `<span class="badge bg-warning text-dark me-1">${allergen.name}</span>`
+            ).join('');
+          }
+          
+          updateFinalPreview();
+        });
+      }
+      
+      function updateFinalPreview() {
+        const manualCheckboxes = manualAllergensContainer.querySelectorAll('input[type="checkbox"]:checked');
+        const manualAllergens = Array.from(manualCheckboxes).map(cb => ({
+          id: cb.value,
+          name: cb.nextElementSibling.textContent
+        }));
+        
+        const allAllergens = [...automaticAllergens];
+        manualAllergens.forEach(manual => {
+          if (!allAllergens.find(auto => auto.id == manual.id)) {
+            allAllergens.push(manual);
+          }
+        });
+        
+        if (allAllergens.length === 0) {
+          finalAllergensPreview.innerHTML = '<em class="text-muted">Nessun allergene</em>';
+        } else {
+          finalAllergensPreview.innerHTML = allAllergens.map(allergen => 
+            `<span class="badge bg-danger me-1">${allergen.name}</span>`
+          ).join('');
+        }
+      }
+      
+      ingredientsSelect.addEventListener('change', updateAutomaticAllergens);
+      manualAllergensContainer.addEventListener('change', function(e) {
+        if (e.target.type === 'checkbox') updateFinalPreview();
+      });
+      
+      // Inizializzazione con dati esistenti
+      updateAutomaticAllergens();
+    });
+  </script>
 </x-app-layout>

@@ -22,6 +22,20 @@ class PizzaResource extends JsonResource
             'ingredients_count' => $this->when(isset($this->ingredients_count), (int) $this->ingredients_count),
             'category'          => new CategoryResource($this->whenLoaded('category')),
             'ingredients'       => IngredientResource::collection($this->whenLoaded('ingredients')),
+            // Allergeni intelligenti (automatici + manuali)
+            'allergens'         => $this->when(
+                $this->relationLoaded('ingredients'),
+                fn() => AllergenResource::collection($this->getAllAllergens())
+            ),
+            // Breakdown allergeni per debug/admin
+            'automatic_allergens' => $this->when(
+                $request->has('include_allergen_breakdown'),
+                fn() => AllergenResource::collection($this->getAutomaticAllergens())
+            ),
+            'manual_allergens' => $this->when(
+                $request->has('include_allergen_breakdown'),
+                fn() => AllergenResource::collection($this->getManualAllergens())
+            ),
         ];
     }
 }

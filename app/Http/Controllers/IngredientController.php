@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreIngredientRequest;
+use App\Http\Requests\UpdateIngredientRequest;
 use App\Models\Allergen;
 use App\Models\Ingredient;
 use Illuminate\Http\RedirectResponse;
@@ -51,14 +53,9 @@ class IngredientController extends Controller
         return view('admin.ingredients.create', compact('allergens'));
     }
 
-    public function store(Request $request)
+    public function store(StoreIngredientRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'allergens' => ['array'],
-            'allergens.*' => ['integer', 'exists:allergens,id'],
-            'is_tomato' => ['nullable','boolean'],
-        ]);
+        $data = $request->validated();
         $data['slug'] = Str::slug($data['name']);
         $data['is_tomato'] = $request->boolean('is_tomato');
 
@@ -89,14 +86,9 @@ class IngredientController extends Controller
         return view('admin.ingredients.edit', compact('ingredient', 'allergens'));
     }
 
-    public function update(Request $request, Ingredient $ingredient): RedirectResponse
+    public function update(UpdateIngredientRequest $request, Ingredient $ingredient): RedirectResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'allergens' => ['array'],
-            'allergens.*' => ['integer', 'exists:allergens,id'],
-            'is_tomato' => ['nullable','boolean'],
-        ]);
+        $data = $request->validated();
         $data['slug'] = Str::slug($data['name']);
         $data['is_tomato'] = $request->boolean('is_tomato');
 
@@ -112,5 +104,23 @@ class IngredientController extends Controller
         $ingredient->delete();
     $qs = session('ingredients.index.query', []);
     return redirect()->route('admin.ingredients.index', $qs)->with('status', 'Ingrediente eliminato.');
+    }
+
+    /**
+     * AJAX: Ottieni allergeni per una lista di ingredienti (per form intelligenti)
+     */
+    public function getAllergensForIngredients(Request $request)
+    {
+        $ingredientIds = $request->input('ingredient_ids', []);
+        
+        if (empty($ingredientIds)) {
+            return response()->json(['allergens' => []]);
+        }
+
+        $allergens = Allergen::whereHas('ingredients', function($query) use ($ingredientIds) {
+            $query->whereIn('ingredients.id', $ingredientIds);
+        })->get(['id', 'name'])->unique('id');
+
+        return response()->json(['allergens' => $allergens]);
     }
 }

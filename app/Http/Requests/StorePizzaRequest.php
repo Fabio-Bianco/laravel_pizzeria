@@ -22,6 +22,8 @@ class StorePizzaRequest extends FormRequest
             'category_id' => ['nullable','integer','exists:categories,id'],
             'ingredients' => ['array'],
             'ingredients.*' => ['integer','exists:ingredients,id'],
+            'manual_allergens' => ['array'],
+            'manual_allergens.*' => ['integer','exists:allergens,id'],
             'image' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
         ];
     }
