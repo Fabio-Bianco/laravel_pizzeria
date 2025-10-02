@@ -80,3 +80,155 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 });
+
+// =========================================
+// JAVASCRIPT ADMIN MODERNO
+// =========================================
+
+/**
+ * Funzioni per la gestione della sidebar mobile
+ */
+function toggleSidebar() {
+    document.querySelector('.sidebar-wrapper').classList.toggle('show');
+}
+
+function closeSidebar() {
+    document.querySelector('.sidebar-wrapper').classList.remove('show');
+}
+
+/**
+ * Inizializzazione dell'applicazione admin
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-hide flash messages
+    initAutoHideAlerts();
+    
+    // Enhanced form validation feedback
+    initFormValidation();
+    
+    // Auto-expand sidebar sections with active links
+    initSidebarAutoExpand();
+    
+    // Handle collapse icon rotation (se presente Bootstrap)
+    initBootstrapCollapseHandlers();
+});
+
+/**
+ * Gestione automatica degli alert con auto-dismiss
+ */
+function initAutoHideAlerts() {
+    const alerts = document.querySelectorAll('.alert[data-auto-dismiss]');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.transition = 'all 0.3s ease';
+            alert.style.opacity = '0';
+            alert.style.transform = 'translateY(-10px)';
+            setTimeout(() => alert.remove(), 300);
+        }, 5000);
+    });
+}
+
+/**
+ * Validazione form migliorata con feedback visivo
+ */
+function initFormValidation() {
+    const inputs = document.querySelectorAll('.form-control, .form-select');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.hasAttribute('required') && !this.value.trim()) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+
+        input.addEventListener('input', function() {
+            if (this.classList.contains('is-invalid') && this.value.trim()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+    });
+}
+
+/**
+ * Auto-espansione delle sezioni della sidebar con link attivi
+ */
+function initSidebarAutoExpand() {
+    const activeLinks = document.querySelectorAll('.sidebar .nav-link.active');
+    activeLinks.forEach(link => {
+        const section = link.closest('.nav-section');
+        if (section) {
+            const collapse = section.querySelector('.collapse');
+            const header = section.querySelector('.nav-section-header');
+            if (collapse && header) {
+                collapse.classList.add('show');
+                header.setAttribute('aria-expanded', 'true');
+            }
+        }
+    });
+}
+
+/**
+ * Gestione degli eventi Bootstrap collapse (se presente)
+ */
+function initBootstrapCollapseHandlers() {
+    const collapseHeaders = document.querySelectorAll('.nav-section-header[data-bs-toggle="collapse"]');
+    collapseHeaders.forEach(header => {
+        const targetId = header.getAttribute('data-bs-target');
+        const target = document.querySelector(targetId);
+        
+        if (target) {
+            target.addEventListener('show.bs.collapse', function() {
+                header.setAttribute('aria-expanded', 'true');
+            });
+            
+            target.addEventListener('hide.bs.collapse', function() {
+                header.setAttribute('aria-expanded', 'false');
+            });
+        }
+    });
+}
+
+/**
+ * Utility functions
+ */
+
+/**
+ * Mostra un toast di notifica
+ */
+function showToast(message, type = 'info') {
+    // Implementazione per future notifiche toast
+    console.log(`Toast ${type}:`, message);
+}
+
+/**
+ * Conferma un'azione con modal
+ */
+function confirmAction(message, callback) {
+    if (confirm(message)) {
+        callback();
+    }
+}
+
+/**
+ * Debounce function per ottimizzare eventi
+ */
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Esporta le funzioni globalmente per compatibilità
+window.toggleSidebar = toggleSidebar;
+window.closeSidebar = closeSidebar;
+window.showToast = showToast;
+window.confirmAction = confirmAction;
