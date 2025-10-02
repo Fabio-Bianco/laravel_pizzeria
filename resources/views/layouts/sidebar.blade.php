@@ -1,5 +1,8 @@
 {{-- Sidebar moderna per backoffice --}}
 <div class="sidebar-wrapper">
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" onclick="closeSidebar()"></div>
+  
   <div class="sidebar bg-white shadow-sm border-end">
     {{-- User Header con Menu --}}
     <div class="sidebar-header p-3 border-bottom">
@@ -54,14 +57,14 @@
 
       {{-- Sezione Gestione Menu (Collapsible) --}}
       <div class="nav-section">
-        <div class="nav-section-header" data-bs-toggle="collapse" data-bs-target="#menuSection" aria-expanded="false">
+        <div class="nav-section-header" data-bs-toggle="collapse" data-bs-target="#menuSection" aria-expanded="{{ request()->routeIs('admin.pizzas.*', 'admin.appetizers.*', 'admin.beverages.*', 'admin.desserts.*') ? 'true' : 'false' }}">
           <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase d-flex justify-content-between align-items-center">
             <span>📋 Gestione Menu</span>
             <i class="fas fa-chevron-down transition-icon"></i>
           </div>
         </div>
         
-        <div id="menuSection" class="collapse nav-section-content">
+        <div id="menuSection" class="collapse nav-section-content {{ request()->routeIs('admin.pizzas.*', 'admin.appetizers.*', 'admin.beverages.*', 'admin.desserts.*') ? 'show' : '' }}">
           <a href="{{ route('admin.pizzas.index') }}" 
              class="nav-link {{ request()->routeIs('admin.pizzas.*') ? 'active' : '' }}"
              title="🍕 {{ $countPizzas ?? 0 }} pizze nel menu">
@@ -106,14 +109,14 @@
 
       {{-- Sezione Configurazione (Collapsible) --}}
       <div class="nav-section">
-        <div class="nav-section-header" data-bs-toggle="collapse" data-bs-target="#configSection" aria-expanded="false">
+        <div class="nav-section-header" data-bs-toggle="collapse" data-bs-target="#configSection" aria-expanded="{{ request()->routeIs('admin.ingredients.*', 'admin.allergens.*', 'admin.categories.*') ? 'true' : 'false' }}">
           <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase d-flex justify-content-between align-items-center">
             <span>⚙️ Configurazione</span>
             <i class="fas fa-chevron-down transition-icon"></i>
           </div>
         </div>
         
-        <div id="configSection" class="collapse nav-section-content">
+        <div id="configSection" class="collapse nav-section-content {{ request()->routeIs('admin.ingredients.*', 'admin.allergens.*', 'admin.categories.*') ? 'show' : '' }}">
           <a href="{{ route('admin.ingredients.index') }}" 
              class="nav-link {{ request()->routeIs('admin.ingredients.*') ? 'active' : '' }}"
              title="🥬 {{ $countIngredients ?? 0 }} ingredienti catalogati">
@@ -195,11 +198,26 @@
   z-index: 1000;
 }
 
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
 .sidebar {
   height: 100%;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  position: relative;
+  z-index: 1001;
 }
 
 .sidebar-nav {
@@ -361,6 +379,7 @@
   font-size: 0.6875rem;
 }
 
+/* Improved mobile responsiveness */
 @media (max-width: 768px) {
   .sidebar-wrapper {
     transform: translateX(-100%);
@@ -370,5 +389,73 @@
   .sidebar-wrapper.show {
     transform: translateX(0);
   }
+  
+  .sidebar-wrapper.show .mobile-overlay {
+    display: block;
+    opacity: 1;
+  }
+  
+  .mobile-overlay {
+    display: block;
+  }
+}
+
+/* Smooth scrolling for sidebar nav */
+.sidebar-nav {
+  scrollbar-width: thin;
+  scrollbar-color: #D1D5DB #F9FAFB;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: #F9FAFB;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background-color: #D1D5DB;
+  border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background-color: #9CA3AF;
+}
+
+/* Collapse animations */
+.collapse {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.collapse:not(.show) {
+  max-height: 0;
+  opacity: 0;
+}
+
+.collapse.show {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.nav-section-header {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 0.5rem;
+  margin: 0.125rem 0;
+}
+
+.nav-section-header:hover {
+  background-color: #F3F4F6;
+}
+
+.transition-icon {
+  transition: transform 0.3s ease;
+  font-size: 0.75rem;
+}
+
+.nav-section-header[aria-expanded="true"] .transition-icon {
+  transform: rotate(180deg);
 }
 </style>

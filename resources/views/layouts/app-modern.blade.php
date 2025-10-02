@@ -440,9 +440,59 @@
             function toggleSidebar() {
                 document.querySelector('.sidebar-wrapper').classList.toggle('show');
             }
+            
+            function closeSidebar() {
+                document.querySelector('.sidebar-wrapper').classList.remove('show');
+            }
+
+            // Initialize sidebar collapse functionality
+            function initSidebarCollapse() {
+                const collapseHeaders = document.querySelectorAll('.nav-section-header[data-bs-toggle="collapse"]');
+                
+                // Initialize icons based on current state
+                collapseHeaders.forEach(header => {
+                    const targetSelector = header.getAttribute('data-bs-target');
+                    const target = document.querySelector(targetSelector);
+                    const icon = header.querySelector('.transition-icon');
+                    
+                    if (target && icon) {
+                        const isExpanded = target.classList.contains('show') || header.getAttribute('aria-expanded') === 'true';
+                        icon.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
+                    }
+                });
+                
+                collapseHeaders.forEach(header => {
+                    header.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        const targetSelector = this.getAttribute('data-bs-target');
+                        const target = document.querySelector(targetSelector);
+                        const icon = this.querySelector('.transition-icon');
+                        
+                        if (target) {
+                            const isExpanded = target.classList.contains('show');
+                            
+                            if (isExpanded) {
+                                // Collapse
+                                target.classList.remove('show');
+                                this.setAttribute('aria-expanded', 'false');
+                                if (icon) icon.style.transform = 'rotate(0deg)';
+                            } else {
+                                // Expand
+                                target.classList.add('show');
+                                this.setAttribute('aria-expanded', 'true');
+                                if (icon) icon.style.transform = 'rotate(180deg)';
+                            }
+                        }
+                    });
+                });
+            }
 
             // Auto-hide flash messages
             document.addEventListener('DOMContentLoaded', function() {
+                // Initialize sidebar collapse
+                initSidebarCollapse();
+                
                 const alerts = document.querySelectorAll('.alert[data-auto-dismiss]');
                 alerts.forEach(alert => {
                     setTimeout(() => {
