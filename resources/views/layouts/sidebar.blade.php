@@ -57,7 +57,7 @@
 
       {{-- Sezione Gestione Menu (Collapsible) --}}
       <div class="nav-section">
-        <div class="nav-section-header" data-bs-toggle="collapse" data-bs-target="#menuSection" aria-expanded="{{ request()->routeIs('admin.pizzas.*', 'admin.appetizers.*', 'admin.beverages.*', 'admin.desserts.*') ? 'true' : 'false' }}">
+        <div class="nav-section-header" data-bs-target="#menuSection" aria-expanded="{{ request()->routeIs('admin.pizzas.*', 'admin.appetizers.*', 'admin.beverages.*', 'admin.desserts.*') ? 'true' : 'false' }}">
           <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase d-flex justify-content-between align-items-center">
             <span>📋 Gestione Menu</span>
             <i class="fas fa-chevron-down transition-icon"></i>
@@ -109,7 +109,7 @@
 
       {{-- Sezione Configurazione (Collapsible) --}}
       <div class="nav-section">
-        <div class="nav-section-header" data-bs-toggle="collapse" data-bs-target="#configSection" aria-expanded="{{ request()->routeIs('admin.ingredients.*', 'admin.allergens.*', 'admin.categories.*') ? 'true' : 'false' }}">
+        <div class="nav-section-header" data-bs-target="#configSection" aria-expanded="{{ request()->routeIs('admin.ingredients.*', 'admin.allergens.*', 'admin.categories.*') ? 'true' : 'false' }}">
           <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase d-flex justify-content-between align-items-center">
             <span>⚙️ Configurazione</span>
             <i class="fas fa-chevron-down transition-icon"></i>
@@ -154,7 +154,7 @@
 
       {{-- Sezione Azioni Rapide (Collapsible) --}}
       <div class="nav-section">
-        <div class="nav-section-header" data-bs-toggle="collapse" data-bs-target="#actionsSection" aria-expanded="false">
+        <div class="nav-section-header" data-bs-target="#actionsSection" aria-expanded="false">
           <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase d-flex justify-content-between align-items-center">
             <span>⚡ Azioni Rapide</span>
             <i class="fas fa-chevron-down transition-icon"></i>
@@ -423,22 +423,7 @@
   background-color: #9CA3AF;
 }
 
-/* Collapse animations */
-.collapse {
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.collapse:not(.show) {
-  max-height: 0;
-  opacity: 0;
-}
-
-.collapse.show {
-  max-height: 500px;
-  opacity: 1;
-}
-
+/* Navigation section styling */
 .nav-section-header {
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -458,4 +443,79 @@
 .nav-section-header[aria-expanded="true"] .transition-icon {
   transform: rotate(180deg);
 }
+
+/* Collapse animations personalizzate */
+.collapse {
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.collapse:not(.show) {
+  max-height: 0;
+  opacity: 0;
+  padding: 0;
+}
+
+.collapse.show {
+  max-height: 500px;
+  opacity: 1;
+  padding: 0.5rem 0;
+}
+
+.nav-section-content {
+  border-left: 2px solid #E5E7EB;
+  margin-left: 1rem;
+}
+
+.nav-section-content .nav-link {
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
 </style>
+
+{{-- JavaScript per i collapse --}}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, inizializzazione collapse...');
+    
+    // Trova tutti gli header clickabili
+    const headers = document.querySelectorAll('.nav-section-header[data-bs-target]');
+    console.log('Trovati', headers.length, 'header');
+    
+    headers.forEach(function(header) {
+        header.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('data-bs-target');
+            const target = document.querySelector(targetId);
+            const icon = this.querySelector('.transition-icon');
+            
+            console.log('Click su header, target:', targetId, 'trovato:', !!target);
+            
+            if (target) {
+                const isVisible = target.classList.contains('show');
+                
+                if (isVisible) {
+                    target.classList.remove('show');
+                    this.setAttribute('aria-expanded', 'false');
+                    if (icon) icon.style.transform = 'rotate(0deg)';
+                } else {
+                    target.classList.add('show');
+                    this.setAttribute('aria-expanded', 'true');
+                    if (icon) icon.style.transform = 'rotate(180deg)';
+                }
+            }
+        });
+        
+        // Imposta stato iniziale
+        const targetId = header.getAttribute('data-bs-target');
+        const target = document.querySelector(targetId);
+        const icon = header.querySelector('.transition-icon');
+        
+        if (target && icon) {
+            const isExpanded = target.classList.contains('show');
+            icon.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+    });
+});
+</script>

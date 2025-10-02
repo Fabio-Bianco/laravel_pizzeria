@@ -447,44 +447,47 @@
 
             // Initialize sidebar collapse functionality
             function initSidebarCollapse() {
-                const collapseHeaders = document.querySelectorAll('.nav-section-header[data-bs-toggle="collapse"]');
+                console.log('Inizializzazione collapse sidebar...');
                 
-                // Initialize icons based on current state
-                collapseHeaders.forEach(header => {
+                const collapseHeaders = document.querySelectorAll('.nav-section-header[data-bs-target]');
+                console.log('Trovati', collapseHeaders.length, 'header di collapse');
+                
+                collapseHeaders.forEach((header, index) => {
                     const targetSelector = header.getAttribute('data-bs-target');
                     const target = document.querySelector(targetSelector);
                     const icon = header.querySelector('.transition-icon');
                     
-                    if (target && icon) {
-                        const isExpanded = target.classList.contains('show') || header.getAttribute('aria-expanded') === 'true';
-                        icon.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
-                    }
-                });
-                
-                collapseHeaders.forEach(header => {
-                    header.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        
-                        const targetSelector = this.getAttribute('data-bs-target');
-                        const target = document.querySelector(targetSelector);
-                        const icon = this.querySelector('.transition-icon');
-                        
-                        if (target) {
-                            const isExpanded = target.classList.contains('show');
+                    console.log(`Header ${index}: target=${targetSelector}, trovato=${!!target}`);
+                    
+                    if (target) {
+                        // Approccio semplificato senza dipendere da Bootstrap
+                        header.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            console.log('Click su header:', targetSelector);
                             
-                            if (isExpanded) {
-                                // Collapse
+                            const isVisible = target.classList.contains('show');
+                            
+                            if (isVisible) {
+                                // Collassa
                                 target.classList.remove('show');
                                 this.setAttribute('aria-expanded', 'false');
                                 if (icon) icon.style.transform = 'rotate(0deg)';
+                                console.log('Collassato:', targetSelector);
                             } else {
-                                // Expand
+                                // Espandi
                                 target.classList.add('show');
                                 this.setAttribute('aria-expanded', 'true');
                                 if (icon) icon.style.transform = 'rotate(180deg)';
+                                console.log('Espanso:', targetSelector);
                             }
+                        });
+                        
+                        // Imposta stato iniziale icona
+                        if (icon) {
+                            const isExpanded = target.classList.contains('show');
+                            icon.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
                         }
-                    });
+                    }
                 });
             }
 
