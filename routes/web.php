@@ -7,10 +7,12 @@ use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\AllergenController;
 use App\Http\Controllers\AppetizerController;
 use App\Http\Controllers\BeverageController;
+use App\Http\Controllers\DessertController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Appetizer;
 use App\Models\Pizza;
 use App\Models\Beverage;
+use App\Models\Dessert;
 use App\Models\Allergen;
 use App\Models\Ingredient;
 
@@ -23,8 +25,19 @@ Route::get('/dashboard', function () {
         'countAppetizers' => Appetizer::count(),
         'countPizzas' => Pizza::count(),
         'countBeverages' => Beverage::count(),
+        'countDesserts' => Dessert::count(),
         'countAllergens' => Allergen::count(),
         'countIngredients' => Ingredient::count(),
+        'countCategories' => \App\Models\Category::count(),
+        // Statistiche più utili
+        'latestPizza' => Pizza::latest()->first(),
+        'latestAppetizer' => Appetizer::latest()->first(),
+        'latestBeverage' => Beverage::latest()->first(),
+        'latestDessert' => Dessert::latest()->first(),
+        // Tutti gli elementi sono considerati "attivi" senza colonna is_active
+        'activePizzas' => Pizza::count(),
+        'activeAppetizers' => Appetizer::count(),
+        'activeBeverages' => Beverage::count(),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -81,6 +94,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('allergens', AllergenController::class)->names('admin.allergens');
     Route::resource('appetizers', AppetizerController::class)->names('admin.appetizers');
     Route::resource('beverages', BeverageController::class)->names('admin.beverages');
+    Route::resource('desserts', DessertController::class)->names('admin.desserts');
     
     // AJAX endpoints per form intelligenti
     Route::get('ajax/ingredients-allergens', [IngredientController::class, 'getAllergensForIngredients'])->name('admin.ajax.ingredients-allergens');

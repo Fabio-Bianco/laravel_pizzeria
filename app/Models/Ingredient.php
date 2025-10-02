@@ -22,6 +22,11 @@ class Ingredient extends Model
         return $this->belongsToMany(Appetizer::class)->withTimestamps();
     }
 
+    public function desserts(): BelongsToMany
+    {
+        return $this->belongsToMany(Dessert::class)->withTimestamps();
+    }
+
     public function allergens(): BelongsToMany
     {
         return $this->belongsToMany(Allergen::class)->withTimestamps();

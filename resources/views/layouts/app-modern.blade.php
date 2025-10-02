@@ -259,6 +259,68 @@
                 transition: all 0.3s ease;
             }
 
+            /* Action button improvements */
+            .btn-action-primary, .btn-action-success, .btn-action-info, .btn-action-outline {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                border-radius: 12px;
+                border: 2px solid transparent;
+            }
+
+            .btn-action-primary:hover {
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+                border-color: var(--primary-color);
+            }
+
+            .btn-action-success:hover {
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+                border-color: #10B981;
+            }
+
+            .btn-action-info:hover {
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+                border-color: #3B82F6;
+            }
+
+            .btn-action-warning:hover {
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+                border-color: #F59E0B;
+            }
+
+            .btn-action-outline:hover {
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                background-color: #F8F9FA;
+            }
+
+            /* Hover cards for statistics */
+            .hover-card {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .hover-card:hover {
+                transform: translateY(-2px) scale(1.02);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+                text-decoration: none;
+            }
+
+            .hover-card:hover .card-body {
+                background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-dark) 100%) !important;
+            }
+
+            /* Statistics card animations */
+            .hover-card .badge {
+                transition: all 0.3s ease;
+            }
+
+            .hover-card:hover .badge {
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
             /* Empty states */
             .empty-state {
                 padding: 4rem 2rem;
@@ -291,6 +353,48 @@
             @keyframes spin {
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
+            }
+
+            /* Sidebar Collapsible Styles */
+            .nav-section-header {
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .nav-section-header:hover {
+                background-color: var(--gray-50);
+            }
+
+            .transition-icon {
+                transition: transform 0.3s ease;
+                font-size: 0.75rem;
+            }
+
+            .nav-section-header[aria-expanded="true"] .transition-icon {
+                transform: rotate(180deg);
+            }
+
+            .nav-section-content {
+                border-left: 2px solid var(--gray-100);
+                margin-left: 1rem;
+            }
+
+            .nav-section-content .nav-link {
+                padding-left: 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            /* Auto-expand active sections */
+            .nav-section:has(.nav-link.active) .collapse {
+                display: block !important;
+            }
+
+            .nav-section:has(.nav-link.active) .nav-section-header {
+                background-color: var(--gray-50);
+            }
+
+            .nav-section:has(.nav-link.active) .transition-icon {
+                transform: rotate(180deg);
             }
         </style>
     </head>
@@ -369,6 +473,37 @@
                             this.classList.add('is-valid');
                         }
                     });
+                });
+
+                // Auto-expand sidebar sections with active links
+                const activeLinks = document.querySelectorAll('.sidebar .nav-link.active');
+                activeLinks.forEach(link => {
+                    const section = link.closest('.nav-section');
+                    if (section) {
+                        const collapse = section.querySelector('.collapse');
+                        const header = section.querySelector('.nav-section-header');
+                        if (collapse && header) {
+                            collapse.classList.add('show');
+                            header.setAttribute('aria-expanded', 'true');
+                        }
+                    }
+                });
+
+                // Handle collapse icon rotation
+                const collapseHeaders = document.querySelectorAll('.nav-section-header[data-bs-toggle="collapse"]');
+                collapseHeaders.forEach(header => {
+                    const targetId = header.getAttribute('data-bs-target');
+                    const target = document.querySelector(targetId);
+                    
+                    if (target) {
+                        target.addEventListener('show.bs.collapse', function() {
+                            header.setAttribute('aria-expanded', 'true');
+                        });
+                        
+                        target.addEventListener('hide.bs.collapse', function() {
+                            header.setAttribute('aria-expanded', 'false');
+                        });
+                    }
                 });
             });
         </script>

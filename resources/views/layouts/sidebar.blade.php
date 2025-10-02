@@ -1,142 +1,186 @@
 {{-- Sidebar moderna per backoffice --}}
 <div class="sidebar-wrapper">
   <div class="sidebar bg-white shadow-sm border-end">
-    {{-- Logo e brand --}}
+    {{-- User Header con Menu --}}
     <div class="sidebar-header p-3 border-bottom">
-      <a href="{{ route('dashboard') }}" class="d-flex align-items-center text-decoration-none">
-        <div class="brand-icon me-2">
-          <svg viewBox="0 0 40 40" width="32" height="32">
-            <circle cx="20" cy="20" r="18" fill="#FF6B35" />
-            <path d="M20 2 A18 18 0 0 1 38 20 L20 20 Z" fill="#FFE66D"/>
-            <circle cx="15" cy="15" r="2" fill="#C44536"/>
-            <circle cx="25" cy="14" r="2" fill="#C44536"/>
-            <circle cx="22" cy="22" r="2" fill="#C44536"/>
-          </svg>
-        </div>
-        <div class="brand-text">
-          <div class="fw-bold text-dark">Pizzeria</div>
-          <div class="small text-muted">Admin Panel</div>
-        </div>
-      </a>
-    </div>
-
-    {{-- Navigation principale --}}
-    <nav class="sidebar-nav p-2">
-      {{-- Sezione Menu --}}
-      <div class="nav-section">
-        <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase">
-          📋 Gestione Menu
-        </div>
-        
-        <a href="{{ route('admin.pizzas.index') }}" 
-           class="nav-link {{ request()->routeIs('admin.pizzas.*') ? 'active' : '' }}">
-          <span class="nav-icon">🍕</span>
-          <span class="nav-text">Pizze</span>
-          @if(isset($countPizzas))
-            <span class="nav-badge">{{ $countPizzas }}</span>
-          @endif
-        </a>
-
-        <a href="{{ route('admin.appetizers.index') }}" 
-           class="nav-link {{ request()->routeIs('admin.appetizers.*') ? 'active' : '' }}">
-          <span class="nav-icon">🥗</span>
-          <span class="nav-text">Antipasti</span>
-          @if(isset($countAppetizers))
-            <span class="nav-badge">{{ $countAppetizers }}</span>
-          @endif
-        </a>
-
-        <a href="{{ route('admin.beverages.index') }}" 
-           class="nav-link {{ request()->routeIs('admin.beverages.*') ? 'active' : '' }}">
-          <span class="nav-icon">🥤</span>
-          <span class="nav-text">Bevande</span>
-          @if(isset($countBeverages))
-            <span class="nav-badge">{{ $countBeverages }}</span>
-          @endif
-        </a>
-      </div>
-
-      {{-- Sezione Configurazione --}}
-      <div class="nav-section">
-        <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase">
-          ⚙️ Configurazione
-        </div>
-        
-        <a href="{{ route('admin.ingredients.index') }}" 
-           class="nav-link {{ request()->routeIs('admin.ingredients.*') ? 'active' : '' }}">
-          <span class="nav-icon">🥬</span>
-          <span class="nav-text">Ingredienti</span>
-          @if(isset($countIngredients))
-            <span class="nav-badge">{{ $countIngredients }}</span>
-          @endif
-        </a>
-
-        <a href="{{ route('admin.allergens.index') }}" 
-           class="nav-link {{ request()->routeIs('admin.allergens.*') ? 'active' : '' }}">
-          <span class="nav-icon">⚠️</span>
-          <span class="nav-text">Allergeni</span>
-          @if(isset($countAllergens))
-            <span class="nav-badge">{{ $countAllergens }}</span>
-          @endif
-        </a>
-
-        <a href="{{ route('admin.categories.index') }}" 
-           class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-          <span class="nav-icon">📂</span>
-          <span class="nav-text">Categorie</span>
-          @if(isset($countCategories))
-            <span class="nav-badge">{{ $countCategories }}</span>
-          @endif
-        </a>
-      </div>
-
-      {{-- Quick Actions --}}
-      <div class="nav-section">
-        <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase">
-          ⚡ Azioni Rapide
-        </div>
-        
-        <a href="{{ route('admin.pizzas.create') }}" class="nav-link nav-link-action">
-          <span class="nav-icon">➕</span>
-          <span class="nav-text">Nuova Pizza</span>
-        </a>
-
-        <a href="{{ route('admin.appetizers.create') }}" class="nav-link nav-link-action">
-          <span class="nav-icon">➕</span>
-          <span class="nav-text">Nuovo Antipasto</span>
-        </a>
-      </div>
-    </nav>
-
-    {{-- User info e logout --}}
-    <div class="sidebar-footer p-3 border-top mt-auto">
       <div class="d-flex align-items-center">
-        <div class="user-avatar me-2">
-          <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+        <div class="user-avatar me-3">
+          <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 1.2rem;">
             {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
           </div>
         </div>
         <div class="flex-grow-1">
-          <div class="small fw-semibold">{{ auth()->user()->name ?? 'Utente' }}</div>
-          <div class="tiny text-muted">{{ auth()->user()->email ?? '' }}</div>
+          <div class="fw-semibold text-dark">{{ auth()->user()->name ?? 'Utente' }}</div>
+          <div class="small text-muted">{{ auth()->user()->email ?? 'admin@pizzeria.com' }}</div>
         </div>
         <div class="dropdown">
-          <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <i class="fas fa-cog"></i>
+          <button class="btn btn-sm btn-outline-secondary dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-ellipsis-v"></i>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profilo</a></li>
+          <ul class="dropdown-menu dropdown-menu-end shadow">
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.edit') }}">
+                <i class="fas fa-user-edit me-2 text-muted"></i>
+                Profilo
+              </a>
+            </li>
             <li><hr class="dropdown-divider"></li>
             <li>
-              <form method="POST" action="{{ route('logout') }}">
+              <form method="POST" action="{{ route('logout') }}" class="m-0">
                 @csrf
-                <button type="submit" class="dropdown-item text-danger">Logout</button>
+                <button type="submit" class="dropdown-item d-flex align-items-center text-danger">
+                  <i class="fas fa-sign-out-alt me-2"></i>
+                  Logout
+                </button>
               </form>
             </li>
           </ul>
         </div>
       </div>
     </div>
+
+    {{-- Navigation principale --}}
+    <nav class="sidebar-nav p-2">
+      {{-- Dashboard Link --}}
+      <div class="nav-section mb-2">
+        <a href="{{ route('dashboard') }}" 
+           class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+           style="background: linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%); color: white; border-radius: 8px; margin: 0 8px;">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-text fw-semibold">Dashboard</span>
+          <i class="fas fa-home ms-auto"></i>
+        </a>
+      </div>
+
+      {{-- Sezione Gestione Menu (Collapsible) --}}
+      <div class="nav-section">
+        <div class="nav-section-header" data-bs-toggle="collapse" data-bs-target="#menuSection" aria-expanded="false">
+          <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase d-flex justify-content-between align-items-center">
+            <span>📋 Gestione Menu</span>
+            <i class="fas fa-chevron-down transition-icon"></i>
+          </div>
+        </div>
+        
+        <div id="menuSection" class="collapse nav-section-content">
+          <a href="{{ route('admin.pizzas.index') }}" 
+             class="nav-link {{ request()->routeIs('admin.pizzas.*') ? 'active' : '' }}"
+             title="🍕 {{ $countPizzas ?? 0 }} pizze nel menu">
+            <span class="nav-icon">🍕</span>
+            <span class="nav-text">Pizze</span>
+            @if(isset($countPizzas))
+              <span class="nav-badge nav-badge-primary">{{ $countPizzas }}</span>
+            @endif
+          </a>
+
+          <a href="{{ route('admin.appetizers.index') }}" 
+             class="nav-link {{ request()->routeIs('admin.appetizers.*') ? 'active' : '' }}"
+             title="🥗 {{ $countAppetizers ?? 0 }} antipasti disponibili">
+            <span class="nav-icon">🥗</span>
+            <span class="nav-text">Antipasti</span>
+            @if(isset($countAppetizers))
+              <span class="nav-badge nav-badge-success">{{ $countAppetizers }}</span>
+            @endif
+          </a>
+
+          <a href="{{ route('admin.beverages.index') }}" 
+             class="nav-link {{ request()->routeIs('admin.beverages.*') ? 'active' : '' }}"
+             title="🥤 {{ $countBeverages ?? 0 }} bevande in carta">
+            <span class="nav-icon">🥤</span>
+            <span class="nav-text">Bevande</span>
+            @if(isset($countBeverages))
+              <span class="nav-badge nav-badge-info">{{ $countBeverages }}</span>
+            @endif
+          </a>
+
+          <a href="{{ route('admin.desserts.index') }}" 
+             class="nav-link {{ request()->routeIs('admin.desserts.*') ? 'active' : '' }}"
+             title="🍰 {{ $countDesserts ?? 0 }} dessert disponibili">
+            <span class="nav-icon">🍰</span>
+            <span class="nav-text">Dessert</span>
+            @if(isset($countDesserts))
+              <span class="nav-badge nav-badge-secondary">{{ $countDesserts }}</span>
+            @endif
+          </a>
+        </div>
+      </div>
+
+      {{-- Sezione Configurazione (Collapsible) --}}
+      <div class="nav-section">
+        <div class="nav-section-header" data-bs-toggle="collapse" data-bs-target="#configSection" aria-expanded="false">
+          <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase d-flex justify-content-between align-items-center">
+            <span>⚙️ Configurazione</span>
+            <i class="fas fa-chevron-down transition-icon"></i>
+          </div>
+        </div>
+        
+        <div id="configSection" class="collapse nav-section-content">
+          <a href="{{ route('admin.ingredients.index') }}" 
+             class="nav-link {{ request()->routeIs('admin.ingredients.*') ? 'active' : '' }}"
+             title="🥬 {{ $countIngredients ?? 0 }} ingredienti catalogati">
+            <span class="nav-icon">🥬</span>
+            <span class="nav-text">Ingredienti</span>
+            @if(isset($countIngredients))
+              <span class="nav-badge nav-badge-warning">{{ $countIngredients }}</span>
+            @endif
+          </a>
+
+          <a href="{{ route('admin.allergens.index') }}" 
+             class="nav-link {{ request()->routeIs('admin.allergens.*') ? 'active' : '' }}"
+             title="⚠️ {{ $countAllergens ?? 0 }} allergeni configurati - Sistema attivo">
+            <span class="nav-icon">⚠️</span>
+            <span class="nav-text">Allergeni</span>
+            <div class="nav-stats">
+              @if(isset($countAllergens))
+                <span class="nav-badge nav-badge-danger">{{ $countAllergens }}</span>
+              @endif
+              <div class="nav-status nav-status-active"></div>
+            </div>
+          </a>
+
+          <a href="{{ route('admin.categories.index') }}" 
+             class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}"
+             title="📂 {{ $countCategories ?? 0 }} categorie per organizzare il menu">
+            <span class="nav-icon">📂</span>
+            <span class="nav-text">Categorie</span>
+            @if(isset($countCategories))
+              <span class="nav-badge nav-badge-secondary">{{ $countCategories }}</span>
+            @endif
+          </a>
+        </div>
+      </div>
+
+      {{-- Sezione Azioni Rapide (Collapsible) --}}
+      <div class="nav-section">
+        <div class="nav-section-header" data-bs-toggle="collapse" data-bs-target="#actionsSection" aria-expanded="false">
+          <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase d-flex justify-content-between align-items-center">
+            <span>⚡ Azioni Rapide</span>
+            <i class="fas fa-chevron-down transition-icon"></i>
+          </div>
+        </div>
+        
+        <div id="actionsSection" class="collapse nav-section-content">
+          <a href="{{ route('admin.pizzas.create') }}" class="nav-link nav-link-action">
+            <span class="nav-icon">➕</span>
+            <span class="nav-text">Nuova Pizza</span>
+          </a>
+
+          <a href="{{ route('admin.appetizers.create') }}" class="nav-link nav-link-action">
+            <span class="nav-icon">➕</span>
+            <span class="nav-text">Nuovo Antipasto</span>
+          </a>
+
+          <a href="{{ route('admin.beverages.create') }}" class="nav-link nav-link-action">
+            <span class="nav-icon">➕</span>
+            <span class="nav-text">Nuova Bevanda</span>
+          </a>
+
+          <a href="{{ route('admin.desserts.create') }}" class="nav-link nav-link-action">
+            <span class="nav-icon">➕</span>
+            <span class="nav-text">Nuovo Dessert</span>
+          </a>
+        </div>
+      </div>
+    </nav>
   </div>
 </div>
 
@@ -223,11 +267,94 @@
   border-radius: 1rem;
   min-width: 1.5rem;
   text-align: center;
+  font-weight: 500;
 }
+
+/* Badge colors */
+.nav-badge-primary { background-color: #FF6B35; color: white; }
+.nav-badge-success { background-color: #10B981; color: white; }
+.nav-badge-info { background-color: #3B82F6; color: white; }
+.nav-badge-warning { background-color: #F59E0B; color: white; }
+.nav-badge-danger { background-color: #EF4444; color: white; }
+.nav-badge-secondary { background-color: #8B5CF6; color: white; }
 
 .nav-link.active .nav-badge {
   background-color: rgba(255, 255, 255, 0.2);
   color: white;
+}
+
+/* Advanced nav stats */
+.nav-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.125rem;
+}
+
+.nav-latest {
+  font-size: 0.6875rem;
+  color: #9CA3AF;
+  font-weight: 400;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-link.active .nav-latest {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.nav-detail {
+  font-size: 0.6875rem;
+  color: #9CA3AF;
+  font-weight: 400;
+}
+
+.nav-link.active .nav-detail {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Status indicators */
+.nav-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #9CA3AF;
+}
+
+.nav-status-active {
+  background-color: #10B981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+}
+
+/* Info-only nav links */
+.nav-link-info {
+  cursor: default;
+  background-color: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  margin: 0.25rem 0;
+}
+
+.nav-link-info:hover {
+  background-color: #F3F4F6;
+}
+
+/* Transition effects */
+.nav-link {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-badge, .nav-status {
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover .nav-badge {
+  transform: scale(1.05);
+}
+
+.nav-link:hover .nav-status-active {
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
 }
 
 .tiny {

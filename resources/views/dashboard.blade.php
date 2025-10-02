@@ -6,12 +6,12 @@
 <div class="d-flex justify-content-between align-items-center">
     <div>
         <h1 class="page-title">Dashboard</h1>
-        <p class="page-subtitle">Panoramica generale del tuo menu</p>
+        <p class="page-subtitle">Gestisci il tuo menu</p>
     </div>
     <div>
         <span class="badge bg-success fs-6 px-3 py-2">
             <i class="fas fa-check-circle me-1"></i>
-            Sistema Attivo
+            Gestione attiva
         </span>
     </div>
 </div>
@@ -19,98 +19,71 @@
 
 @section('content')
 
-    {{-- Statistiche veloci --}}
-    <div class="row g-4 mb-4">
-        <div class="col-6 col-lg-3">
-            <div class="card border-0 bg-gradient" style="background: linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%);">
-                <div class="card-body text-white">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <div class="h3 mb-0 fw-bold">{{ $countPizzas ?? 0 }}</div>
-                            <div class="small opacity-75">Pizze</div>
-                        </div>
-                        <div class="fs-1 opacity-50">🍕</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-6 col-lg-3">
-            <div class="card border-0 bg-gradient" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
-                <div class="card-body text-white">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <div class="h3 mb-0 fw-bold">{{ $countAppetizers ?? 0 }}</div>
-                            <div class="small opacity-75">Antipasti</div>
-                        </div>
-                        <div class="fs-1 opacity-50">🥗</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-lg-3">
-            <div class="card border-0 bg-gradient" style="background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);">
-                <div class="card-body text-white">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <div class="h3 mb-0 fw-bold">{{ $countBeverages ?? 0 }}</div>
-                            <div class="small opacity-75">Bevande</div>
-                        </div>
-                        <div class="fs-1 opacity-50">🥤</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-lg-3">
-            <div class="card border-0 bg-gradient" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);">
-                <div class="card-body text-white">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <div class="h3 mb-0 fw-bold">{{ $countIngredients ?? 0 }}</div>
-                            <div class="small opacity-75">Ingredienti</div>
-                        </div>
-                        <div class="fs-1 opacity-50">🥬</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Azioni rapide --}}
+    {{-- Azioni rapide centrali --}}
     <div class="row g-4 mb-4">
         <div class="col-12">
-            <div class="card">
+            <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white border-bottom">
                     <h5 class="card-title mb-0">
                         <i class="fas fa-bolt text-warning me-2"></i>
                         Azioni Rapide
                     </h5>
+                    <p class="card-text small text-muted mb-0">Crea rapidamente nuovi contenuti per il tuo menu</p>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
-                        <div class="col-md-4">
-                            <a href="{{ route('admin.pizzas.create') }}" class="btn btn-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
+                        <div class="col-lg-3 col-md-6">
+                            <a href="{{ route('admin.pizzas.create') }}" class="btn btn-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4 btn-action-primary">
                                 <i class="fas fa-plus fs-2 mb-2"></i>
                                 <span class="fw-semibold">Nuova Pizza</span>
                                 <small class="opacity-75">Aggiungi al menu</small>
                             </a>
                         </div>
                         
-                        <div class="col-md-4">
-                            <a href="{{ route('admin.appetizers.create') }}" class="btn btn-success w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
+                        <div class="col-lg-3 col-md-6">
+                            <a href="{{ route('admin.appetizers.create') }}" class="btn btn-success w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4 btn-action-success">
                                 <i class="fas fa-plus fs-2 mb-2"></i>
                                 <span class="fw-semibold">Nuovo Antipasto</span>
                                 <small class="opacity-75">Aggiungi al menu</small>
                             </a>
                         </div>
 
-                        <div class="col-md-4">
-                            <a href="{{ route('admin.ingredients.create') }}" class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
-                                <i class="fas fa-seedling fs-2 mb-2"></i>
-                                <span class="fw-semibold">Nuovo Ingrediente</span>
-                                <small class="text-muted">Espandi le opzioni</small>
+                        <div class="col-lg-3 col-md-6">
+                            <a href="{{ route('admin.beverages.create') }}" class="btn btn-info w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4 btn-action-info">
+                                <i class="fas fa-plus fs-2 mb-2"></i>
+                                <span class="fw-semibold">Nuova Bevanda</span>
+                                <small class="opacity-75">Aggiungi alla carta</small>
+                            </a>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6">
+                            <a href="{{ route('admin.desserts.create') }}" class="btn btn-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4 btn-action-warning">
+                                <i class="fas fa-plus fs-2 mb-2"></i>
+                                <span class="fw-semibold">Nuovo Dessert</span>
+                                <small class="opacity-75">Aggiungi alla carta</small>
+                            </a>
+                        </div>
+                    </div>
+
+                    {{-- Azioni secondarie --}}
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6">
+                            <a href="{{ route('admin.ingredients.create') }}" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center py-3 btn-action-outline">
+                                <i class="fas fa-seedling fs-4 me-2"></i>
+                                <div class="text-start">
+                                    <div class="fw-semibold">Nuovo Ingrediente</div>
+                                    <small class="text-muted">Per sistema allergeni</small>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <a href="{{ route('admin.categories.create') }}" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center py-3 btn-action-outline">
+                                <i class="fas fa-tags fs-4 me-2"></i>
+                                <div class="text-start">
+                                    <div class="fw-semibold">Nuova Categoria</div>
+                                    <small class="text-muted">Organizza il menu</small>
+                                </div>
                             </a>
                         </div>
                     </div>
@@ -119,10 +92,10 @@
         </div>
     </div>
 
-    {{-- Menu principale --}}
+    {{-- Panoramica contenuti --}}
     <div class="row g-4">
         <div class="col-lg-8">
-            <div class="card h-100">
+            <div class="card h-100 border-0 shadow-sm">
                 <div class="card-header bg-white border-bottom">
                     <h5 class="card-title mb-0">
                         <i class="fas fa-utensils text-primary me-2"></i>
@@ -165,12 +138,12 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <a href="{{ route('admin.categories.index') }}" class="card text-decoration-none border-2 h-100" style="border-color: #8B5CF6 !important;">
+                            <a href="{{ route('admin.desserts.index') }}" class="card text-decoration-none border-2 h-100" style="border-color: #F59E0B !important;">
                                 <div class="card-body text-center">
-                                    <div class="display-4 mb-2">📂</div>
-                                    <h6 class="card-title text-dark">Categorie</h6>
-                                    <p class="card-text text-muted">Organizza il menu</p>
-                                    <div class="badge bg-light text-dark">{{ $countCategories ?? 0 }} elementi</div>
+                                    <div class="display-4 mb-2">🍰</div>
+                                    <h6 class="card-title text-dark">Dessert</h6>
+                                    <p class="card-text text-muted">Gestisci i dessert</p>
+                                    <div class="badge bg-light text-dark">{{ $countDesserts ?? 0 }} elementi</div>
                                 </div>
                             </a>
                         </div>
@@ -180,43 +153,53 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="card h-100">
+            <div class="card h-100 border-0 shadow-sm">
                 <div class="card-header bg-white border-bottom">
                     <h5 class="card-title mb-0">
-                        <i class="fas fa-cog text-secondary me-2"></i>
-                        Configurazione
+                        <i class="fas fa-clock text-info me-2"></i>
+                        Attività Recenti
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="d-grid gap-3">
-                        <a href="{{ route('admin.ingredients.index') }}" class="btn btn-outline-secondary d-flex align-items-center justify-content-start">
-                            <span class="me-3">🥬</span>
-                            <div class="text-start">
-                                <div class="fw-semibold">Ingredienti</div>
-                                <small class="text-muted">{{ $countIngredients ?? 0 }} disponibili</small>
-                            </div>
-                        </a>
+                    @php
+                        $recentItems = collect([
+                            $latestPizza ? ['item' => $latestPizza, 'type' => 'pizza', 'icon' => '🍕', 'color' => 'primary'] : null,
+                            $latestAppetizer ? ['item' => $latestAppetizer, 'type' => 'antipasto', 'icon' => '🥗', 'color' => 'success'] : null,
+                            $latestBeverage ? ['item' => $latestBeverage, 'type' => 'bevanda', 'icon' => '🥤', 'color' => 'info'] : null,
+                            $latestDessert ? ['item' => $latestDessert, 'type' => 'dessert', 'icon' => '🍰', 'color' => 'warning'] : null
+                        ])->filter()->sortByDesc(function($data) {
+                            return $data['item']->created_at;
+                        })->take(3);
+                    @endphp
 
-                        <a href="{{ route('admin.allergens.index') }}" class="btn btn-outline-warning d-flex align-items-center justify-content-start">
-                            <span class="me-3">⚠️</span>
-                            <div class="text-start">
-                                <div class="fw-semibold">Allergeni</div>
-                                <small class="text-muted">{{ $countAllergens ?? 0 }} configurati</small>
+                    @if($recentItems->count() > 0)
+                        <div class="d-flex flex-column gap-3">
+                            @foreach($recentItems as $data)
+                            <div class="d-flex align-items-center p-2 rounded border">
+                                <div class="fs-4 me-3">{{ $data['icon'] }}</div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-semibold text-dark">{{ $data['item']->name }}</div>
+                                    <div class="small text-muted d-flex justify-content-between">
+                                        <span>{{ ucfirst($data['type']) }} • {{ $data['item']->created_at->format('d M Y') }}</span>
+                                        <span class="text-{{ $data['color'] }} fw-bold">€{{ number_format($data['item']->price, 2) }}</span>
+                                    </div>
+                                </div>
                             </div>
-                        </a>
+                            @endforeach
+                        </div>
 
-                        <div class="border-top pt-3 mt-2">
-                            <h6 class="text-muted small text-uppercase fw-bold mb-2">Sistema</h6>
-                            <div class="d-flex align-items-center text-success">
-                                <i class="fas fa-circle me-2" style="font-size: 0.5rem;"></i>
-                                <small>Allergeni intelligenti attivi</small>
-                            </div>
-                            <div class="d-flex align-items-center text-success">
-                                <i class="fas fa-circle me-2" style="font-size: 0.5rem;"></i>
-                                <small>API menu funzionanti</small>
+                        <div class="border-top pt-3 mt-3">
+                            <div class="small text-muted text-center">
+                                <strong>{{ ($countPizzas ?? 0) + ($countAppetizers ?? 0) + ($countBeverages ?? 0) + ($countDesserts ?? 0) }}</strong> elementi totali nel menu
                             </div>
                         </div>
-                    </div>
+                    @else
+                        <div class="text-center py-4 text-muted">
+                            <i class="fas fa-plus-circle fs-1 mb-2 opacity-50"></i>
+                            <div>Nessun elemento ancora creato</div>
+                            <div class="small">Inizia aggiungendo i tuoi primi piatti!</div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
