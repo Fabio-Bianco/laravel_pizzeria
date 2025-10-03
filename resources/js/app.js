@@ -96,6 +96,10 @@ function closeSidebar() {
     document.querySelector('.sidebar-wrapper').classList.remove('show');
 }
 
+// Esponi le funzioni globalmente per onclick
+window.toggleSidebar = toggleSidebar;
+window.closeSidebar = closeSidebar;
+
 /**
  * Inizializzazione dell'applicazione admin
  */
