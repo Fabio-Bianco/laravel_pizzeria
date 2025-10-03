@@ -53,7 +53,7 @@
         </div>
 
         <nav class="mt-4 d-flex justify-content-center" aria-label="Paginazione categorie">
-            {{ $categories->links() }}
+            {{ $categories->links('pagination.custom') }}
         </nav>
     </div>
 </x-app-layout>

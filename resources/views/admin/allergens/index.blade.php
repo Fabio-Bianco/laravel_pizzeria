@@ -35,7 +35,7 @@
         </div>
 
         <nav class="mt-4 d-flex justify-content-center" aria-label="Paginazione allergeni">
-            {{ $allergens->links() }}
+            {{ $allergens->links('pagination.custom') }}
         </nav>
     </div>
 </x-app-layout>

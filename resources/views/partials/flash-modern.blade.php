@@ -1,6 +1,6 @@
 {{-- Flash messages moderni con toast-style --}}
 @if (session('status') || session('success'))
-    <div class="alert alert-success d-flex align-items-center slide-up" data-auto-dismiss="true" role="alert">
+    <div class="alert alert-success d-flex align-items-center slide-up" data-auto-dismiss="10000" role="alert">
         <div class="me-2">
             <i class="fas fa-check-circle"></i>
         </div>
@@ -13,7 +13,7 @@
 @endif
 
 @if (session('error') || session('danger'))
-    <div class="alert alert-danger d-flex align-items-center slide-up" data-auto-dismiss="true" role="alert">
+    <div class="alert alert-danger d-flex align-items-center slide-up" data-auto-dismiss="10000" role="alert">
         <div class="me-2">
             <i class="fas fa-exclamation-triangle"></i>
         </div>
@@ -26,7 +26,7 @@
 @endif
 
 @if (session('warning'))
-    <div class="alert alert-warning d-flex align-items-center slide-up" data-auto-dismiss="true" role="alert">
+    <div class="alert alert-warning d-flex align-items-center slide-up" data-auto-dismiss="10000" role="alert">
         <div class="me-2">
             <i class="fas fa-exclamation-circle"></i>
         </div>
@@ -39,7 +39,7 @@
 @endif
 
 @if (session('info'))
-    <div class="alert alert-info d-flex align-items-center slide-up" data-auto-dismiss="true" role="alert">
+    <div class="alert alert-info d-flex align-items-center slide-up" data-auto-dismiss="10000" role="alert">
         <div class="me-2">
             <i class="fas fa-info-circle"></i>
         </div>
@@ -73,12 +73,14 @@
 
 <style>
 .alert {
-    border-radius: 1rem;
+    border-radius: 12px;
     border: none;
     margin-bottom: 1.5rem;
-    padding: 1rem 1.25rem;
+    padding: 1.25rem 1.5rem;
     position: relative;
     overflow: hidden;
+    font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .alert::before {
@@ -89,9 +91,10 @@
     width: 4px;
     height: 100%;
     background: currentColor;
-    opacity: 0.5;
+    opacity: 0.7;
 }
 
+/* Light Mode Alerts */
 .alert-success {
     background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
     color: #047857;
@@ -116,16 +119,55 @@
     border-left: 4px solid #3B82F6;
 }
 
+/* Dark Mode Alerts - Contrasti Ottimizzati */
+[data-theme="dark"] .alert-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+    color: #34D399;
+    border-left: 4px solid #10B981;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+}
+
+[data-theme="dark"] .alert-danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+    color: #F87171;
+    border-left: 4px solid #EF4444;
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.2);
+}
+
+[data-theme="dark"] .alert-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+    color: #FBBF24;
+    border-left: 4px solid #F59E0B;
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.2);
+}
+
+[data-theme="dark"] .alert-info {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%);
+    color: #60A5FA;
+    border-left: 4px solid #3B82F6;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+}
+
 .btn-close {
     --bs-btn-close-bg: none;
     background: transparent;
     border: none;
     font-size: 1.1rem;
-    opacity: 0.5;
+    opacity: 0.6;
     transition: opacity 0.2s ease;
+    color: currentColor;
 }
 
 .btn-close:hover {
+    opacity: 1;
+}
+
+[data-theme="dark"] .btn-close {
+    filter: invert(1);
+    opacity: 0.7;
+}
+
+[data-theme="dark"] .btn-close:hover {
     opacity: 1;
 }
 
@@ -133,7 +175,24 @@
     .alert {
         margin-left: 0;
         margin-right: 0;
-        border-radius: 0.75rem;
+        border-radius: 8px;
+        padding: 1rem 1.25rem;
     }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-dismiss alerts after specified time
+    const alerts = document.querySelectorAll('[data-auto-dismiss]');
+    alerts.forEach(alert => {
+        const dismissTime = parseInt(alert.getAttribute('data-auto-dismiss'));
+        if (dismissTime > 0) {
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }, dismissTime);
+        }
+    });
+});
+</script>
