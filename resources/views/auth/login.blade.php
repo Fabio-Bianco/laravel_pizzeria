@@ -1,20 +1,14 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>Accedi • Pizzeria</title>
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-        
-    </head>
-    <body class="login-page">
-        @include('layouts.navigation')
-    <div class="card login-card shadow-sm">
-            <div class="card-body">
-            <div class="logo d-flex align-items-center justify-content-center mb-3" aria-label="Logo pizza">
-                <!-- Logo pizza semplice -->
-                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+@extends('layouts.guest')
+
+@section('title', 'Accedi')
+
+@section('content')
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-5">
+        <!-- Logo centrato -->
+        <div class="text-center mb-4">
+            <div class="mb-3">
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" style="width: 64px; height: 64px;">
                     <circle cx="32" cy="32" r="30" fill="#fcd34d" stroke="#b45309" stroke-width="2"/>
                     <path d="M32 2 A30 30 0 0 1 62 32 L32 32 Z" fill="#ef4444"/>
                     <circle cx="24" cy="24" r="3" fill="#991b1b"/>
@@ -22,38 +16,64 @@
                     <circle cx="36" cy="36" r="3" fill="#991b1b"/>
                 </svg>
             </div>
-            
-
-            @if (session('status'))
-                <div class="alert alert-success" role="status">{{ session('status') }}</div>
-            @endif
-
-            <form method="POST" action="{{ route('login') }}" novalidate>
-                @csrf
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" class="form-control" />
-                    @error('email')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input id="password" type="password" name="password" required autocomplete="current-password" class="form-control" />
-                    @error('password')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-3 form-check">
-                    <input class="form-check-input" id="remember" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} />
-                    <label class="form-check-label" for="remember">Ricordami</label>
-                </div>
-
-                <button type="submit" class="btn btn-danger w-100">Entra</button>
-            </form>
-            </div>
+            <h1 class="h3 fw-bold text-dark mb-1">Benvenuto</h1>
+            <p class="text-muted mb-0">Accedi al pannello di gestione</p>
         </div>
-    </body>
-</html>
+
+        @if (session('status'))
+            <div class="alert alert-success d-flex align-items-center mb-4">
+                <i class="fas fa-check-circle me-2"></i>
+                {{ session('status') }}
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('login') }}" novalidate>
+            @csrf
+            
+            <div class="mb-4">
+                <label for="email" class="form-label fw-semibold">
+                    <i class="fas fa-envelope me-1"></i>
+                    Email
+                </label>
+                <input id="email" type="email" name="email" 
+                       class="form-control form-control-lg @error('email') is-invalid @enderror" 
+                       value="{{ old('email') }}" 
+                       required autofocus autocomplete="username"
+                       placeholder="inserisci@email.com">
+                @error('email')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label fw-semibold">
+                    <i class="fas fa-lock me-1"></i>
+                    Password
+                </label>
+                <input id="password" type="password" name="password" 
+                       class="form-control form-control-lg @error('password') is-invalid @enderror" 
+                       required autocomplete="current-password"
+                       placeholder="••••••••">
+                @error('password')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-4">
+                <div class="form-check">
+                    <input class="form-check-input" id="remember" type="checkbox" name="remember" 
+                           {{ old('remember') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="remember">
+                        Ricordami
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100">
+                <i class="fas fa-sign-in-alt me-2"></i>
+                Accedi
+            </button>
+        </form>
+    </div>
+</div>
+@endsection

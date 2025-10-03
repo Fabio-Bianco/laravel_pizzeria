@@ -1,34 +1,83 @@
-<x-app-layout>
-  <x-slot name="header">
-    <x-page-header :title="'Modifica: '.$pizza->name" :items="[['label'=>'Pizze','url'=>route('admin.pizzas.index')],['label'=>$pizza->name],['label'=>'Modifica']]" :backUrl="route('admin.pizzas.index')" />
-  </x-slot>
+@extends('layouts.app-modern')
 
-  @include('partials.flash')
+@section('title', 'Modifica: ' . $pizza->name)
 
-  <div class="row justify-content-center py-3">
-    <div class="col-12 col-lg-10 col-xl-8">
-      <div class="card shadow-sm">
-        <div class="card-header bg-white"><span class="h6 mb-0">Dettagli pizza</span></div>
-        <div class="card-body">
+@section('header')
+<div class="d-flex justify-content-between align-items-center">
+    <div>
+        <div class="d-flex align-items-center mb-2">
+            <a href="{{ route('admin.pizzas.index') }}" class="btn btn-outline-secondary btn-sm me-3">
+                <i class="fas fa-arrow-left me-1"></i>
+                Indietro
+            </a>
+            <h1 class="page-title mb-0">
+                <i class="fas fa-edit text-primary me-2"></i>
+                Modifica: {{ $pizza->name }}
+            </h1>
+        </div>
+        <p class="page-subtitle">Aggiorna le informazioni della pizza</p>
+    </div>
+    <div>
+        <span class="badge bg-light text-dark fs-6 px-3 py-2">
+            <i class="fas fa-pizza-slice me-1"></i>
+            Gestione Menu
+        </span>
+    </div>
+</div>
+@endsection
+
+@section('content')
+    @include('partials.flash-modern')
+    
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle text-primary me-2"></i>
+                        Informazioni Pizza
+                    </h5>
+                </div>
+                <div class="card-body">
           <form action="{{ route('admin.pizzas.update', $pizza) }}" method="POST" enctype="multipart/form-data" novalidate>
             @csrf @method('PUT')
 
-            <div class="row g-3">
-              <div class="col-12 col-md-6">
-                <label for="name" class="form-label">Nome</label>
-                <input id="name" name="name" type="text" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $pizza->name) }}" required>
+            <div class="row g-4">
+              <div class="col-12 col-md-8">
+                <label for="name" class="form-label fw-semibold">
+                    <i class="fas fa-pizza-slice me-1"></i>
+                    Nome Pizza <span class="text-danger">*</span>
+                </label>
+                <input id="name" name="name" type="text" 
+                       class="form-control form-control-lg @error('name') is-invalid @enderror" 
+                       value="{{ old('name', $pizza->name) }}" 
+                       required>
                 @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
               </div>
 
-              <div class="col-12 col-md-3">
-                <label for="price" class="form-label">Prezzo</label>
-                <input id="price" name="price" type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" value="{{ old('price', $pizza->price) }}" required>
+              <div class="col-12 col-md-4">
+                <label for="price" class="form-label fw-semibold">
+                    <i class="fas fa-euro-sign me-1"></i>
+                    Prezzo <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">€</span>
+                    <input id="price" name="price" type="number" step="0.01" 
+                           class="form-control form-control-lg @error('price') is-invalid @enderror" 
+                           value="{{ old('price', $pizza->price) }}" 
+                           required>
+                </div>
                 @error('price')<div class="invalid-feedback">{{ $message }}</div>@enderror
               </div>
 
-              <div class="col-12 col-md-3">
-                <label for="category_id" class="form-label">Categoria</label>
-                <select id="category_id" name="category_id" class="form-select @error('category_id') is-invalid @enderror" data-choices>
+              <div class="col-12">
+                <label for="category_id" class="form-label fw-semibold">
+                    <i class="fas fa-tags me-1"></i>
+                    Categoria <span class="text-danger">*</span>
+                </label>
+                <select id="category_id" name="category_id" 
+                        class="form-select @error('category_id') is-invalid @enderror" 
+                        data-choices required>
                   <option value="">-</option>
                   @foreach ($categories as $category)
                     <option value="{{ $category->id }}" data-is-white="{{ $category->is_white ? '1' : '0' }}" @selected(old('category_id', $pizza->category_id) == $category->id)>{{ $category->name }}</option>
