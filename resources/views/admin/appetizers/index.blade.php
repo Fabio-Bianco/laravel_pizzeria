@@ -149,7 +149,7 @@
     @if($appetizers->hasPages())
         <div class="d-flex justify-content-center mt-5">
             <nav aria-label="Navigazione antipasti">
-                {{ $appetizers->links() }}
+                {{ $appetizers->links('pagination.custom') }}
             </nav>
         </div>
     @endif

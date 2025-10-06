@@ -261,6 +261,65 @@
       
       // Inizializzazione con dati esistenti
       updateAutomaticAllergens();
+      
+      // Gestione modal nuovo ingrediente
+      const newIngredientModal = document.getElementById('newIngredientModal');
+      const saveButton = document.getElementById('ni_save');
+      const nameInput = document.getElementById('ni_name');
+      
+      if (saveButton && nameInput) {
+        saveButton.addEventListener('click', function() {
+          const name = nameInput.value.trim();
+          if (!name) {
+            alert('Inserisci il nome dell\'ingrediente');
+            return;
+          }
+          
+          const storeUrl = ingredientsSelect.dataset.storeUrl;
+          if (!storeUrl) {
+            alert('URL di creazione non configurato');
+            return;
+          }
+          
+          fetch(storeUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            },
+            body: JSON.stringify({ name: name })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // Aggiungi la nuova opzione al select
+              const option = document.createElement('option');
+              option.value = data.ingredient.id;
+              option.textContent = data.ingredient.name;
+              option.selected = true;
+              ingredientsSelect.appendChild(option);
+              
+              // Aggiorna Choices.js se presente
+              if (ingredientsSelect._choices) {
+                ingredientsSelect._choices.setChoiceByValue(data.ingredient.id.toString());
+              }
+              
+              // Chiudi modal e reset
+              bootstrap.Modal.getInstance(newIngredientModal).hide();
+              nameInput.value = '';
+              
+              // Aggiorna allergeni
+              updateAutomaticAllergens();
+            } else {
+              alert('Errore nella creazione: ' + (data.message || 'Errore sconosciuto'));
+            }
+          })
+          .catch(error => {
+            console.error('Errore:', error);
+            alert('Errore di rete');
+          });
+        });
+      }
     });
   </script>
-</x-app-layout>
+@endsection

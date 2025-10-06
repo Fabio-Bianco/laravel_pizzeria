@@ -184,7 +184,7 @@
     @if($ingredients->hasPages())
         <div class="d-flex justify-content-center mt-5">
             <nav aria-label="Navigazione ingredienti">
-                {{ $ingredients->links() }}
+                {{ $ingredients->links('pagination.custom') }}
             </nav>
         </div>
     @endif

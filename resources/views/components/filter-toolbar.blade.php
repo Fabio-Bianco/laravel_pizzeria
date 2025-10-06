@@ -42,7 +42,7 @@
       @endif
     </div>
     <div class="mt-3 d-flex gap-2">
-      <button class="btn btn-outline-primary" type="submit">Filtra</button>
+      <button class="btn btn-outline-warning" type="submit">Filtra</button>
       <a class="btn btn-outline-secondary" href="{{ $resetUrl }}">Reset</a>
     </div>
   </div>

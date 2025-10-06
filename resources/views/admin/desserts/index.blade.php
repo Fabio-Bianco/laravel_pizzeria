@@ -149,7 +149,7 @@
     @if($desserts->hasPages())
         <div class="d-flex justify-content-center mt-5">
             <nav aria-label="Navigazione dessert">
-                {{ $desserts->links() }}
+                {{ $desserts->links('pagination.custom') }}
             </nav>
         </div>
     @endif

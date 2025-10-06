@@ -172,7 +172,7 @@
     @if($pizzas->hasPages())
         <div class="d-flex justify-content-center mt-5">
             <nav aria-label="Navigazione pizze">
-                {{ $pizzas->links() }}
+                {{ $pizzas->links('pagination.custom') }}
             </nav>
         </div>
     @endif
