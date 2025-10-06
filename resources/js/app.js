@@ -1,6 +1,9 @@
 ﻿// Bootstrap base e inizializzazioni front-end del progetto
 import './bootstrap';
 
+// Components
+import './components/sidebar.js';
+
 // Alpine.js (se in uso per piccoli comportamenti reattivi)
 import Alpine from 'alpinejs';
 window.Alpine = Alpine;

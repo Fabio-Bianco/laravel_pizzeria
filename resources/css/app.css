@@ -2,6 +2,88 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "choices.js/public/assets/styles/choices.min.css";
 
+/* Components - DOPO Bootstrap per priorità */
+@import "./components/sidebar.css";
+
+/* ========================================
+   LAYOUT PRINCIPALE - OVERRIDE BOOTSTRAP
+   ======================================== */
+
+/* IMPORTANTE: Questi stili devono venire DOPO Bootstrap per avere priorità */
+
+/* Layout base che sovrascrive Bootstrap */
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Sidebar - posizionamento fisso che sovrascrive Bootstrap */
+.sidebar-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 1050; /* Sopra il z-index di Bootstrap */
+    background: var(--bg-primary);
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto;
+}
+
+/* Contenuto principale - margine sinistro che sovrascrive Bootstrap */
+.main-content {
+    margin-left: 280px;
+    min-height: 100vh;
+    width: calc(100vw - 280px);
+    position: relative;
+    background: var(--bg-secondary);
+}
+
+/* Wrapper del contenuto */
+.content-wrapper {
+    padding: 1.5rem;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Toggle mobile */
+.mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1060; /* Sopra sidebar */
+    background-color: #FF6B35;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+/* Layout responsive per mobile */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        width: 100vw;
+    }
+    
+    .mobile-toggle {
+        display: block;
+    }
+    
+    .sidebar-wrapper {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar-wrapper.show {
+        transform: translateX(0);
+    }
+}
+
 /* CSS Variables - Professional Dark Mode */
 :root {
     --bg-primary: #FFFFFF;
@@ -1134,4 +1216,48 @@ p:contains("Showing") {
     background-color: var(--bg-secondary) !important;
     color: var(--text-primary) !important;
     border: 1px solid var(--border-color) !important;
+}
+
+/* Wrapper del contenuto con padding */
+.content-wrapper {
+    padding: 1.5rem !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Toggle mobile (nascosto su desktop) */
+.mobile-toggle {
+    display: none !important;
+    position: fixed !important;
+    top: 1rem !important;
+    left: 1rem !important;
+    z-index: 1002 !important;
+    background-color: #FF6B35 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 0.5rem !important;
+    padding: 0.75rem !important;
+    font-size: 1.1rem !important;
+    cursor: pointer !important;
+}
+
+/* Layout responsive per mobile */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0 !important;
+        width: 100vw !important;
+    }
+    
+    .mobile-toggle {
+        display: block !important;
+    }
+    
+    .sidebar-wrapper {
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s ease !important;
+    }
+    
+    .sidebar-wrapper.show {
+        transform: translateX(0) !important;
+    }
 }
