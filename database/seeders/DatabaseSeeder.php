@@ -12,6 +12,7 @@ use Database\Seeders\PizzaSeeder;
 use Database\Seeders\CustomUserSeeder;
 use Database\Seeders\AppetizerSeeder;
 use Database\Seeders\BeverageSeeder;
+use Database\Seeders\DessertSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -39,6 +40,7 @@ class DatabaseSeeder extends Seeder
             PizzaSeeder::class,
             AppetizerSeeder::class,
             BeverageSeeder::class,
+            DessertSeeder::class,
         ]);
     }
 }
