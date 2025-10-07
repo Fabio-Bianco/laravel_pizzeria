@@ -12,10 +12,15 @@ class Dessert extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'price', 'description', 'manual_allergens'
+        'name',
+        'slug', 
+        'price',
+        'description',
+        'is_vegan'
     ];
 
     protected $casts = [
+        'is_vegan' => 'boolean',
         'manual_allergens' => 'array',
     ];
 

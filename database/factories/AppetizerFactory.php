@@ -21,6 +21,7 @@ class AppetizerFactory extends Factory
             'slug' => Str::slug($name.'-'.Str::random(5)),
             'price' => $this->faker->randomFloat(2, 1, 15),
             'description' => $this->faker->optional()->sentence(),
+            'is_vegan' => $this->faker->boolean(30), // 30% di probabilità di essere vegano
         ];
     }
 }

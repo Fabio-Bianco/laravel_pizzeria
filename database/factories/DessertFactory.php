@@ -71,6 +71,7 @@ class DessertFactory extends Factory
             'slug' => Str::slug($name),
             'description' => fake()->randomElement(self::$descriptions),
             'price' => fake()->randomFloat(2, 4.50, 12.90), // Prezzi realistici per dessert
+            'is_vegan' => fake()->boolean(20), // 20% di probabilità di essere vegano
             'manual_allergens' => null, // Inizialmente null, li aggiungeremo via seeder se necessario
             'created_at' => now(),
             'updated_at' => now(),

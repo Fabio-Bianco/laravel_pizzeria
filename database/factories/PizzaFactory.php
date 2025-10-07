@@ -20,12 +20,12 @@ class PizzaFactory extends Factory
         $name = $this->faker->unique()->words(2, true);
 
         return [
-            'category_id' => null, // verrà associata nel seeder se necessario
-            'name' => $name,
-            'slug' => Str::slug($name),
-            'price' => $this->faker->randomFloat(2, 5, 30),
-            // column description removed from schema
-            'notes' => $this->faker->optional(0.3)->sentence(6),
+            'category_id' => Category::factory(),
+            'name'        => $name,
+            'slug'        => Str::slug($name),
+            'price'       => $this->faker->randomFloat(2, 6.0, 18.0),
+            'notes'       => $this->faker->optional(0.3)->sentence(),
+            'is_vegan'    => $this->faker->boolean(25), // 25% di probabilità di essere vegano
         ];
     }
 }
