@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('menu_tables', function (Blueprint $table) {
-            //
+        Schema::table('beverages', function (Blueprint $table) {
+            $table->json('manual_allergens')->nullable()->after('description')->comment('Allergeni aggiunti manualmente (array di ID allergeni)');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('menu_tables', function (Blueprint $table) {
-            //
+        Schema::table('beverages', function (Blueprint $table) {
+            $table->dropColumn('manual_allergens');
         });
     }
 };

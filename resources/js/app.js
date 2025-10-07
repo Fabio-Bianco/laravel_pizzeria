@@ -124,8 +124,8 @@ e.preventDefault();
 // Inizializza il sistema di dark mode semplice
 initDarkMode();
 
-// NASCONDI DEFINITIVAMENTE IL TESTO "Showing x to y of z results"
-hidePaginationText();
+// TEMPORANEAMENTE DISABILITATO - CAUSAVA PROBLEMI
+// hidePaginationText();
 });
 
 /**
@@ -194,14 +194,86 @@ if (typeof initCommandPalette === 'function') initCommandPalette();
 // JAVASCRIPT ADMIN MODERNO
 
 /**
- * Funzioni per la gestione della sidebar mobile
+ * Funzioni per la gestione della sidebar mobile con accessibilità migliorata
  */
 function toggleSidebar() {
-    document.querySelector('.sidebar-wrapper').classList.toggle('show');
+    const sidebar = document.querySelector('.sidebar-wrapper');
+    const toggleButton = document.querySelector('.mobile-toggle');
+    const isExpanded = sidebar.classList.contains('show');
+    
+    // Toggle classe e ARIA state
+    sidebar.classList.toggle('show');
+    
+    if (toggleButton) {
+        toggleButton.setAttribute('aria-expanded', (!isExpanded).toString());
+    }
+    
+    // Focus management per accessibilità
+    if (!isExpanded) {
+        // Quando apriamo la sidebar, focalizziamo il primo link
+        const firstLink = sidebar.querySelector('a, button');
+        if (firstLink) {
+            firstLink.focus();
+        }
+    } else {
+        // Quando chiudiamo, torniamo al toggle button
+        if (toggleButton) {
+            toggleButton.focus();
+        }
+    }
 }
 
 function closeSidebar() {
-    document.querySelector('.sidebar-wrapper').classList.remove('show');
+    const sidebar = document.querySelector('.sidebar-wrapper');
+    const toggleButton = document.querySelector('.mobile-toggle');
+    
+    sidebar.classList.remove('show');
+    
+    if (toggleButton) {
+        toggleButton.setAttribute('aria-expanded', 'false');
+        toggleButton.focus(); // Riporta focus al toggle
+    }
+}
+
+// Keyboard navigation per sidebar
+document.addEventListener('keydown', function(e) {
+    const sidebar = document.querySelector('.sidebar-wrapper');
+    const isOpen = sidebar && sidebar.classList.contains('show');
+    
+    // ESC per chiudere sidebar
+    if (e.key === 'Escape' && isOpen) {
+        closeSidebar();
+        e.preventDefault();
+    }
+    
+    // Trap focus nella sidebar quando aperta su mobile
+    if (isOpen && window.innerWidth <= 768) {
+        trapFocus(sidebar, e);
+    }
+});
+
+// Focus trap utility per accessibilità
+function trapFocus(container, event) {
+    const focusableElements = container.querySelectorAll(
+        'a[href], button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])'
+    );
+    
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    
+    if (event.key === 'Tab') {
+        if (event.shiftKey) {
+            if (document.activeElement === firstElement) {
+                lastElement.focus();
+                event.preventDefault();
+            }
+        } else {
+            if (document.activeElement === lastElement) {
+                firstElement.focus();
+                event.preventDefault();
+            }
+        }
+    }
 }
 
 // Esponi le funzioni globalmente per onclick

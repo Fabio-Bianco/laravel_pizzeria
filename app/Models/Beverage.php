@@ -10,6 +10,6 @@ class Beverage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'price', 'description',
+        'name', 'slug', 'price', 'description', 'manual_allergens',
     ];
 }

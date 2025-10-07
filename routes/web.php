@@ -103,6 +103,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('categories', CategoryController::class)->names('admin.categories');
     Route::resource('pizzas', PizzaController::class)->names('admin.pizzas');
+    
+    // ROTTA DEBUG PIZZE
+    Route::get('/pizzas-debug', function() {
+        $pizzas = \App\Models\Pizza::with(['category', 'ingredients'])->paginate(10);
+        return view('admin.pizzas.debug', compact('pizzas'));
+    })->name('admin.pizzas.debug');
     Route::resource('ingredients', IngredientController::class)->names('admin.ingredients');
     Route::resource('allergens', AllergenController::class)->names('admin.allergens');
     Route::resource('appetizers', AppetizerController::class)->names('admin.appetizers');

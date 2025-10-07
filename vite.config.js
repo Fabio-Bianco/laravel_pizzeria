@@ -14,6 +14,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/css/app.css',
+                'resources/css/accessibility-first.css',
                 'resources/js/app.js'
             ],
             refresh: true,
