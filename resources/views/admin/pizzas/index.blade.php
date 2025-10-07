@@ -49,29 +49,29 @@
                 <div class="card h-100 border-0 shadow-sm hover-lift" role="article" aria-label="Scheda pizza {{ $p->name }}">
                     @if($p->image_path)
                         <div class="position-relative">
-                            <img src="{{ asset('storage/'.$p->image_path) }}" 
-                                 alt="Immagine pizza {{ $p->name }}" 
-                                 class="card-img-top" 
-                                 style="height:200px;object-fit:cover;">
-                            <div class="position-absolute top-0 end-0 m-2">
-                                @if($p->category?->is_white)
-                                    <span class="badge bg-white text-dark shadow-sm">
-                                        <i class="fas fa-circle text-warning me-1"></i>
-                                        Pizza Bianca
-                                    </span>
-                                @endif
-                            </div>
+                            {{-- 🚀 LAZY LOADING OTTIMIZZATO --}}
+                            <img 
+                                data-src="{{ Storage::url($p->image_path) }}" 
+                                alt="Immagine di {{ $p->name }}" 
+                                class="card-img-top object-fit-cover"
+                                style="height: 200px; opacity: 0; transition: opacity 0.3s ease;"
+                                loading="lazy"
+                                data-critical="{{ $loop->index < 3 ? 'true' : 'false' }}"
+                            />
+                            @if($p->is_bianca)
+                                <span class="position-absolute top-0 end-0 badge bg-white text-dark m-2">
+                                    <i class="fas fa-cheese me-1"></i>Bianca
+                                </span>
+                            @endif
                         </div>
                     @else
-                        <div class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height:200px;">
+                        <div class="d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
                             <div class="text-center text-muted">
-                                <i class="fas fa-pizza-slice fs-1 mb-2"></i>
-                                <div class="small">Nessuna immagine</div>
+                                <i class="fas fa-image fa-3x mb-2 opacity-50"></i>
+                                <br><small>Nessuna immagine</small>
                             </div>
                         </div>
-                    @endif
-                    
-                    <div class="card-body d-flex flex-column">
+                    @endif                    <div class="card-body d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <a href="{{ route('admin.pizzas.show', $p) }}" 
                                class="h5 mb-0 text-decoration-none fw-bold text-dark hover-primary">

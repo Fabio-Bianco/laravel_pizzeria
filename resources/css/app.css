@@ -2,8 +2,8 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "choices.js/public/assets/styles/choices.min.css";
 
-/* Components - DOPO Bootstrap per priorità */
-@import "./components/sidebar.css";
+/* 🚀 PERFORMANCE OPTIMIZATIONS */
+@import "./performance.css";
 
 /* ========================================
    LAYOUT PRINCIPALE - OVERRIDE BOOTSTRAP

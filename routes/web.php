@@ -21,24 +21,37 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard', [
-        'countAppetizers' => Appetizer::count(),
-        'countPizzas' => Pizza::count(),
-        'countBeverages' => Beverage::count(),
-        'countDesserts' => Dessert::count(),
-        'countAllergens' => Allergen::count(),
-        'countIngredients' => Ingredient::count(),
-        'countCategories' => \App\Models\Category::count(),
-        // Statistiche più utili
-        'latestPizza' => Pizza::latest()->first(),
-        'latestAppetizer' => Appetizer::latest()->first(),
-        'latestBeverage' => Beverage::latest()->first(),
-        'latestDessert' => Dessert::latest()->first(),
-        // Tutti gli elementi sono considerati "attivi" senza colonna is_active
-        'activePizzas' => Pizza::count(),
-        'activeAppetizers' => Appetizer::count(),
-        'activeBeverages' => Beverage::count(),
-    ]);
+    // 🚀 OTTIMIZZAZIONE: Caching intelligente per prestazioni superiori
+    $counts = \Illuminate\Support\Facades\Cache::remember('dashboard.counts', 300, function () {
+        return [
+            'countAppetizers' => Appetizer::count(),
+            'countPizzas' => Pizza::count(),
+            'countBeverages' => Beverage::count(),
+            'countDesserts' => Dessert::count(),
+            'countAllergens' => Allergen::count(),
+            'countIngredients' => Ingredient::count(),
+            'countCategories' => \App\Models\Category::count(),
+        ];
+    });
+
+    $latest = \Illuminate\Support\Facades\Cache::remember('dashboard.latest', 120, function () {
+        return [
+            'latestPizza' => Pizza::latest()->first(),
+            'latestAppetizer' => Appetizer::latest()->first(),
+            'latestBeverage' => Beverage::latest()->first(),
+            'latestDessert' => Dessert::latest()->first(),
+        ];
+    });
+
+    $stats = \Illuminate\Support\Facades\Cache::remember('dashboard.stats', 180, function () {
+        return [
+            'activePizzas' => Pizza::count(),
+            'activeAppetizers' => Appetizer::count(),
+            'activeBeverages' => Beverage::count(),
+        ];
+    });
+
+    return view('dashboard', array_merge($counts, $latest, $stats));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Rotte pubbliche (guest) per futura vetrina: nomi guest.* e URL user-friendly

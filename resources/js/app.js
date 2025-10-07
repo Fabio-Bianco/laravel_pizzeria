@@ -1,8 +1,5 @@
-﻿// Bootstrap base e inizializzazioni front-end del progetto
+// Bootstrap base e inizializzazioni front-end del progetto
 import './bootstrap';
-
-// Components
-import './components/sidebar.js';
 
 // Alpine.js (se in uso per piccoli comportamenti reattivi)
 import Alpine from 'alpinejs';
@@ -17,6 +14,88 @@ window.bootstrap = bootstrap;
 import Choices from 'choices.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+// IMPORTANTE: Delay per assicurarsi che la sidebar sia completamente renderizzata
+setTimeout(() => {
+    // 🚀 INIZIALIZZAZIONE MENU SIDEBAR TOGGLE
+    console.log('🎯 Inizializzazione sidebar menu toggles...');
+
+    // Trova tutti gli header clickabili della sidebar
+    const sidebarHeaders = document.querySelectorAll('.nav-section-header[data-bs-target]');
+    console.log(`📋 Trovati ${sidebarHeaders.length} header menu nella sidebar`);
+
+    if (sidebarHeaders.length === 0) {
+        console.warn('⚠️ Nessun header menu trovato! Verifica selettori CSS.');
+        // Debug: stampa tutti gli elementi che potrebbero essere header
+        const allHeaders = document.querySelectorAll('.nav-section-header');
+        console.log('Debug - Header trovati senza data-bs-target:', allHeaders.length);
+        allHeaders.forEach((h, i) => {
+            console.log(`Header ${i}:`, h.outerHTML.substring(0, 100));
+        });
+    }
+
+    sidebarHeaders.forEach(function(header, index) {
+        console.log(`🔧 Configurando header ${index + 1}: ${header.getAttribute('data-bs-target')}`);
+        
+        // Rimuovi eventuali listener precedenti per evitare duplicati
+        const newHeader = header.cloneNode(true);
+        header.parentNode.replaceChild(newHeader, header);
+        
+        newHeader.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const targetId = this.getAttribute('data-bs-target');
+            const target = document.querySelector(targetId);
+            const icon = this.querySelector('.transition-icon');
+            
+            console.log(`🔄 Toggle cliccato: ${targetId}`);
+            
+            if (!target) {
+                console.error(`❌ Target non trovato: ${targetId}`);
+                return;
+            }
+            
+            const isCurrentlyOpen = target.classList.contains('show');
+            console.log(`📊 Stato attuale: ${isCurrentlyOpen ? 'APERTO' : 'CHIUSO'}`);
+            
+            if (isCurrentlyOpen) {
+                // CHIUDI
+                target.classList.remove('show');
+                this.setAttribute('aria-expanded', 'false');
+                if (icon) {
+                    icon.style.transform = 'rotate(0deg)';
+                    icon.style.transition = 'transform 0.3s ease';
+                }
+                console.log(`📁 ✅ Menu CHIUSO: ${targetId}`);
+            } else {
+                // APRI
+                target.classList.add('show');
+                this.setAttribute('aria-expanded', 'true');
+                if (icon) {
+                    icon.style.transform = 'rotate(180deg)';
+                    icon.style.transition = 'transform 0.3s ease';
+                }
+                console.log(`📂 ✅ Menu APERTO: ${targetId}`);
+            }
+        });
+        
+        // Imposta stato iniziale corretto
+        const targetId = newHeader.getAttribute('data-bs-target');
+        const target = document.querySelector(targetId);
+        const icon = newHeader.querySelector('.transition-icon');
+        
+        if (target && icon) {
+            const isExpanded = target.classList.contains('show');
+            newHeader.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+            icon.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
+            icon.style.transition = 'transform 0.3s ease';
+            console.log(`🎨 Stato iniziale ${targetId}: ${isExpanded ? 'APERTO' : 'CHIUSO'}`);
+        }
+    });
+
+    console.log('✅ Sidebar menu toggles inizializzati completamente!');
+}, 500); // Delay di 500ms per assicurarsi che tutto sia caricato
+
 // Attiva Choices.js per ogni select con data-choices
 document.querySelectorAll('select[data-choices]')?.forEach((el) => {
 const isMultiple = el.multiple;
@@ -129,6 +208,32 @@ function closeSidebar() {
 window.toggleSidebar = toggleSidebar;
 window.closeSidebar = closeSidebar;
 
+// Debug globale per sidebar
+window.debugSidebar = function() {
+    console.log('🔍 DEBUG SIDEBAR COMPLETO:');
+    console.log('Headers found:', document.querySelectorAll('.nav-section-header[data-bs-target]').length);
+    console.log('Targets found:', document.querySelectorAll('.nav-section-content').length);
+    console.log('Collapse classes:', document.querySelectorAll('.collapse').length);
+    
+    // Stampa ogni header trovato
+    const headers = document.querySelectorAll('.nav-section-header[data-bs-target]');
+    headers.forEach((h, i) => {
+        const target = h.getAttribute('data-bs-target');
+        const targetEl = document.querySelector(target);
+        console.log(`Header ${i}: ${target} -> Target exists: ${!!targetEl}`);
+        if (targetEl) {
+            console.log(`  - Has 'show' class: ${targetEl.classList.contains('show')}`);
+            console.log(`  - Aria-expanded: ${h.getAttribute('aria-expanded')}`);
+        }
+    });
+};
+
+// Test automatico al caricamento
+setTimeout(() => {
+    console.log('🧪 Auto-test sidebar dopo 2 secondi...');
+    window.debugSidebar();
+}, 2000);
+
 /**
  * =========================================
  * 🌙 DARK MODE SEMPLICE E ACCESSIBILE
@@ -176,7 +281,7 @@ function applyTheme(theme) {
     // Salva preferenza
     localStorage.setItem('theme', theme);
     
-    console.log(`� Theme applied: ${theme}`);
+    console.log(`🌙 Theme applied: ${theme}`);
 }
 
 /**
