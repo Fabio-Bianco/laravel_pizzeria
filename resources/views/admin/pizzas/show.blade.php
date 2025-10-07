@@ -34,7 +34,7 @@
         </div>
 
         <div class="d-flex gap-2">
-          <a href="{{ route('admin.pizzas.edit', $pizza) }}" class="btn btn-warning">Modifica</a>
+          <a href="{{ route('admin.pizzas.edit', $pizza) }}" class="btn btn-success">Modifica</a>
           <form action="{{ route('admin.pizzas.destroy', $pizza) }}" method="POST" data-confirm="Sicuro?">
             @csrf @method('DELETE')
             <button class="btn btn-danger" type="submit">Elimina</button>

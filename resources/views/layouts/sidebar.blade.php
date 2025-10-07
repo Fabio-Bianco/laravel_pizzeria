@@ -48,9 +48,9 @@
       <div class="nav-section mb-2">
         <a href="{{ route('dashboard') }}" 
            class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
-           style="background: linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%); color: white; border-radius: 8px; margin: 0 8px;">
-          <span class="nav-icon">🏠</span>
-          <span class="nav-text fw-semibold">Dashboard</span>
+           style="background: linear-gradient(135deg, #9ceeafff 0%, #75ff93ff 100%); color: white; border-radius: 8px; margin: 0 8px;">
+          <span class="nav-icon"><i class="fas fa-home"></i></span>
+          <span class="nav-text fw-semibold">GESTISCI IL MENU</span>
           <i class="fas fa-home ms-auto"></i>
         </a>
       </div>
@@ -59,7 +59,7 @@
       <div class="nav-section">
         <div class="nav-section-header" data-bs-target="#menuSection" aria-expanded="{{ request()->routeIs('admin.pizzas.*', 'admin.appetizers.*', 'admin.beverages.*', 'admin.desserts.*') ? 'true' : 'false' }}">
           <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase d-flex justify-content-between align-items-center">
-            <span>📋 Gestione Menu</span>
+            <span>🍽️ Il Tuo Menu</span>
             <i class="fas fa-chevron-down transition-icon"></i>
           </div>
         </div>
@@ -111,7 +111,7 @@
       <div class="nav-section">
         <div class="nav-section-header" data-bs-target="#configSection" aria-expanded="{{ request()->routeIs('admin.ingredients.*', 'admin.allergens.*', 'admin.categories.*') ? 'true' : 'false' }}">
           <div class="nav-section-title px-3 py-2 small text-muted fw-semibold text-uppercase d-flex justify-content-between align-items-center">
-            <span>⚙️ Configurazione</span>
+            <span>🔧 Impostazioni Base</span>
             <i class="fas fa-chevron-down transition-icon"></i>
           </div>
         </div>
@@ -251,7 +251,7 @@
 }
 
 .nav-link.active {
-  background-color: #FF6B35;
+  background-color: #28a745;
   color: white;
   font-weight: 500;
 }
@@ -289,7 +289,7 @@
 }
 
 /* Badge colors */
-.nav-badge-primary { background-color: #FF6B35; color: white; }
+.nav-badge-primary { background-color: #28a745; color: white; }
 .nav-badge-success { background-color: #10B981; color: white; }
 .nav-badge-info { background-color: #3B82F6; color: white; }
 .nav-badge-warning { background-color: #F59E0B; color: white; }

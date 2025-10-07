@@ -54,7 +54,7 @@ body {
     top: 1rem;
     left: 1rem;
     z-index: 1060; /* Sopra sidebar */
-    background-color: #FF6B35;
+    background-color: #28a745;
     color: white;
     border: none;
     border-radius: 0.5rem;
@@ -91,8 +91,8 @@ body {
     --text-primary: #212529;
     --text-secondary: #6C757D;
     --border-color: #DEE2E6;
-    --accent-color: #FF6B35;
-    --accent-hover: #E55A2B;
+    --accent-color: #28a745;
+    --accent-hover: #218838;
     --sidebar-bg: #FFFFFF;
     --card-bg: #FFFFFF;
     --success-color: #10B981;
@@ -1232,7 +1232,7 @@ p:contains("Showing") {
     top: 1rem !important;
     left: 1rem !important;
     z-index: 1002 !important;
-    background-color: #FF6B35 !important;
+    background-color: #28a745 !important;
     color: white !important;
     border: none !important;
     border-radius: 0.5rem !important;

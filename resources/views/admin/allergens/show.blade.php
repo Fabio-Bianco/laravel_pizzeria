@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2">
-                    <a href="{{ route('admin.allergens.edit', $allergen) }}" class="btn btn-warning">Modifica</a>
+                    <a href="{{ route('admin.allergens.edit', $allergen) }}" class="btn btn-success">Modifica</a>
                     <form action="{{ route('admin.allergens.destroy', $allergen) }}" method="POST" data-confirm="Sicuro?">
                         @csrf
                         @method('DELETE')

@@ -35,7 +35,7 @@
                                 <p class="card-text text-muted small mb-3">{{ \Illuminate\Support\Str::limit($category->description, 120) }}</p>
                             @endif
                             <div class="mt-auto d-flex gap-2 justify-content-end">
-                                <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-sm btn-warning">Modifica</a>
+                                <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-sm btn-success">Modifica</a>
                                 <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" data-confirm="Sicuro?">
                                     @csrf
                                     @method('DELETE')

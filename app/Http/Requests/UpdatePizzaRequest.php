@@ -26,6 +26,7 @@ class UpdatePizzaRequest extends FormRequest
             'manual_allergens' => ['array'],
             'manual_allergens.*' => ['integer','exists:allergens,id'],
             'image' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
+            'is_vegan' => ['boolean'],
         ];
     }
 

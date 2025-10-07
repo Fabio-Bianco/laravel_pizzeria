@@ -140,7 +140,7 @@
                         
                         {{-- Azioni --}}
                         <div class="d-flex gap-2 mt-auto">
-                            <a class="btn btn-outline-success btn-sm flex-fill" 
+                            <a class="btn btn-success btn-sm flex-fill" 
                                href="{{ route('admin.ingredients.edit', $ing) }}" 
                                aria-label="Modifica ingrediente {{ $ing->name }}">
                                 <i class="fas fa-edit me-1"></i>

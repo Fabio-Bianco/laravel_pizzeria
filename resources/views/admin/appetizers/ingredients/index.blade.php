@@ -27,7 +27,7 @@
                                 <p class="card-text text-muted small mb-3">Allergeni: {{ $names->join(', ') }}</p>
                             @endif
                             <div class="mt-auto d-flex gap-2 justify-content-end">
-                                <a href="{{ route('admin.ingredients.edit', $ingredient) }}" class="btn btn-sm btn-warning">Modifica</a>
+                                <a href="{{ route('admin.ingredients.edit', $ingredient) }}" class="btn btn-sm btn-success">Modifica</a>
                                 <form action="{{ route('admin.ingredients.destroy', $ingredient) }}" method="POST" data-confirm="Sicuro?">
                                     @csrf
                                     @method('DELETE')

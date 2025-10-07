@@ -17,7 +17,7 @@
                                 <a href="{{ route('admin.allergens.show', $allergen) }}" class="stretched-link text-decoration-none">{{ $allergen->name }}</a>
                             </h5>
                             <div class="mt-auto d-flex gap-2 justify-content-end">
-                                <a href="{{ route('admin.allergens.edit', $allergen) }}" class="btn btn-sm btn-warning">Modifica</a>
+                                <a href="{{ route('admin.allergens.edit', $allergen) }}" class="btn btn-sm btn-success">Modifica</a>
                                 <form action="{{ route('admin.allergens.destroy', $allergen) }}" method="POST" data-confirm="Sicuro?">
                                     @csrf
                                     @method('DELETE')

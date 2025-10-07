@@ -18,7 +18,7 @@
         <p class="page-subtitle">Dettagli del dessert</p>
     </div>
     <div class="d-flex gap-2">
-        <a href="{{ route('admin.desserts.edit', $dessert) }}" class="btn btn-warning px-4">
+        <a href="{{ route('admin.desserts.edit', $dessert) }}" class="btn btn-success px-4">
             <i class="fas fa-edit me-2"></i>
             Modifica
         </a>
@@ -161,7 +161,7 @@
                                 <i class="fas fa-list me-2"></i>
                                 Lista Dessert
                             </a>
-                            <a href="{{ route('admin.desserts.edit', $dessert) }}" class="btn btn-warning px-4">
+                            <a href="{{ route('admin.desserts.edit', $dessert) }}" class="btn btn-success px-4">
                                 <i class="fas fa-edit me-2"></i>
                                 Modifica
                             </a>

@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="d-flex gap-2">
-                    <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-warning">Modifica</a>
+                    <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-success">Modifica</a>
                     <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" data-confirm="Sicuro?">
                         @csrf
                         @method('DELETE')

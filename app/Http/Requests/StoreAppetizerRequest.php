@@ -22,6 +22,7 @@ class StoreAppetizerRequest extends FormRequest
             'ingredients.*' => ['integer', 'exists:ingredients,id'],
             'manual_allergens' => ['array'],
             'manual_allergens.*' => ['integer', 'exists:allergens,id'],
+            'is_vegan' => ['boolean'],
         ];
     }
 
