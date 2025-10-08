@@ -19,7 +19,13 @@
                                 </h5>
                                 @php($allergenCount = $ingredient->allergens->count())
                                 @if($allergenCount > 0)
-                                    <span class="badge text-bg-secondary">{{ $allergenCount }} {{ \Illuminate\Support\Str::plural('allergene', $allergenCount) }}</span>
+                                    <span class="badge bg-warning text-dark" 
+                                          role="button"
+                                          tabindex="0"
+                                          title="{{ $allergenCount }} {{ \Illuminate\Support\Str::plural('allergene', $allergenCount) }} in questo ingrediente"
+                                          aria-label="Contiene {{ $allergenCount }} {{ \Illuminate\Support\Str::plural('allergene', $allergenCount) }}">
+                                      <i class="fas fa-exclamation-triangle me-1" aria-hidden="true"></i>{{ $allergenCount }}
+                                    </span>
                                 @endif
                             </div>
                             @php($names = $ingredient->allergens->pluck('name'))

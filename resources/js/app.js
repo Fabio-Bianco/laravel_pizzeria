@@ -184,6 +184,9 @@ function hidePaginationText() {
 import { initPizzaIngredientQuickCreate } from './features/pizzas';
 import { initStickyHeaderSearch } from './features/stickyHeader';
 import { initCommandPalette } from './features/commandPalette';
+import './features/appetizers';
+import './features/beverages';
+import './features/desserts';
 
 document.addEventListener('DOMContentLoaded', () => {
 initPizzaIngredientQuickCreate();

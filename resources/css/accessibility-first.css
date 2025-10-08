@@ -780,3 +780,255 @@ CONTRASTI WCAG 2.1 AAA (minimo 7:1):
   outline: none;
   box-shadow: var(--shadow-focus);
 }
+
+/* =============================================================================
+   SISTEMA ALLERGENI SEMANTICO E ACCESSIBILE
+   Per ristoratori "analfabeti digitali" - Design intuitivo e visuale
+============================================================================= */
+
+/* Container principale allergeni */
+.allergen-display {
+  width: 100%;
+}
+
+/* STATO SICURO - Nessun allergene */
+.allergen-safe .badge-success {
+  background-color: var(--color-success);
+  color: var(--text-on-dark);
+  border: 2px solid var(--color-success);
+  font-weight: 600;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: var(--radius-lg);
+}
+
+/* BADGES ALLERGENI WARNING */
+.badge-warning-subtle {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.badge-warning {
+  background-color: var(--color-warning);
+  color: #000000;
+  border: 2px solid #ffc107;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+}
+
+/* MODALITÀ COMPATTA per card */
+.allergen-compact .small {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.allergen-compact .badge {
+  margin-right: 2px;
+  margin-bottom: 2px;
+}
+
+/* MODALITÀ COMPLETA per dettagli */
+.allergen-full .small {
+  font-size: 14px;
+  font-weight: 700;
+  color: #d68910;
+}
+
+.allergen-full .badge {
+  margin-right: 4px;
+  margin-bottom: 4px;
+  padding: 6px 12px;
+}
+
+/* HOVER EFFECTS per accessibilità */
+.badge-warning:hover,
+.badge-warning-subtle:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+  transition: all 0.2s ease;
+}
+
+/* RESPONSIVE BEHAVIOR */
+@media (max-width: 768px) {
+  .allergen-compact .badge {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+  
+  .allergen-full .badge {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  
+  .allergen-minimal .allergen-icon {
+    font-size: 14px;
+    cursor: help;
+  }
+}
+
+/* DARK MODE per allergeni */
+[data-theme="dark"] .badge-warning-subtle {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border-color: rgba(255, 193, 7, 0.4);
+}
+
+[data-theme="dark"] .badge-warning {
+  background-color: var(--color-warning);
+  color: #000000;
+  border-color: #ffc107;
+}
+
+[data-theme="dark"] .allergen-full .small {
+  color: #ffc107;
+}
+
+/* FOCUS STATES per accessibilità */
+.badge-warning:focus,
+.badge-warning-subtle:focus {
+  outline: 2px solid var(--color-info);
+  outline-offset: 2px;
+}
+
+/* ANIMAZIONI sottili per UX */
+.allergen-display {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================================================
+   LAYOUT TOGGLE VIEWS - CARD/LIST
+============================================================================= */
+
+/* Toggle Controls Styling */
+.view-toggle-controls {
+  margin: 0;
+}
+
+.view-toggle-controls .btn-group {
+  border: 2px solid var(--color-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.view-toggle-controls .btn {
+  min-width: 50px;
+  min-height: 44px;
+  border: none;
+  background-color: transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.view-toggle-controls .btn:hover {
+  background-color: var(--color-secondary);
+  color: var(--text-on-light);
+}
+
+.view-toggle-controls .btn-check:checked + .btn {
+  background-color: var(--color-primary);
+  color: var(--text-on-dark);
+  box-shadow: none;
+}
+
+/* Container transizioni */
+.transition-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.view-mode {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.view-mode:not(.active) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.view-mode.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Vista Lista Specifica */
+.list-container {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.list-item-pizza {
+  border-bottom: 1px solid #f1f5f9;
+  padding: 1rem 0;
+  transition: background-color 0.2s ease;
+}
+
+.list-item-pizza:last-child {
+  border-bottom: none;
+}
+
+.list-item-pizza:hover {
+  background-color: #f8fafc;
+  border-radius: 8px;
+  margin: 0 -0.5rem;
+  padding: 1rem 0.5rem;
+}
+
+.list-item-pizza img {
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+}
+
+.list-item-pizza h6 {
+  font-weight: 700;
+  color: var(--text-on-light);
+  margin-bottom: 0.25rem;
+}
+
+.list-item-pizza .text-muted {
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.list-item-pizza .btn-group-sm .btn {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .view-toggle-controls .btn span {
+    display: none;
+  }
+  
+  .view-toggle-controls .btn {
+    min-width: 44px;
+    padding: 0.5rem;
+  }
+  
+  .list-item-pizza .row {
+    align-items: center !important;
+  }
+  
+  .list-item-pizza .col-6 {
+    flex: 1;
+  }
+}

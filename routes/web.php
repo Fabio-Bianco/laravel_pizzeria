@@ -103,12 +103,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('categories', CategoryController::class)->names('admin.categories');
     Route::resource('pizzas', PizzaController::class)->names('admin.pizzas');
-    
-    // ROTTA DEBUG PIZZE
-    Route::get('/pizzas-debug', function() {
-        $pizzas = \App\Models\Pizza::with(['category', 'ingredients'])->paginate(10);
-        return view('admin.pizzas.debug', compact('pizzas'));
-    })->name('admin.pizzas.debug');
     Route::resource('ingredients', IngredientController::class)->names('admin.ingredients');
     Route::resource('allergens', AllergenController::class)->names('admin.allergens');
     Route::resource('appetizers', AppetizerController::class)->names('admin.appetizers');
@@ -117,29 +111,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // AJAX endpoints per form intelligenti
     Route::get('ajax/ingredients-allergens', [IngredientController::class, 'getAllergensForIngredients'])->name('admin.ajax.ingredients-allergens');
-    
-    // ROTTA DI TEST LAYOUT
-    Route::get('/test-layout', function () {
-        return view('layouts.test-layout');
-    })->name('test.layout');
-    
-    // DEBUG ASSOLUTO
-    Route::get('/debug', function () {
-        return view('debug-layout');
-    })->name('debug.layout');
-    
-    // DASHBOARD PULITO SENZA BOOTSTRAP
-    Route::get('/dashboard-clean', function () {
-        return view('dashboard-clean', [
-            'countPizzas' => 12,
-            'countAppetizers' => 8,
-            'countBeverages' => 15,
-            'countDesserts' => 6,
-            'latestPizza' => (object)['name' => 'Margherita', 'price' => 8.50],
-            'latestAppetizer' => (object)['name' => 'Bruschetta', 'price' => 5.00],
-            'latestDessert' => (object)['name' => 'Tiramisù', 'price' => 4.50],
-        ]);
-    })->name('dashboard.clean');
 });
 
 require __DIR__ . '/auth.php';
