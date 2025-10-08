@@ -44,65 +44,47 @@
       </div>
     </div>
   @else
-    {{-- Lista ingredienti --}}
-    <div class="row g-4">
+
+    {{-- Lista ingredienti: elenco semplice, azioni sempre visibili a destra --}}
+    <div class="list-container">
       @foreach($ingredients as $ingredient)
-        <div class="col-lg-4 col-md-6">
-          <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body d-flex flex-column">
-              {{-- Nome e info principali --}}
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="card-title mb-0 text-truncate flex-grow-1 me-2">{{ $ingredient->name }}</h5>
-                @if($ingredient->allergens && $ingredient->allergens->count() > 0)
-                  <span class="badge bg-warning text-dark">{{ $ingredient->allergens->count() }} allergeni</span>
+        <div class="d-flex align-items-center list-item-pizza">
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <h6 class="mb-0 text-truncate">{{ $ingredient->name }}</h6>
+              @if($ingredient->allergens && $ingredient->allergens->count() > 0)
+                <span class="badge badge-warning" title="Contiene allergeni">{{ $ingredient->allergens->count() }} allergeni</span>
+              @endif
+            </div>
+            @if(!empty($ingredient->description))
+              <div class="text-muted small mb-1">{{ \Illuminate\Support\Str::limit($ingredient->description, 100) }}</div>
+            @endif
+            @if($ingredient->allergens && $ingredient->allergens->count() > 0)
+              <div class="mb-1">
+                <small class="text-muted">Allergeni:</small>
+                @foreach($ingredient->allergens->take(3) as $allergen)
+                  <span class="badge badge-danger me-1 mb-1">{{ $allergen->name }}</span>
+                @endforeach
+                @if($ingredient->allergens->count() > 3)
+                  <span class="badge badge-neutral">+{{ $ingredient->allergens->count() - 3 }}</span>
                 @endif
               </div>
-
-              @if(!empty($ingredient->description))
-                <p class="card-text text-muted small mb-3">{{ \Illuminate\Support\Str::limit($ingredient->description, 100) }}</p>
-              @endif
-
-              {{-- Allergeni --}}
-              @if($ingredient->allergens && $ingredient->allergens->count() > 0)
-                <div class="mb-3">
-                  <small class="text-muted">Allergeni:</small>
-                  <div class="mt-1">
-                    @foreach($ingredient->allergens->take(3) as $allergen)
-                      <span class="badge bg-danger text-white me-1 mb-1">{{ $allergen->name }}</span>
-                    @endforeach
-                    @if($ingredient->allergens->count() > 3)
-                      <span class="badge bg-secondary">+{{ $ingredient->allergens->count() - 3 }}</span>
-                    @endif
-                  </div>
-                </div>
-              @endif
-
-              {{-- Azioni sempre in fondo --}}
-              <div class="mt-auto">
-                <div class="d-flex justify-content-end gap-2">
-                  <a href="{{ route('admin.ingredients.show', $ingredient) }}" 
-                     class="btn btn-outline-primary btn-sm" 
-                     title="Visualizza dettagli">
-                    <i class="fas fa-eye" aria-hidden="true"></i>
-                  </a>
-                  <a href="{{ route('admin.ingredients.edit', $ingredient) }}" 
-                     class="btn btn-outline-secondary btn-sm" 
-                     title="Modifica ingrediente">
-                    <i class="fas fa-edit" aria-hidden="true"></i>
-                  </a>
-                  <form method="POST" action="{{ route('admin.ingredients.destroy', $ingredient) }}" 
-                        class="d-inline"
-                        data-item-name="{{ $ingredient->name }}">
-                    @csrf @method('DELETE')
-                    <button type="submit" 
-                            class="btn btn-outline-danger btn-sm" 
-                            title="Elimina ingrediente">
-                      <i class="fas fa-trash" aria-hidden="true"></i>
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
+            @endif
+          </div>
+          <div class="d-flex align-items-center gap-2 ms-3 flex-shrink-0">
+            <a href="{{ route('admin.ingredients.edit', $ingredient) }}"
+               class="btn btn-success btn-sm d-flex align-items-center gap-1"
+               title="Modifica ingrediente">
+              <i class="fas fa-edit me-1" aria-hidden="true"></i> <span>Modifica</span>
+            </a>
+            <form method="POST" action="{{ route('admin.ingredients.destroy', $ingredient) }}" class="d-inline" data-item-name="{{ $ingredient->name }}">
+              @csrf @method('DELETE')
+              <button type="submit"
+                      class="btn btn-danger btn-sm d-flex align-items-center gap-1"
+                      title="Elimina ingrediente">
+                <i class="fas fa-trash me-1" aria-hidden="true"></i> <span>Elimina</span>
+              </button>
+            </form>
           </div>
         </div>
       @endforeach

@@ -33,11 +33,11 @@
                                 <p class="card-text text-muted small mb-3">Allergeni: {{ $names->join(', ') }}</p>
                             @endif
                             <div class="mt-auto d-flex gap-2 justify-content-end">
-                                <a href="{{ route('admin.ingredients.edit', $ingredient) }}" class="btn btn-sm btn-success">Modifica</a>
+                                <a href="{{ route('admin.ingredients.edit', $ingredient) }}" class="btn btn-outline-success btn-sm" style="border:1.5px solid #388e3c;color:#388e3c;background:transparent;">Modifica</a>
                                 <form action="{{ route('admin.ingredients.destroy', $ingredient) }}" method="POST" data-confirm="Sicuro?">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-sm btn-danger" type="submit">Elimina</button>
+                                    <button class="btn btn-outline-danger btn-sm" type="submit" style="border:1.5px solid #d32f2f;color:#d32f2f;background:transparent;">Elimina</button>
                                 </form>
                             </div>
                         </div>

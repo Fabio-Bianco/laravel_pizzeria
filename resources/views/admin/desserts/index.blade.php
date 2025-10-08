@@ -49,70 +49,75 @@
 
       <div class="list-container">
         @foreach($desserts as $d)
-          <div class="list-item-dessert py-3 border-bottom">
-            <div class="row align-items-center g-3">
-              {{-- IMG --}}
-              <div class="col-md-2 col-3">
-                @if(!empty($d->image_path))
-                  <img src="{{ asset('storage/'.$d->image_path) }}" alt="Dolce {{ $d->name }}" class="img-fluid rounded" style="height:60px;width:60px;object-fit:cover;">
-                @else
-                  <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height:60px;width:60px;">
-                    <i class="fas fa-cookie-bite text-muted" aria-hidden="true"></i>
-                  </div>
-                @endif
-              </div>
-
-              {{-- TESTO + BADGE --}}
-              <div class="col-md-5 col-6">
-                <div class="d-flex justify-content-between align-items-start">
-                  <div class="flex-grow-1 min-w-0">
-                    <h6 class="mb-1 fw-bold text-truncate">
-                      <a href="{{ route('admin.desserts.show', $d) }}" class="text-decoration-none text-dark">{{ $d->name }}</a>
-                    </h6>
-                    <small class="text-muted d-block text-truncate">{{ $d->description ?? 'Nessuna descrizione' }}</small>
-
-                    @if (\Illuminate\Support\Facades\View::exists('components.allergen-display'))
-                      <div class="mt-1">
-                        <x-allergen-display :allergens="$d" mode="minimal" :maxVisible="3" />
-                      </div>
-                    @endif
-                  </div>
-
-                  @if(!empty($d->is_gluten_free))
-                    <span class="badge bg-info text-dark ms-2" title="Senza glutine">🌾 Senza Glutine</span>
+          <div class="pizza-card card shadow-sm border-0 mb-3">
+            <div class="card-body py-3 px-3">
+              <div class="d-flex align-items-center gap-3 flex-wrap flex-md-nowrap">
+                <div class="pizza-icon flex-shrink-0 d-flex align-items-center justify-content-center bg-light rounded-circle" style="height:56px;width:56px;">
+                  @if(!empty($d->image_path))
+                    <img src="{{ asset('storage/'.$d->image_path) }}" alt="Dolce {{ $d->name }}" class="img-fluid rounded-circle" style="height:56px;width:56px;object-fit:cover;">
+                  @else
+                    <i class="fas fa-cookie-bite text-warning fs-3" aria-hidden="true"></i>
                   @endif
                 </div>
-              </div>
-
-              {{-- PREZZO --}}
-              <div class="col-md-2 col-3 text-center">
-                <span class="h6 text-success fw-bold">€{{ number_format($d->price ?? 0, 2, ',', '.') }}</span>
-              </div>
-
-              {{-- AZIONI (no .btn-group per evitare clipping) --}}
-              <div class="col-md-3 col-12">
-                <div class="d-flex flex-wrap gap-2 w-100 actions-flex">
-                  <a href="{{ route('admin.desserts.show', $d) }}"
-                     class="btn btn-view btn-sm flex-grow-1"
-                     data-bs-toggle="tooltip" title="Dettagli">
-                    <i class="fas fa-eye me-1"></i><span class="d-none d-lg-inline">Dettagli</span>
+                <div class="flex-grow-1 min-w-0">
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <div class="d-flex align-items-center flex-wrap" style="min-width:0;">
+                      <span class="fw-bold fs-5 text-dark text-truncate d-inline-block" style="max-width:220px;">{{ $d->name }}</span>
+                    </div>
+                    @if(!empty($d->is_gluten_free))
+                      <span class="badge rounded-pill bg-glutenfree text-glutenfree ms-2 align-middle" style="font-size:0.85em;font-weight:600;padding:0.18em 0.7em;vertical-align:middle;letter-spacing:0.02em;" title="Senza glutine">Senza Glutine</span>
+                    @endif
+                  </div>
+                  @if(!empty($d->description))
+                    <div class="mb-1"><small class="text-muted text-truncate d-block" style="max-width:320px;">{{ \Illuminate\Support\Str::limit($d->description, 120) }}</small></div>
+                  @endif
+                  @php $collapseId = 'ingredients-collapse-dessert-'.$d->id; $collapseAllergenId = 'allergens-collapse-dessert-'.$d->id; @endphp
+                  <div class="d-flex flex-row gap-2 mt-2">
+                    <button class="btn btn-sm d-inline-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#{{ $collapseId }}" aria-expanded="false" aria-controls="{{ $collapseId }}" style="border:1.5px solid #8fd19e;color:#388e3c;background:transparent;">
+                      <span style="font-size:1.2em;line-height:1;color:#388e3c;">&#9776;</span> <span>Vedi ingredienti</span>
+                    </button>
+                    <button class="btn btn-sm d-inline-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#{{ $collapseAllergenId }}" aria-expanded="false" aria-controls="{{ $collapseAllergenId }}" style="border:1.5px solid #ffe066;color:#bfa100;background:transparent;">
+                      <span style="font-size:1.2em;line-height:1;color:#bfa100;">&#9776;</span> <span>Vedi allergeni</span>
+                    </button>
+                  </div>
+                  <div class="collapse mt-2 w-100" id="{{ $collapseId }}">
+                    @if($d->ingredients && $d->ingredients->count() > 0)
+                      <ul class="list-unstyled mb-0 ps-2 small">
+                        @foreach($d->ingredients as $ingredient)
+                          <li class="py-1 d-flex align-items-center gap-2">
+                            <span>{{ $ingredient->name }}</span>
+                          </li>
+                        @endforeach
+                      </ul>
+                    @else
+                      <div class="text-muted small ps-2">Nessun ingrediente</div>
+                    @endif
+                  </div>
+                  <div class="collapse mt-2 w-100" id="{{ $collapseAllergenId }}">
+                    @if($d->allergens && $d->allergens->count() > 0)
+                      <ul class="list-unstyled mb-0 ps-2 small">
+                        @foreach($d->allergens as $allergen)
+                          <li class="py-1 d-flex align-items-center gap-2">
+                            <span>{{ $allergen->name }}</span>
+                          </li>
+                        @endforeach
+                      </ul>
+                    @else
+                      <div class="text-muted small ps-2">Nessun allergene</div>
+                    @endif
+                  </div>
+                </div>
+                <div class="pizza-actions d-flex flex-column flex-md-row gap-2 ms-md-3 mt-3 mt-md-0">
+                  <a href="{{ route('admin.desserts.show', $d) }}" class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Dettagli" style="border:1.5px solid #1976d2;color:#1976d2;background:transparent;">
+                    <i class="fas fa-eye me-1" style="color:#1976d2;"></i><span class="d-none d-md-inline" style="color:#1976d2;">Dettagli</span>
                   </a>
-
-                  <a href="{{ route('admin.desserts.edit', $d) }}"
-                     class="btn btn-edit btn-sm flex-grow-1"
-                     data-bs-toggle="tooltip" title="Modifica">
-                    <i class="fas fa-edit me-1"></i><span class="d-none d-lg-inline">Modifica</span>
+                  <a href="{{ route('admin.desserts.edit', $d) }}" class="btn btn-outline-success btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Modifica" style="border:1.5px solid #388e3c;color:#388e3c;background:transparent;">
+                    <i class="fas fa-edit me-1" style="color:#388e3c;"></i><span class="d-none d-md-inline" style="color:#388e3c;">Modifica</span>
                   </a>
-
-                  <form method="POST"
-                        action="{{ route('admin.desserts.destroy', $d) }}"
-                        class="flex-grow-1"
-                        onsubmit="return confirm('Eliminare definitivamente {{ $d->name }}?')">
+                  <form method="POST" action="{{ route('admin.desserts.destroy', $d) }}" onsubmit="return confirm('Eliminare definitivamente {{ $d->name }}?')">
                     @csrf @method('DELETE')
-                    <button type="submit"
-                            class="btn btn-delete btn-sm w-100 d-flex align-items-center justify-content-center"
-                            data-bs-toggle="tooltip" title="Elimina">
-                      <i class="fas fa-trash me-1"></i><span>Elimina</span>
+                    <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center w-100" data-bs-toggle="tooltip" title="Elimina" style="border:1.5px solid #d32f2f;color:#d32f2f;background:transparent;">
+                      <i class="fas fa-trash me-1" style="color:#d32f2f;"></i><span class="d-none d-md-inline" style="color:#d32f2f;">Elimina</span>
                     </button>
                   </form>
                 </div>
@@ -131,12 +136,25 @@
 
 @push('styles')
 <style>
-  /* Evita qualsiasi clipping dell'elenco */
   .list-wrapper, .list-container { overflow: visible; }
-  /* Migliora la resa su layout stretti */
   .actions-flex .btn { min-width: 110px; white-space: nowrap; }
   @media (max-width: 576px) {
     .actions-flex .btn { min-width: 100%; }
+  }
+  /* Badge vegano e senza glutine: palette rilassante */
+  .bg-green-veg {
+    background: #e6f4ea;
+    border: 1.5px solid #6bbf59;
+  }
+  .text-green-veg {
+    color: #388e3c !important;
+  }
+  .bg-glutenfree {
+    background: #f3f6fa;
+    border: 1.5px solid #7e9ebd;
+  }
+  .text-glutenfree {
+    color: #3b5c7e !important;
   }
 </style>
 @endpush

@@ -72,7 +72,7 @@
             <span class="nav-icon">🍕</span>
             <span class="nav-text">Pizze</span>
             <?php if(isset($countPizzas)): ?>
-              <span class="nav-badge nav-badge-primary"><?php echo e($countPizzas); ?></span>
+              <span class="nav-badge nav-badge-neutral"><?php echo e($countPizzas); ?></span>
             <?php endif; ?>
           </a>
 
@@ -82,7 +82,7 @@
             <span class="nav-icon">🥗</span>
             <span class="nav-text">Antipasti</span>
             <?php if(isset($countAppetizers)): ?>
-              <span class="nav-badge nav-badge-success"><?php echo e($countAppetizers); ?></span>
+              <span class="nav-badge nav-badge-neutral"><?php echo e($countAppetizers); ?></span>
             <?php endif; ?>
           </a>
 
@@ -92,7 +92,7 @@
             <span class="nav-icon">🥤</span>
             <span class="nav-text">Bevande</span>
             <?php if(isset($countBeverages)): ?>
-              <span class="nav-badge nav-badge-info"><?php echo e($countBeverages); ?></span>
+              <span class="nav-badge nav-badge-neutral"><?php echo e($countBeverages); ?></span>
             <?php endif; ?>
           </a>
 
@@ -102,7 +102,7 @@
             <span class="nav-icon">🍰</span>
             <span class="nav-text">Dessert</span>
             <?php if(isset($countDesserts)): ?>
-              <span class="nav-badge nav-badge-secondary"><?php echo e($countDesserts); ?></span>
+              <span class="nav-badge nav-badge-neutral"><?php echo e($countDesserts); ?></span>
             <?php endif; ?>
           </a>
         </div>
@@ -290,12 +290,12 @@
 }
 
 /* Badge colors */
-.nav-badge-primary { background-color: #28a745; color: white; }
-.nav-badge-success { background-color: #10B981; color: white; }
-.nav-badge-info { background-color: #3B82F6; color: white; }
-.nav-badge-warning { background-color: #F59E0B; color: white; }
-.nav-badge-danger { background-color: #EF4444; color: white; }
-.nav-badge-secondary { background-color: #8B5CF6; color: white; }
+.nav-badge-neutral {
+  background-color: #f7fafc;
+  color: #2d3748;
+  border: 1px solid #e2e8f0;
+  font-weight: 600;
+}
 
 .nav-link.active .nav-badge {
   background-color: rgba(255, 255, 255, 0.2);

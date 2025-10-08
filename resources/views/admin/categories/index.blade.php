@@ -18,37 +18,38 @@
 
     <div class="container py-4">
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+
+        <div class="list-container">
             @forelse ($categories as $category)
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-body d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title mb-0">
-                                    <a href="{{ route('admin.categories.show', $category) }}" class="stretched-link text-decoration-none">{{ $category->name }}</a>
-                                </h5>
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="badge text-bg-info-subtle text-info-emphasis" title="Numero pizze in categoria">{{ $category->pizzas_count }} pizze</span>
-                                </div>
-                            </div>
-                            @if($category->description)
-                                <p class="card-text text-muted small mb-3">{{ \Illuminate\Support\Str::limit($category->description, 120) }}</p>
-                            @endif
-                            <div class="mt-auto d-flex gap-2 justify-content-end">
-                                <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-sm btn-success">Modifica</a>
-                                <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" data-confirm="Sicuro?">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger" type="submit">Elimina</button>
-                                </form>
-                            </div>
+                <div class="d-flex align-items-center list-item-pizza">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <h6 class="mb-0 text-truncate">
+                                <a href="{{ route('admin.categories.show', $category) }}" class="text-decoration-none">{{ $category->name }}</a>
+                            </h6>
+                            <span class="badge badge-info" title="Numero pizze in categoria">{{ $category->pizzas_count }} pizze</span>
                         </div>
+                        @if($category->description)
+                            <div class="text-muted small mb-1">{{ \Illuminate\Support\Str::limit($category->description, 120) }}</div>
+                        @endif
+                    </div>
+                    <div class="d-flex align-items-center gap-2 ms-3 flex-shrink-0">
+                        <a href="{{ route('admin.categories.edit', $category) }}"
+                           class="btn btn-success btn-sm d-flex align-items-center gap-1"
+                           title="Modifica categoria">
+                            <i class="fas fa-edit me-1" aria-hidden="true"></i> <span>Modifica</span>
+                        </a>
+                        <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" data-confirm="Sicuro?" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger btn-sm d-flex align-items-center gap-1" type="submit" title="Elimina categoria">
+                                <i class="fas fa-trash me-1" aria-hidden="true"></i> <span>Elimina</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             @empty
-                <div class="col">
-                    <div class="alert alert-info mb-0">Nessuna categoria.</div>
-                </div>
+                <div class="alert alert-info mb-0">Nessuna categoria.</div>
             @endforelse
         </div>
 

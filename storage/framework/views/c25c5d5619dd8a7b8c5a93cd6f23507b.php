@@ -47,89 +47,80 @@
 
       <div class="list-container">
         <?php $__currentLoopData = $desserts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $d): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-          <div class="list-item-dessert py-3 border-bottom">
-            <div class="row align-items-center g-3">
-              
-              <div class="col-md-2 col-3">
-                <?php if(!empty($d->image_path)): ?>
-                  <img src="<?php echo e(asset('storage/'.$d->image_path)); ?>" alt="Dolce <?php echo e($d->name); ?>" class="img-fluid rounded" style="height:60px;width:60px;object-fit:cover;">
-                <?php else: ?>
-                  <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height:60px;width:60px;">
-                    <i class="fas fa-cookie-bite text-muted" aria-hidden="true"></i>
-                  </div>
-                <?php endif; ?>
-              </div>
-
-              
-              <div class="col-md-5 col-6">
-                <div class="d-flex justify-content-between align-items-start">
-                  <div class="flex-grow-1 min-w-0">
-                    <h6 class="mb-1 fw-bold text-truncate">
-                      <a href="<?php echo e(route('admin.desserts.show', $d)); ?>" class="text-decoration-none text-dark"><?php echo e($d->name); ?></a>
-                    </h6>
-                    <small class="text-muted d-block text-truncate"><?php echo e($d->description ?? 'Nessuna descrizione'); ?></small>
-
-                    <?php if(\Illuminate\Support\Facades\View::exists('components.allergen-display')): ?>
-                      <div class="mt-1">
-                        <?php if (isset($component)) { $__componentOriginal5b439834db70954e0d348c0a339254ee = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal5b439834db70954e0d348c0a339254ee = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.allergen-display','data' => ['allergens' => $d,'mode' => 'minimal','maxVisible' => 3]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('allergen-display'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['allergens' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($d),'mode' => 'minimal','maxVisible' => 3]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal5b439834db70954e0d348c0a339254ee)): ?>
-<?php $attributes = $__attributesOriginal5b439834db70954e0d348c0a339254ee; ?>
-<?php unset($__attributesOriginal5b439834db70954e0d348c0a339254ee); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal5b439834db70954e0d348c0a339254ee)): ?>
-<?php $component = $__componentOriginal5b439834db70954e0d348c0a339254ee; ?>
-<?php unset($__componentOriginal5b439834db70954e0d348c0a339254ee); ?>
-<?php endif; ?>
-                      </div>
-                    <?php endif; ?>
-                  </div>
-
-                  <?php if(!empty($d->is_gluten_free)): ?>
-                    <span class="badge bg-info text-dark ms-2" title="Senza glutine">🌾 Senza Glutine</span>
+          <div class="pizza-card card shadow-sm border-0 mb-3">
+            <div class="card-body py-3 px-3">
+              <div class="d-flex align-items-center gap-3 flex-wrap flex-md-nowrap">
+                <div class="pizza-icon flex-shrink-0 d-flex align-items-center justify-content-center bg-light rounded-circle" style="height:56px;width:56px;">
+                  <?php if(!empty($d->image_path)): ?>
+                    <img src="<?php echo e(asset('storage/'.$d->image_path)); ?>" alt="Dolce <?php echo e($d->name); ?>" class="img-fluid rounded-circle" style="height:56px;width:56px;object-fit:cover;">
+                  <?php else: ?>
+                    <i class="fas fa-cookie-bite text-warning fs-3" aria-hidden="true"></i>
                   <?php endif; ?>
                 </div>
-              </div>
-
-              
-              <div class="col-md-2 col-3 text-center">
-                <span class="h6 text-success fw-bold">€<?php echo e(number_format($d->price ?? 0, 2, ',', '.')); ?></span>
-              </div>
-
-              
-              <div class="col-md-3 col-12">
-                <div class="d-flex flex-wrap gap-2 w-100 actions-flex">
-                  <a href="<?php echo e(route('admin.desserts.show', $d)); ?>"
-                     class="btn btn-view btn-sm flex-grow-1"
-                     data-bs-toggle="tooltip" title="Dettagli">
-                    <i class="fas fa-eye me-1"></i><span class="d-none d-lg-inline">Dettagli</span>
+                <div class="flex-grow-1 min-w-0">
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <div class="d-flex align-items-center flex-wrap" style="min-width:0;">
+                      <span class="fw-bold fs-5 text-dark text-truncate d-inline-block" style="max-width:220px;"><?php echo e($d->name); ?></span>
+                      <?php if(!empty($d->is_vegan)): ?>
+                        <span class="badge badge-success rounded-pill align-middle ms-2 veg-badge">
+                          <i class="fas fa-leaf me-1 veg-leaf"></i>Veg
+                        </span>
+                      <?php endif; ?>
+                    </div>
+                    <?php if(!empty($d->is_gluten_free)): ?>
+                      <span class="badge rounded-pill bg-glutenfree text-glutenfree ms-2 align-middle" style="font-size:0.85em;font-weight:600;padding:0.18em 0.7em;vertical-align:middle;letter-spacing:0.02em;" title="Senza glutine">Senza Glutine</span>
+                    <?php endif; ?>
+                  </div>
+                  <?php if(!empty($d->description)): ?>
+                    <div class="mb-1"><small class="text-muted text-truncate d-block" style="max-width:320px;"><?php echo e(\Illuminate\Support\Str::limit($d->description, 120)); ?></small></div>
+                  <?php endif; ?>
+                  <?php $collapseId = 'ingredients-collapse-dessert-'.$d->id; $collapseAllergenId = 'allergens-collapse-dessert-'.$d->id; ?>
+                  <div class="d-flex flex-row gap-2 mt-2">
+                    <button class="btn btn-sm d-inline-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#<?php echo e($collapseId); ?>" aria-expanded="false" aria-controls="<?php echo e($collapseId); ?>" style="border:1.5px solid #8fd19e;color:#388e3c;background:transparent;">
+                      <span style="font-size:1.2em;line-height:1;color:#388e3c;">&#9776;</span> <span>Vedi ingredienti</span>
+                    </button>
+                    <button class="btn btn-sm d-inline-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#<?php echo e($collapseAllergenId); ?>" aria-expanded="false" aria-controls="<?php echo e($collapseAllergenId); ?>" style="border:1.5px solid #ffe066;color:#bfa100;background:transparent;">
+                      <span style="font-size:1.2em;line-height:1;color:#bfa100;">&#9776;</span> <span>Vedi allergeni</span>
+                    </button>
+                  </div>
+                  <div class="collapse mt-2 w-100" id="<?php echo e($collapseId); ?>">
+                    <?php if($d->ingredients && $d->ingredients->count() > 0): ?>
+                      <ul class="list-unstyled mb-0 ps-2 small">
+                        <?php $__currentLoopData = $d->ingredients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ingredient): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                          <li class="py-1 d-flex align-items-center gap-2">
+                            <span><?php echo e($ingredient->name); ?></span>
+                          </li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                      </ul>
+                    <?php else: ?>
+                      <div class="text-muted small ps-2">Nessun ingrediente</div>
+                    <?php endif; ?>
+                  </div>
+                  <div class="collapse mt-2 w-100" id="<?php echo e($collapseAllergenId); ?>">
+                    <?php if($d->allergens && $d->allergens->count() > 0): ?>
+                      <ul class="list-unstyled mb-0 ps-2 small">
+                        <?php $__currentLoopData = $d->allergens; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $allergen): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                          <li class="py-1 d-flex align-items-center gap-2">
+                            <span><?php echo e($allergen->name); ?></span>
+                          </li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                      </ul>
+                    <?php else: ?>
+                      <div class="text-muted small ps-2">Nessun allergene</div>
+                    <?php endif; ?>
+                  </div>
+                </div>
+                <div class="pizza-actions d-flex flex-column flex-md-row gap-2 ms-md-3 mt-3 mt-md-0">
+                  <a href="<?php echo e(route('admin.desserts.show', $d)); ?>" class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Dettagli" style="border:1.5px solid #1976d2;color:#1976d2;background:transparent;">
+                    <i class="fas fa-eye me-1" style="color:#1976d2;"></i><span class="d-none d-md-inline" style="color:#1976d2;">Dettagli</span>
                   </a>
-
-                  <a href="<?php echo e(route('admin.desserts.edit', $d)); ?>"
-                     class="btn btn-edit btn-sm flex-grow-1"
-                     data-bs-toggle="tooltip" title="Modifica">
-                    <i class="fas fa-edit me-1"></i><span class="d-none d-lg-inline">Modifica</span>
+                  <a href="<?php echo e(route('admin.desserts.edit', $d)); ?>" class="btn btn-outline-success btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Modifica" style="border:1.5px solid #388e3c;color:#388e3c;background:transparent;">
+                    <i class="fas fa-edit me-1" style="color:#388e3c;"></i><span class="d-none d-md-inline" style="color:#388e3c;">Modifica</span>
                   </a>
-
-                  <form method="POST"
-                        action="<?php echo e(route('admin.desserts.destroy', $d)); ?>"
-                        class="flex-grow-1"
-                        onsubmit="return confirm('Eliminare definitivamente <?php echo e($d->name); ?>?')">
+                  <form method="POST" action="<?php echo e(route('admin.desserts.destroy', $d)); ?>" onsubmit="return confirm('Eliminare definitivamente <?php echo e($d->name); ?>?')">
                     <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
-                    <button type="submit"
-                            class="btn btn-delete btn-sm w-100 d-flex align-items-center justify-content-center"
-                            data-bs-toggle="tooltip" title="Elimina">
-                      <i class="fas fa-trash me-1"></i><span>Elimina</span>
+                    <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center w-100" data-bs-toggle="tooltip" title="Elimina" style="border:1.5px solid #d32f2f;color:#d32f2f;background:transparent;">
+                      <i class="fas fa-trash me-1" style="color:#d32f2f;"></i><span class="d-none d-md-inline" style="color:#d32f2f;">Elimina</span>
                     </button>
                   </form>
                 </div>
@@ -148,12 +139,25 @@
 
 <?php $__env->startPush('styles'); ?>
 <style>
-  /* Evita qualsiasi clipping dell'elenco */
   .list-wrapper, .list-container { overflow: visible; }
-  /* Migliora la resa su layout stretti */
   .actions-flex .btn { min-width: 110px; white-space: nowrap; }
   @media (max-width: 576px) {
     .actions-flex .btn { min-width: 100%; }
+  }
+  /* Badge vegano e senza glutine: palette rilassante */
+  .bg-green-veg {
+    background: #e6f4ea;
+    border: 1.5px solid #6bbf59;
+  }
+  .text-green-veg {
+    color: #388e3c !important;
+  }
+  .bg-glutenfree {
+    background: #f3f6fa;
+    border: 1.5px solid #7e9ebd;
+  }
+  .text-glutenfree {
+    color: #3b5c7e !important;
   }
 </style>
 <?php $__env->stopPush(); ?>

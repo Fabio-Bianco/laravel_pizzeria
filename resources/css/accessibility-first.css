@@ -2,22 +2,7 @@
 ================================================================================
 SISTEMA COLORI SEMANTICO PER RISTORATORI ANALFABETI DIGITALI
 WCAG 2.1 AAA COMPLIANT - Contrasto minimo 7:1
-================================================================================
 
-FILOSOFIA:
-- Verde = CREO/SALVO qualcosa (come aggiungere una pizza al menu)
-- Rosso = ELIMINO qualcosa (come rimuovere una pizza dal menu) 
-- Blu = GUARDO/LEGGO qualcosa (come vedere i dettagli di un ordine)
-- Giallo = MODIFICO qualcosa (come cambiare il prezzo di una pizza)
-- Grigio = ANNULLO/NEUTRO (come tornare indietro)
-
-CONTRASTI WCAG 2.1 AAA (minimo 7:1):
-- Verde: #0d4f1c su bianco = 9.3:1 ✓
-- Rosso: #8b0000 su bianco = 9.7:1 ✓  
-- Blu: #003366 su bianco = 12.6:1 ✓
-- Giallo: #996600 su bianco = 7.4:1 ✓
-- Grigio: #2d3748 su bianco = 13.4:1 ✓
-*/
 
 /* =============================================================================
    VARIABILI CSS SEMANTIC COLOR SYSTEM

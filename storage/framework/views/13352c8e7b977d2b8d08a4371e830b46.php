@@ -45,59 +45,84 @@
     <div class="transition-container list-wrapper">
       <div class="list-container">
         <?php $__currentLoopData = $pizzas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pizza): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-          <div class="border-bottom py-3">
-            <div class="row align-items-center g-3">
-              <div class="col-md-2 col-3">
-                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height:60px;width:60px;">
-                  <i class="fas fa-pizza-slice text-muted" aria-hidden="true"></i>
+          <div class="pizza-card card shadow-sm border-0 mb-3">
+            <div class="card-body py-3 px-3">
+              <div class="d-flex align-items-center gap-3 flex-wrap flex-md-nowrap">
+                <div class="pizza-icon flex-shrink-0 d-flex align-items-center justify-content-center bg-light rounded-circle" style="height:56px;width:56px;">
+                  <i class="fas fa-pizza-slice text-warning fs-3" aria-hidden="true"></i>
                 </div>
-              </div>
-
-              <div class="col-md-7 col-9">
-                <div class="d-flex justify-content-between align-items-start">
-                  <div class="flex-grow-1 min-w-0">
-                    <h6 class="mb-1 fw-bold text-truncate"><?php echo e($pizza->name); ?></h6>
-                    <?php if(!empty($pizza->notes)): ?>
-                      <small class="text-muted d-block text-truncate"><?php echo e(\Illuminate\Support\Str::limit($pizza->notes, 120)); ?></small>
-                    <?php endif; ?>
-
-                    <?php if($pizza->ingredients && $pizza->ingredients->count() > 0): ?>
-                      <div class="mt-2">
-                        <small class="text-muted">Ingredienti:</small>
-                        <div class="mt-1">
-                          <?php $__currentLoopData = $pizza->ingredients->take(3); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ingredient): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <span class="badge bg-primary text-white me-1 mb-1"><?php echo e($ingredient->name); ?></span>
-                          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                          <?php if($pizza->ingredients->count() > 3): ?>
-                            <span class="badge bg-secondary">+<?php echo e($pizza->ingredients->count() - 3); ?></span>
-                          <?php endif; ?>
-                        </div>
+                <div class="flex-grow-1 min-w-0">
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <div class="d-flex flex-column align-items-start min-w-0">
+                      <div class="d-flex align-items-center flex-row flex-wrap" style="min-width:0;">
+                        <span class="fw-bold fs-5 text-dark d-inline-block" style="max-width:320px;"><?php echo e($pizza->name); ?></span>
+                        <?php if(!empty($pizza->is_vegan)): ?>
+                          <span class="badge badge-success rounded-pill align-middle ms-2 veg-badge">
+                            <i class="fas fa-leaf me-1 veg-leaf"></i>Veg
+                          </span>
+                        <?php endif; ?>
                       </div>
-                    <?php endif; ?>
+                      <?php if($pizza->category): ?>
+                        <span class="badge rounded-pill border border-secondary text-secondary px-2 py-1 mt-1 small" style="font-size:0.85em;background:transparent;"><?php echo e($pizza->category->name); ?></span>
+                      <?php endif; ?>
+                    </div>
                   </div>
-                  <?php if($pizza->category): ?>
-                    <span class="badge bg-info text-dark ms-2"><?php echo e($pizza->category->name); ?></span>
+                  <?php if(!empty($pizza->notes)): ?>
+                    <div class="mb-1"><small class="text-muted text-truncate d-block" style="max-width:320px;"><?php echo e(\Illuminate\Support\Str::limit($pizza->notes, 120)); ?></small></div>
+                  <?php endif; ?>
+                  <?php if($pizza->ingredients && $pizza->ingredients->count() > 0): ?>
+                    <?php $collapseId = 'ingredients-collapse-'.$pizza->id; $collapseAllergenId = 'allergens-collapse-'.$pizza->id; ?>
+                    <div class="d-flex flex-row gap-2 mt-2">
+                      <button class="btn btn-sm d-inline-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#<?php echo e($collapseId); ?>" aria-expanded="false" aria-controls="<?php echo e($collapseId); ?>" style="border:1.5px solid #8fd19e;color:#388e3c;background:transparent;">
+                        <span style="font-size:1.2em;line-height:1;color:#388e3c;">&#9776;</span> <span>Vedi ingredienti</span>
+                      </button>
+                      <button class="btn btn-sm d-inline-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#<?php echo e($collapseAllergenId); ?>" aria-expanded="false" aria-controls="<?php echo e($collapseAllergenId); ?>" style="border:1.5px solid #ffe066;color:#bfa100;background:transparent;">
+                        <span style="font-size:1.2em;line-height:1;color:#bfa100;">&#9776;</span> <span>Vedi allergeni</span>
+                      </button>
+                    </div>
+                    <div class="collapse mt-2 w-100" id="<?php echo e($collapseId); ?>">
+                      <?php if($pizza->ingredients && $pizza->ingredients->count() > 0): ?>
+                        <ul class="list-unstyled mb-0 ps-2 small">
+                          <?php $__currentLoopData = $pizza->ingredients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ingredient): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li class="py-1 d-flex align-items-center gap-2">
+                              <span><?php echo e($ingredient->name); ?></span>
+                            </li>
+                          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </ul>
+                      <?php else: ?>
+                        <div class="text-muted small ps-2">Nessun ingrediente</div>
+                      <?php endif; ?>
+                    </div>
+                    <div class="collapse mt-2 w-100" id="<?php echo e($collapseAllergenId); ?>">
+                      <?php if($pizza->allergens && $pizza->allergens->count() > 0): ?>
+                        <ul class="list-unstyled mb-0 ps-2 small">
+                          <?php $__currentLoopData = $pizza->allergens; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $allergen): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li class="py-1 d-flex align-items-center gap-2">
+                              <span><?php echo e($allergen->name); ?></span>
+                            </li>
+                          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </ul>
+                      <?php else: ?>
+                        <div class="text-muted small ps-2">Nessun allergene</div>
+                      <?php endif; ?>
+                    </div>
                   <?php endif; ?>
                 </div>
-              </div>
-
-              <div class="col-md-3 col-12">
-                <div class="d-flex flex-wrap gap-2 w-100 actions-flex">
-                  <a href="<?php echo e(route('admin.pizzas.show', $pizza)); ?>" class="btn btn-view btn-sm flex-grow-1" data-bs-toggle="tooltip" title="Dettagli">
-                    <i class="fas fa-eye me-1"></i><span class="d-none d-lg-inline">Dettagli</span>
+                <div class="pizza-actions d-flex flex-column flex-md-row gap-2 ms-md-3 mt-3 mt-md-0">
+                  <a href="<?php echo e(route('admin.pizzas.show', $pizza)); ?>" class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Dettagli">
+                    <i class="fas fa-eye me-1"></i><span class="d-none d-md-inline">Dettagli</span>
                   </a>
-                  <a href="<?php echo e(route('admin.pizzas.edit', $pizza)); ?>" class="btn btn-edit btn-sm flex-grow-1" data-bs-toggle="tooltip" title="Modifica">
-                    <i class="fas fa-edit me-1"></i><span class="d-none d-lg-inline">Modifica</span>
+                  <a href="<?php echo e(route('admin.pizzas.edit', $pizza)); ?>" class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Modifica">
+                    <i class="fas fa-edit me-1 text-success"></i><span class="d-none d-md-inline text-success">Modifica</span>
                   </a>
-                  <form method="POST" action="<?php echo e(route('admin.pizzas.destroy', $pizza)); ?>" class="flex-grow-1" onsubmit="return confirm('Eliminare definitivamente <?php echo e($pizza->name); ?>?')">
+                  <form method="POST" action="<?php echo e(route('admin.pizzas.destroy', $pizza)); ?>" onsubmit="return confirm('Eliminare definitivamente <?php echo e($pizza->name); ?>?')">
                     <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
-                    <button type="submit" class="btn btn-delete btn-sm w-100 d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Elimina">
-                      <i class="fas fa-trash me-1"></i><span>Elimina</span>
+                    <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center w-100" data-bs-toggle="tooltip" title="Elimina">
+                      <i class="fas fa-trash me-1 text-danger"></i><span class="d-none d-md-inline text-danger">Elimina</span>
                     </button>
                   </form>
                 </div>
               </div>
-
             </div>
           </div>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -115,6 +140,13 @@
   .list-wrapper, .list-container { overflow: visible; }
   .actions-flex .btn { min-width: 110px; white-space: nowrap; }
   @media (max-width: 576px) { .actions-flex .btn { min-width: 100%; } }
+  .bg-green-veg {
+    background: #e6f4ea;
+    border: 1.5px solid #6bbf59;
+  }
+  .text-green-veg {
+    color: #388e3c !important;
+  }
 </style>
 <?php $__env->stopPush(); ?>
 

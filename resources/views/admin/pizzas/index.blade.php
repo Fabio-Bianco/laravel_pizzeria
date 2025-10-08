@@ -45,59 +45,84 @@
     <div class="transition-container list-wrapper">
       <div class="list-container">
         @foreach($pizzas as $pizza)
-          <div class="border-bottom py-3">
-            <div class="row align-items-center g-3">
-              <div class="col-md-2 col-3">
-                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height:60px;width:60px;">
-                  <i class="fas fa-pizza-slice text-muted" aria-hidden="true"></i>
+          <div class="pizza-card card shadow-sm border-0 mb-3">
+            <div class="card-body py-3 px-3">
+              <div class="d-flex align-items-center gap-3 flex-wrap flex-md-nowrap">
+                <div class="pizza-icon flex-shrink-0 d-flex align-items-center justify-content-center bg-light rounded-circle" style="height:56px;width:56px;">
+                  <i class="fas fa-pizza-slice text-warning fs-3" aria-hidden="true"></i>
                 </div>
-              </div>
-
-              <div class="col-md-7 col-9">
-                <div class="d-flex justify-content-between align-items-start">
-                  <div class="flex-grow-1 min-w-0">
-                    <h6 class="mb-1 fw-bold text-truncate">{{ $pizza->name }}</h6>
-                    @if(!empty($pizza->notes))
-                      <small class="text-muted d-block text-truncate">{{ \Illuminate\Support\Str::limit($pizza->notes, 120) }}</small>
-                    @endif
-
-                    @if($pizza->ingredients && $pizza->ingredients->count() > 0)
-                      <div class="mt-2">
-                        <small class="text-muted">Ingredienti:</small>
-                        <div class="mt-1">
-                          @foreach($pizza->ingredients->take(3) as $ingredient)
-                            <span class="badge bg-primary text-white me-1 mb-1">{{ $ingredient->name }}</span>
-                          @endforeach
-                          @if($pizza->ingredients->count() > 3)
-                            <span class="badge bg-secondary">+{{ $pizza->ingredients->count() - 3 }}</span>
-                          @endif
-                        </div>
+                <div class="flex-grow-1 min-w-0">
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <div class="d-flex flex-column align-items-start min-w-0">
+                      <div class="d-flex align-items-center flex-row flex-wrap" style="min-width:0;">
+                        <span class="fw-bold fs-5 text-dark d-inline-block" style="max-width:320px;">{{ $pizza->name }}</span>
+                        @if(!empty($pizza->is_vegan))
+                          <span class="badge rounded-pill align-middle ms-2" style="border:1.5px solid #6bbf59;color:#388e3c;background:#e6f4ea;font-size:0.85em;font-weight:600;padding:0.18em 0.7em;vertical-align:middle;letter-spacing:0.02em;">
+                            <i class="fas fa-leaf me-1" style="color:#388e3c;"></i>Veg
+                          </span>
+                        @endif
                       </div>
-                    @endif
+                      @if($pizza->category)
+                        <span class="badge rounded-pill border border-secondary text-secondary px-2 py-1 mt-1 small" style="font-size:0.85em;background:transparent;">{{ $pizza->category->name }}</span>
+                      @endif
+                    </div>
                   </div>
-                  @if($pizza->category)
-                    <span class="badge bg-info text-dark ms-2">{{ $pizza->category->name }}</span>
+                  @if(!empty($pizza->notes))
+                    <div class="mb-1"><small class="text-muted text-truncate d-block" style="max-width:320px;">{{ \Illuminate\Support\Str::limit($pizza->notes, 120) }}</small></div>
+                  @endif
+                  @if($pizza->ingredients && $pizza->ingredients->count() > 0)
+                    @php $collapseId = 'ingredients-collapse-'.$pizza->id; $collapseAllergenId = 'allergens-collapse-'.$pizza->id; @endphp
+                    <div class="d-flex flex-row gap-2 mt-2">
+                      <button class="btn btn-sm d-inline-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#{{ $collapseId }}" aria-expanded="false" aria-controls="{{ $collapseId }}" style="border:1.5px solid #8fd19e;color:#388e3c;background:transparent;">
+                        <span style="font-size:1.2em;line-height:1;color:#388e3c;">&#9776;</span> <span>Vedi ingredienti</span>
+                      </button>
+                      <button class="btn btn-sm d-inline-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#{{ $collapseAllergenId }}" aria-expanded="false" aria-controls="{{ $collapseAllergenId }}" style="border:1.5px solid #ffe066;color:#bfa100;background:transparent;">
+                        <span style="font-size:1.2em;line-height:1;color:#bfa100;">&#9776;</span> <span>Vedi allergeni</span>
+                      </button>
+                    </div>
+                    <div class="collapse mt-2 w-100" id="{{ $collapseId }}">
+                      @if($pizza->ingredients && $pizza->ingredients->count() > 0)
+                        <ul class="list-unstyled mb-0 ps-2 small">
+                          @foreach($pizza->ingredients as $ingredient)
+                            <li class="py-1 d-flex align-items-center gap-2">
+                              <span>{{ $ingredient->name }}</span>
+                            </li>
+                          @endforeach
+                        </ul>
+                      @else
+                        <div class="text-muted small ps-2">Nessun ingrediente</div>
+                      @endif
+                    </div>
+                    <div class="collapse mt-2 w-100" id="{{ $collapseAllergenId }}">
+                      @if($pizza->allergens && $pizza->allergens->count() > 0)
+                        <ul class="list-unstyled mb-0 ps-2 small">
+                          @foreach($pizza->allergens as $allergen)
+                            <li class="py-1 d-flex align-items-center gap-2">
+                              <span>{{ $allergen->name }}</span>
+                            </li>
+                          @endforeach
+                        </ul>
+                      @else
+                        <div class="text-muted small ps-2">Nessun allergene</div>
+                      @endif
+                    </div>
                   @endif
                 </div>
-              </div>
-
-              <div class="col-md-3 col-12">
-                <div class="d-flex flex-wrap gap-2 w-100 actions-flex">
-                  <a href="{{ route('admin.pizzas.show', $pizza) }}" class="btn btn-view btn-sm flex-grow-1" data-bs-toggle="tooltip" title="Dettagli">
-                    <i class="fas fa-eye me-1"></i><span class="d-none d-lg-inline">Dettagli</span>
+                <div class="pizza-actions d-flex flex-column flex-md-row gap-2 ms-md-3 mt-3 mt-md-0">
+                  <a href="{{ route('admin.pizzas.show', $pizza) }}" class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Dettagli">
+                    <i class="fas fa-eye me-1"></i><span class="d-none d-md-inline">Dettagli</span>
                   </a>
-                  <a href="{{ route('admin.pizzas.edit', $pizza) }}" class="btn btn-edit btn-sm flex-grow-1" data-bs-toggle="tooltip" title="Modifica">
-                    <i class="fas fa-edit me-1"></i><span class="d-none d-lg-inline">Modifica</span>
+                  <a href="{{ route('admin.pizzas.edit', $pizza) }}" class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Modifica">
+                    <i class="fas fa-edit me-1 text-success"></i><span class="d-none d-md-inline text-success">Modifica</span>
                   </a>
-                  <form method="POST" action="{{ route('admin.pizzas.destroy', $pizza) }}" class="flex-grow-1" onsubmit="return confirm('Eliminare definitivamente {{ $pizza->name }}?')">
+                  <form method="POST" action="{{ route('admin.pizzas.destroy', $pizza) }}" onsubmit="return confirm('Eliminare definitivamente {{ $pizza->name }}?')">
                     @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-delete btn-sm w-100 d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Elimina">
-                      <i class="fas fa-trash me-1"></i><span>Elimina</span>
+                    <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center w-100" data-bs-toggle="tooltip" title="Elimina">
+                      <i class="fas fa-trash me-1 text-danger"></i><span class="d-none d-md-inline text-danger">Elimina</span>
                     </button>
                   </form>
                 </div>
               </div>
-
             </div>
           </div>
         @endforeach
@@ -115,6 +140,13 @@
   .list-wrapper, .list-container { overflow: visible; }
   .actions-flex .btn { min-width: 110px; white-space: nowrap; }
   @media (max-width: 576px) { .actions-flex .btn { min-width: 100%; } }
+  .bg-green-veg {
+    background: #e6f4ea;
+    border: 1.5px solid #6bbf59;
+  }
+  .text-green-veg {
+    color: #388e3c !important;
+  }
 </style>
 @endpush
 

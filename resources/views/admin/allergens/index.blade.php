@@ -8,29 +8,30 @@
             @endif
         </div>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+
+        <div class="list-container">
             @forelse ($allergens as $allergen)
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title mb-2">
-                                <a href="{{ route('admin.allergens.show', $allergen) }}" class="stretched-link text-decoration-none">{{ $allergen->name }}</a>
-                            </h5>
-                            <div class="mt-auto d-flex gap-2 justify-content-end">
-                                <a href="{{ route('admin.allergens.edit', $allergen) }}" class="btn btn-sm btn-success">Modifica</a>
-                                <form action="{{ route('admin.allergens.destroy', $allergen) }}" method="POST" data-confirm="Sicuro?">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger" type="submit">Elimina</button>
-                                </form>
-                            </div>
-                        </div>
+                <div class="d-flex align-items-center list-item-pizza">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0 text-truncate">{{ $allergen->name }}</h6>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 ms-3 flex-shrink-0">
+                        <a href="{{ route('admin.allergens.edit', $allergen) }}"
+                           class="btn btn-success btn-sm d-flex align-items-center gap-1"
+                           title="Modifica allergene">
+                            <i class="fas fa-edit me-1" aria-hidden="true"></i> <span>Modifica</span>
+                        </a>
+                        <form action="{{ route('admin.allergens.destroy', $allergen) }}" method="POST" data-confirm="Sicuro?" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger btn-sm d-flex align-items-center gap-1" type="submit" title="Elimina allergene">
+                                <i class="fas fa-trash me-1" aria-hidden="true"></i> <span>Elimina</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             @empty
-                <div class="col">
-                    <div class="alert alert-info mb-0">Nessun allergene.</div>
-                </div>
+                <div class="alert alert-info mb-0">Nessun allergene.</div>
             @endforelse
         </div>
 
