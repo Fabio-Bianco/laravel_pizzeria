@@ -16,52 +16,68 @@ class DessertController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Dessert::query()
-            ->with(['ingredients.allergens'])
-            ->withCount('ingredients')
-            ->when($request->filled('search'), function ($builder) use ($request) {
-                $term = '%'.$request->string('search')->trim().'%';
-                $builder->where(function ($w) use ($term) {
-                    $w->where('name', 'like', $term)
-                      ->orWhere('description', 'like', $term);
-                });
-            })
-            ->when($request->filled('ingredient'), function ($builder) use ($request) {
-                $ingredientId = $request->integer('ingredient');
-                $builder->whereHas('ingredients', function ($nested) use ($ingredientId) {
-                    $nested->where('ingredients.id', $ingredientId);
-                });
-            })
-            ->when($request->filled('sort'), function ($builder) use ($request) {
-                return match ($request->string('sort')->toString()) {
-                    'price_asc'  => $builder->orderBy('price', 'asc'),
-                    'price_desc' => $builder->orderBy('price', 'desc'),
-                    'name_asc'   => $builder->orderBy('name', 'asc'),
-                    'name_desc'  => $builder->orderBy('name', 'desc'),
-                    default      => $builder->latest('id'),
-                };
-            }, function ($builder) {
-                return $builder->latest('id');
+        try {
+            $perPage = min(max((int) $request->query('per_page', 10), 1), 50);
+            $with = ['ingredients'];
+            if ($request->filled('with') && in_array('allergens', (array) $request->input('with'))) {
+                $with[] = 'ingredients.allergens';
+            }
+            $cacheKey = 'api.desserts.' . md5(json_encode($request->query()));
+            $result = \Cache::remember($cacheKey, 30, function () use ($request, $perPage, $with) {
+                $query = Dessert::query()
+                    ->with($with)
+                    ->withCount('ingredients')
+                    ->when($request->filled('search'), function ($builder) use ($request) {
+                        $term = '%'.$request->string('search')->trim().'%';
+                        $builder->where(function ($w) use ($term) {
+                            $w->where('name', 'like', $term)
+                              ->orWhere('description', 'like', $term);
+                        });
+                    })
+                    ->when($request->filled('ingredient'), function ($builder) use ($request) {
+                        $ingredientId = $request->integer('ingredient');
+                        $builder->whereHas('ingredients', function ($nested) use ($ingredientId) {
+                            $nested->where('ingredients.id', $ingredientId);
+                        });
+                    })
+                    ->when($request->filled('sort'), function ($builder) use ($request) {
+                        return match ($request->string('sort')->toString()) {
+                            'price_asc'  => $builder->orderBy('price', 'asc'),
+                            'price_desc' => $builder->orderBy('price', 'desc'),
+                            'name_asc'   => $builder->orderBy('name', 'asc'),
+                            'name_desc'  => $builder->orderBy('name', 'desc'),
+                            default      => $builder->latest('id'),
+                        };
+                    }, function ($builder) {
+                        return $builder->latest('id');
+                    });
+
+                $paginator = $query->paginate($perPage)->appends($request->query());
+
+                return [
+                    'data'  => DessertResource::collection($paginator->getCollection()),
+                    'meta'  => [
+                        'current_page' => $paginator->currentPage(),
+                        'last_page'    => $paginator->lastPage(),
+                        'per_page'     => $paginator->perPage(),
+                        'total'        => $paginator->total(),
+                    ],
+                    'links' => [
+                        'first' => $paginator->url(1),
+                        'last'  => $paginator->url($paginator->lastPage()),
+                        'prev'  => $paginator->previousPageUrl(),
+                        'next'  => $paginator->nextPageUrl(),
+                    ],
+                ];
             });
-
-        $perPage = min(max((int) $request->query('per_page', 10), 1), 50);
-        $paginator = $query->paginate($perPage)->appends($request->query());
-
-        return response()->json([
-            'data'  => DessertResource::collection($paginator->getCollection()),
-            'meta'  => [
-                'current_page' => $paginator->currentPage(),
-                'last_page'    => $paginator->lastPage(),
-                'per_page'     => $paginator->perPage(),
-                'total'        => $paginator->total(),
-            ],
-            'links' => [
-                'first' => $paginator->url(1),
-                'last'  => $paginator->url($paginator->lastPage()),
-                'prev'  => $paginator->previousPageUrl(),
-                'next'  => $paginator->nextPageUrl(),
-            ],
-        ]);
+            return response()->json($result);
+        } catch (\Throwable $e) {
+            \Log::error('API DessertController@index', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json([
+                'message' => 'Errore interno server. Riprova più tardi.',
+                'error' => app()->environment('production') ? null : $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

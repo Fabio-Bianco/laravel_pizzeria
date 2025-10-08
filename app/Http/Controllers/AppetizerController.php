@@ -17,36 +17,46 @@ class AppetizerController extends Controller
 {
     public function index(Request $request): View
     {
-        $q = Appetizer::query()
-            ->with('ingredients')
+        \DB::enableQueryLog();
+        $query = Appetizer::query()
+            ->with(['ingredients:id,name'])
             ->withCount('ingredients')
-            ->when($request->filled('search'), function ($qq) use ($request) {
-                $term = '%'.$request->string('search')->trim().'%';
-                $qq->where(function ($w) use ($term) {
+            ->select(['id', 'name', 'slug', 'price', 'description'])
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $term = '%' . $request->string('search')->trim() . '%';
+                $q->where(function ($w) use ($term) {
                     $w->where('name', 'like', $term)
-                      ->orWhere('description', 'like', $term);
+                        ->orWhere('description', 'like', $term);
                 });
             })
-            ->when($request->filled('ingredient'), function ($qq) use ($request) {
-                $qq->whereHas('ingredients', fn($w) => $w->where('ingredients.id', $request->integer('ingredient')));
+            ->when($request->filled('ingredient'), function ($q) use ($request) {
+                $q->whereHas('ingredients', fn ($w) => $w->where('ingredients.id', $request->integer('ingredient')));
             })
-            ->when($request->filled('sort'), function ($qq) use ($request) {
+            ->when($request->filled('sort'), function ($q) use ($request) {
                 return match ($request->string('sort')->toString()) {
-                    'price_asc'  => $qq->orderBy('price', 'asc'),
-                    'price_desc' => $qq->orderBy('price', 'desc'),
-                    'name_asc'   => $qq->orderBy('name', 'asc'),
-                    'name_desc'  => $qq->orderBy('name', 'desc'),
-                    default      => $qq->latest('id'),
+                    'price_asc'  => $q->orderBy('price', 'asc'),
+                    'price_desc' => $q->orderBy('price', 'desc'),
+                    'name_asc'   => $q->orderBy('name', 'asc'),
+                    'name_desc'  => $q->orderBy('name', 'desc'),
+                    default      => $q->latest('id'),
                 };
-            }, fn($qq) => $qq->latest('id'));
+            }, fn ($q) => $q->latest('id'));
 
-        $appetizers = $q->paginate(10)->withQueryString();
-        
-        // Filtri per la vista
-        $filters = [
-            'ingredients' => Ingredient::orderBy('name')->pluck('name','id'),
-        ];
-        
+        $appetizers = $query->paginate(10)->withQueryString();
+
+        $filters = \Cache::remember('admin.appetizer.filters', 600, function () {
+            return [
+                'ingredients' => Ingredient::orderBy('name')->pluck('name', 'id'),
+                'allergens'   => Allergen::orderBy('name')->pluck('name', 'id'),
+            ];
+        });
+
+        foreach (\DB::getQueryLog() as $query) {
+            if (($query['time'] ?? 0) > 100) {
+                \Log::warning('Query lenta AppetizerController@index', $query);
+            }
+        }
+
         return view('admin.appetizers.index', compact('appetizers', 'filters'));
     }
 
@@ -61,10 +71,8 @@ class AppetizerController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name']);
-        
         $appetizer = Appetizer::create($data);
         $appetizer->ingredients()->sync($request->input('ingredients', []));
-        
         return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto creato.');
     }
 
@@ -76,20 +84,18 @@ class AppetizerController extends Controller
 
     public function edit(Appetizer $appetizer): View
     {
-    $ingredients = Ingredient::orderBy('name')->get();
-    $allergens = Allergen::orderBy('name')->get();
-    $appetizer->load(['ingredients', 'allergens']);
-    return view('admin.appetizers.edit', compact('appetizer', 'ingredients', 'allergens'));
+        $ingredients = Ingredient::orderBy('name')->get();
+        $allergens = Allergen::orderBy('name')->get();
+        $appetizer->load(['ingredients', 'allergens']);
+        return view('admin.appetizers.edit', compact('appetizer', 'ingredients', 'allergens'));
     }
 
     public function update(UpdateAppetizerRequest $request, Appetizer $appetizer): RedirectResponse
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name'], $appetizer->id);
-        
         $appetizer->update($data);
         $appetizer->ingredients()->sync($request->input('ingredients', []));
-        
         return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto aggiornato.');
     }
 
@@ -99,18 +105,21 @@ class AppetizerController extends Controller
         return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto eliminato.');
     }
 
+    /**
+     * Genera uno slug unico per l'antipasto
+     */
     private function generateUniqueSlug(string $name, ?int $ignoreId = null): string
     {
         $baseSlug = Str::slug($name);
         $slug = $baseSlug;
-        $suffixCounter = 2;
+        $counter = 1;
         while (
             Appetizer::where('slug', $slug)
                 ->when($ignoreId, fn($query) => $query->where('id', '!=', $ignoreId))
                 ->exists()
         ) {
-            $slug = $baseSlug.'-'.$suffixCounter;
-            $suffixCounter++;
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
         }
         return $slug;
     }

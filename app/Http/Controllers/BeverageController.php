@@ -15,11 +15,12 @@ class BeverageController extends Controller
 {
     public function index(Request $request): View
     {
-        // Persist querystring in session to restore after actions
+        \DB::enableQueryLog();
         if ($request->query()) {
             session(['beverages.index.query' => $request->query()]);
         }
         $q = Beverage::query()
+            ->select(['id','name','slug','price','description'])
             ->when($request->filled('search'), function ($qq) use ($request) {
                 $term = '%'.$request->string('search')->trim().'%';
                 $qq->where(function ($w) use ($term) {
@@ -38,6 +39,19 @@ class BeverageController extends Controller
             }, fn($qq) => $qq->latest('id'));
 
         $beverages = $q->paginate(10)->withQueryString();
+
+        $filters = \Cache::remember('admin.beverage.filters', 600, function () {
+            return [
+                // eventuali select future
+            ];
+        });
+
+        foreach (\DB::getQueryLog() as $query) {
+            if (($query['time'] ?? 0) > 100) {
+                \Log::warning('Query lenta BeverageController@index', $query);
+            }
+        }
+
         return view('admin.beverages.index', compact('beverages'));
     }
 

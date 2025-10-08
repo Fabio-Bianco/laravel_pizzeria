@@ -17,36 +17,46 @@ class DessertController extends Controller
 {
     public function index(Request $request): View
     {
+        \DB::enableQueryLog();
         $q = Dessert::query()
-            ->with('ingredients')
+            ->with(['ingredients:id,name'])
             ->withCount('ingredients')
-            ->when($request->filled('search'), function ($qq) use ($request) {
-                $term = '%'.$request->string('search')->trim().'%';
-                $qq->where(function ($w) use ($term) {
+            ->select(['id', 'name', 'slug', 'price', 'description'])
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $term = '%' . $request->string('search')->trim() . '%';
+                $q->where(function ($w) use ($term) {
                     $w->where('name', 'like', $term)
-                      ->orWhere('description', 'like', $term);
+                        ->orWhere('description', 'like', $term);
                 });
             })
-            ->when($request->filled('ingredient'), function ($qq) use ($request) {
-                $qq->whereHas('ingredients', fn($w) => $w->where('ingredients.id', $request->integer('ingredient')));
+            ->when($request->filled('ingredient'), function ($q) use ($request) {
+                $q->whereHas('ingredients', fn ($w) => $w->where('ingredients.id', $request->integer('ingredient')));
             })
-            ->when($request->filled('sort'), function ($qq) use ($request) {
+            ->when($request->filled('sort'), function ($q) use ($request) {
                 return match ($request->string('sort')->toString()) {
-                    'price_asc'  => $qq->orderBy('price', 'asc'),
-                    'price_desc' => $qq->orderBy('price', 'desc'),
-                    'name_asc'   => $qq->orderBy('name', 'asc'),
-                    'name_desc'  => $qq->orderBy('name', 'desc'),
-                    default      => $qq->latest('id'),
+                    'price_asc'  => $q->orderBy('price', 'asc'),
+                    'price_desc' => $q->orderBy('price', 'desc'),
+                    'name_asc'   => $q->orderBy('name', 'asc'),
+                    'name_desc'  => $q->orderBy('name', 'desc'),
+                    default      => $q->latest('id'),
                 };
-            }, fn($qq) => $qq->latest('id'));
+            }, fn ($q) => $q->latest('id'));
 
         $desserts = $q->paginate(10)->withQueryString();
-        
-        // Filtri per la vista
-        $filters = [
-            'ingredients' => Ingredient::orderBy('name')->pluck('name','id'),
-        ];
-        
+
+        $filters = \Cache::remember('admin.dessert.filters', 600, function () {
+            return [
+                'ingredients' => Ingredient::orderBy('name')->pluck('name', 'id'),
+                'allergens'   => Allergen::orderBy('name')->pluck('name', 'id'),
+            ];
+        });
+
+        foreach (\DB::getQueryLog() as $query) {
+            if (($query['time'] ?? 0) > 100) {
+                \Log::warning('Query lenta DessertController@index', $query);
+            }
+        }
+
         return view('admin.desserts.index', compact('desserts', 'filters'));
     }
 
@@ -61,10 +71,8 @@ class DessertController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name']);
-        
         $dessert = Dessert::create($data);
         $dessert->ingredients()->sync($request->input('ingredients', []));
-        
         return redirect()->route('admin.desserts.index')->with('status', 'Dessert creato.');
     }
 
@@ -76,20 +84,18 @@ class DessertController extends Controller
 
     public function edit(Dessert $dessert): View
     {
-    $ingredients = Ingredient::orderBy('name')->get();
-    $allergens = Allergen::orderBy('name')->get();
-    $dessert->load(['ingredients', 'allergens']);
-    return view('admin.desserts.edit', compact('dessert', 'ingredients', 'allergens'));
+        $ingredients = Ingredient::orderBy('name')->get();
+        $allergens = Allergen::orderBy('name')->get();
+        $dessert->load(['ingredients', 'allergens']);
+        return view('admin.desserts.edit', compact('dessert', 'ingredients', 'allergens'));
     }
 
     public function update(UpdateDessertRequest $request, Dessert $dessert): RedirectResponse
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name'], $dessert->id);
-        
         $dessert->update($data);
         $dessert->ingredients()->sync($request->input('ingredients', []));
-        
         return redirect()->route('admin.desserts.index')->with('status', 'Dessert aggiornato.');
     }
 
@@ -107,21 +113,17 @@ class DessertController extends Controller
         $baseSlug = Str::slug($name);
         $slug = $baseSlug;
         $counter = 1;
-
         while (true) {
             $query = Dessert::where('slug', $slug);
             if ($excludeId) {
                 $query->where('id', '!=', $excludeId);
             }
-            
             if (!$query->exists()) {
                 break;
             }
-            
             $slug = $baseSlug . '-' . $counter;
             $counter++;
         }
-
         return $slug;
     }
 }

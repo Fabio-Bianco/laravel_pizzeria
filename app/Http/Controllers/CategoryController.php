@@ -12,12 +12,13 @@ class CategoryController extends Controller
 {
     public function index(Request $request): View
     {
-        // Persist querystring in session to restore after actions
+        \DB::enableQueryLog();
         if ($request->query()) {
             session(['categories.index.query' => $request->query()]);
         }
         $q = Category::query()
             ->withCount('pizzas')
+            ->select(['id','name','slug','description'])
             ->when($request->filled('search'), function ($qq) use ($request) {
                 $term = '%'.$request->string('search')->trim().'%';
                 $qq->where(function ($w) use ($term) {
@@ -34,6 +35,19 @@ class CategoryController extends Controller
             }, fn($qq) => $qq->latest('id'));
 
         $categories = $q->paginate(10)->withQueryString();
+
+        $filters = \Cache::remember('admin.category.filters', 600, function () {
+            return [
+                // eventuali select future
+            ];
+        });
+
+        foreach (\DB::getQueryLog() as $query) {
+            if (($query['time'] ?? 0) > 100) {
+                \Log::warning('Query lenta CategoryController@index', $query);
+            }
+        }
+
         return view('admin.categories.index', compact('categories'));
     }
 

@@ -12,36 +12,48 @@ class AllergenController extends Controller
 {
     public function index(Request $request)
     {
-        $perPage = min(max((int) $request->query('per_page', 10), 1), 50);
-        $paginator = Allergen::select('id','name','slug')
-            ->when($request->filled('search'), function ($q) use ($request) {
-                $term = '%'.$request->string('search')->trim().'%';
-                $q->where('name', 'like', $term);
-            })
-            ->when($request->filled('sort'), function ($q) use ($request) {
-                return match ($request->string('sort')->toString()) {
-                    'name_desc' => $q->orderBy('name', 'desc'),
-                    default     => $q->orderBy('name', 'asc'),
-                };
-            }, fn($q) => $q->orderBy('name', 'asc'))
-            ->paginate($perPage)
-            ->appends($request->query());
+        try {
+            $perPage = min(max((int) $request->query('per_page', 10), 1), 50);
+            $cacheKey = 'api.allergens.' . md5(json_encode($request->query()));
+            $result = \Cache::remember($cacheKey, 30, function () use ($request, $perPage) {
+                $paginator = Allergen::select('id','name','slug')
+                    ->when($request->filled('search'), function ($q) use ($request) {
+                        $term = '%'.$request->string('search')->trim().'%';
+                        $q->where('name', 'like', $term);
+                    })
+                    ->when($request->filled('sort'), function ($q) use ($request) {
+                        return match ($request->string('sort')->toString()) {
+                            'name_desc' => $q->orderBy('name', 'desc'),
+                            default     => $q->orderBy('name', 'asc'),
+                        };
+                    }, fn($q) => $q->orderBy('name', 'asc'))
+                    ->paginate($perPage)
+                    ->appends($request->query());
 
-        return response()->json([
-            'data'  => AllergenResource::collection($paginator->getCollection()),
-            'meta'  => [
-                'current_page' => $paginator->currentPage(),
-                'last_page'    => $paginator->lastPage(),
-                'per_page'     => $paginator->perPage(),
-                'total'        => $paginator->total(),
-            ],
-            'links' => [
-                'first' => $paginator->url(1),
-                'last'  => $paginator->url($paginator->lastPage()),
-                'prev'  => $paginator->previousPageUrl(),
-                'next'  => $paginator->nextPageUrl(),
-            ],
-        ]);
+                return [
+                    'data'  => AllergenResource::collection($paginator->getCollection()),
+                    'meta'  => [
+                        'current_page' => $paginator->currentPage(),
+                        'last_page'    => $paginator->lastPage(),
+                        'per_page'     => $paginator->perPage(),
+                        'total'        => $paginator->total(),
+                    ],
+                    'links' => [
+                        'first' => $paginator->url(1),
+                        'last'  => $paginator->url($paginator->lastPage()),
+                        'prev'  => $paginator->previousPageUrl(),
+                        'next'  => $paginator->nextPageUrl(),
+                    ],
+                ];
+            });
+            return response()->json($result);
+        } catch (\Throwable $e) {
+            \Log::error('API AllergenController@index', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json([
+                'message' => 'Errore interno server. Riprova più tardi.',
+                'error' => app()->environment('production') ? null : $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function store(Request $request)

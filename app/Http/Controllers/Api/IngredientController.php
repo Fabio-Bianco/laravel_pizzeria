@@ -27,21 +27,50 @@ class IngredientController extends Controller
             ->paginate($perPage)
             ->appends($request->query());
 
-        return response()->json([
-            'data'  => IngredientResource::collection($paginator->getCollection()),
-            'meta'  => [
-                'current_page' => $paginator->currentPage(),
-                'last_page'    => $paginator->lastPage(),
-                'per_page'     => $paginator->perPage(),
-                'total'        => $paginator->total(),
-            ],
-            'links' => [
-                'first' => $paginator->url(1),
-                'last'  => $paginator->url($paginator->lastPage()),
-                'prev'  => $paginator->previousPageUrl(),
-                'next'  => $paginator->nextPageUrl(),
-            ],
-        ]);
+            try {
+                $perPage = min(max((int) $request->query('per_page', 10), 1), 50);
+                $cacheKey = 'api.ingredients.' . md5(json_encode($request->query()));
+                $result = \Cache::remember($cacheKey, 30, function () use ($request, $perPage) {
+                    $query = Ingredient::query()
+                        ->with(['allergens'])
+                        ->select(['id','name','slug'])
+                        ->when($request->filled('search'), function ($q) use ($request) {
+                            $term = '%'.$request->string('search')->trim().'%';
+                            $q->where('name', 'like', $term);
+                        })
+                        ->when($request->filled('sort'), function ($q) use ($request) {
+                            return match ($request->string('sort')->toString()) {
+                                'name_desc' => $q->orderBy('name', 'desc'),
+                                default     => $q->orderBy('name', 'asc'),
+                            };
+                        }, fn($q) => $q->orderBy('name', 'asc'));
+
+                    $paginator = $query->paginate($perPage)->appends($request->query());
+
+                    return [
+                        'data'  => IngredientResource::collection($paginator->getCollection()),
+                        'meta'  => [
+                            'current_page' => $paginator->currentPage(),
+                            'last_page'    => $paginator->lastPage(),
+                            'per_page'     => $paginator->perPage(),
+                            'total'        => $paginator->total(),
+                        ],
+                        'links' => [
+                            'first' => $paginator->url(1),
+                            'last'  => $paginator->url($paginator->lastPage()),
+                            'prev'  => $paginator->previousPageUrl(),
+                            'next'  => $paginator->nextPageUrl(),
+                        ],
+                    ];
+                });
+                return response()->json($result);
+            } catch (\Throwable $e) {
+                \Log::error('API IngredientController@index', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+                return response()->json([
+                    'message' => 'Errore interno server. Riprova più tardi.',
+                    'error' => app()->environment('production') ? null : $e->getMessage(),
+                ], 500);
+            }
     }
 
     public function store(Request $request)

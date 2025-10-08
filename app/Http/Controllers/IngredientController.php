@@ -15,13 +15,14 @@ class IngredientController extends Controller
 {
     public function index(Request $request): View
     {
-        // Persist querystring in session to restore after actions
+        \DB::enableQueryLog();
         if ($request->query()) {
             session(['ingredients.index.query' => $request->query()]);
         }
         $q = Ingredient::query()
-            ->with('allergens')
+            ->with(['allergens:id,name'])
             ->withCount('pizzas')
+            ->select(['id','name','slug'])
             ->when($request->filled('search'), function ($qq) use ($request) {
                 $term = '%'.$request->string('search')->trim().'%';
                 $qq->where('name', 'like', $term);
@@ -40,9 +41,17 @@ class IngredientController extends Controller
 
         $ingredients = $q->paginate(10)->withQueryString();
 
-        $filters = [
-            'allergens' => Allergen::orderBy('name')->pluck('name','id'),
-        ];
+        $filters = \Cache::remember('admin.ingredient.filters', 600, function () {
+            return [
+                'allergens' => Allergen::orderBy('name')->pluck('name','id'),
+            ];
+        });
+
+        foreach (\DB::getQueryLog() as $query) {
+            if (($query['time'] ?? 0) > 100) {
+                \Log::warning('Query lenta IngredientController@index', $query);
+            }
+        }
 
         return view('admin.ingredients.index', compact('ingredients','filters'));
     }
