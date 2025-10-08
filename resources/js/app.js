@@ -121,8 +121,19 @@ e.preventDefault();
 });
 });
 
-// Inizializza il sistema di dark mode semplice
-initDarkMode();
+// Inizializza solo la logica dark mode, senza creare il vecchio toggle flottante
+initDarkMode = function() {
+    // Solo logica, nessun tasto aggiunto
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDarkMode = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+    applyTheme(isDarkMode ? 'dark' : 'light');
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+            applyTheme(e.matches ? 'dark' : 'light');
+        }
+    });
+}
 
 // TEMPORANEAMENTE DISABILITATO - CAUSAVA PROBLEMI
 // hidePaginationText();
@@ -364,26 +375,7 @@ function applyTheme(theme) {
 /**
  * Crea il toggle button per la dark mode in posizione professionale
  */
-function createThemeToggle() {
-    // Verifica se esiste già
-    if (document.getElementById('theme-toggle')) return;
-    
-    const toggle = document.createElement('button');
-    toggle.id = 'theme-toggle';
-    toggle.className = 'theme-toggle';
-    toggle.setAttribute('aria-label', 'Toggle dark mode');
-    toggle.setAttribute('title', 'Cambia tema');
-    toggle.innerHTML = `
-        <i class="fas fa-sun sun-icon"></i>
-        <i class="fas fa-moon moon-icon"></i>
-    `;
-    
-    toggle.addEventListener('click', toggleTheme);
-    
-    document.body.appendChild(toggle);
-    
-    console.log('🌙 Theme toggle creato in posizione professionale');
-}
+
 
 /**
  * Toggle tra light e dark mode

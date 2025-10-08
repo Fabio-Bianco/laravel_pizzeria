@@ -159,6 +159,9 @@
         <div class="tiny text-muted"><?php echo e(auth()->user()->email ?? 'admin@pizzeria.com'); ?></div>
       </div>
       <div class="sidebar-profile-actions d-flex gap-2">
+        <button id="theme-toggle-sidebar" class="btn btn-sm btn-outline-darkmode px-3" title="Dark mode" aria-label="Attiva/disattiva dark mode" type="button" onclick="toggleTheme()">
+          <i class="fas fa-moon"></i>
+        </button>
         <a href="<?php echo e(route('profile.edit')); ?>" class="btn btn-sm btn-outline-secondary px-3" title="Profilo"><i class="fas fa-user-edit"></i></a>
         <form method="POST" action="<?php echo e(route('logout')); ?>" class="m-0">
           <?php echo csrf_field(); ?>
@@ -483,4 +486,21 @@
 .nav-section-content .nav-link {
   padding-left: 1.5rem;
   font-size: 0.9rem;
+/* Dark mode button stile sidebar */
+.btn-outline-darkmode {
+  background: transparent;
+  border: 1.5px solid #e2e8f0;
+  color: #6B7280;
+  transition: all 0.2s;
+}
+.btn-outline-darkmode:hover, .btn-outline-darkmode:focus {
+  background: #222;
+  color: #fff;
+  border-color: #222;
+}
+.btn-outline-darkmode[aria-pressed="true"] {
+  background: #222;
+  color: #fff;
+  border-color: #222;
+}
 </style><?php /**PATH C:\Users\Utente\Desktop\project-work\pizzeria-backend\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>
