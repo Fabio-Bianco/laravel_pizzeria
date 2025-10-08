@@ -5,11 +5,11 @@
 ])
 
 @php
-    // Collezione allergeni unificata
+    // 🚀 OTTIMIZZAZIONE: Collezione allergeni unificata con cache-aware loading
     $allergenCollection = collect();
     
     if($allergens && method_exists($allergens, 'getAllAllergens')) {
-        // Per modelli con getAllAllergens() (Pizza, Appetizer, etc.)
+        // Per modelli con getAllAllergens() (Pizza, Appetizer, etc.) - ORA OTTIMIZZATO
         $allergenCollection = $allergens->getAllAllergens();
     } elseif($allergens && is_object($allergens) && !empty($allergens->manual_allergens)) {
         // Per bevande con allergeni manuali JSON
@@ -24,6 +24,15 @@
     
     $hasAllergens = $allergenCollection->isNotEmpty();
     $totalCount = $allergenCollection->count();
+    
+    // Performance: se non ci sono allergeni, esci subito
+    if($allergenCollection->isEmpty()) {
+        // Non fare return qui, mostra badge "sicuro"
+    }
+    
+    // Limita il numero di allergeni visibili per performance
+    $visibleAllergens = $allergenCollection->take($maxVisible);
+    $hiddenCount = max(0, $allergenCollection->count() - $maxVisible);
     
     // Icone semantiche per allergeni comuni
     $allergenIcons = [

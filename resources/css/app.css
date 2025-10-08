@@ -3,7 +3,17 @@
 @import "choices.js/public/assets/styles/choices.min.css";
 
 /* 🚀 PERFORMANCE OPTIMIZATIONS */
-@import "./performance.css";
+/* Import principali */
+@import './accessibility-first.css';
+@import './performance.css';
+
+/* Import componenti */
+@import './components/ui-improvements.css';
+
+/* Bootstrap e utilità */
+@import 'bootstrap';
+
+/* Altri stili specifici del progetto */
 
 /* ========================================
    LAYOUT PRINCIPALE - OVERRIDE BOOTSTRAP

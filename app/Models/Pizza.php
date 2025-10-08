@@ -31,9 +31,19 @@ class Pizza extends Model
 
     /**
      * Ottieni tutti gli allergeni calcolati automaticamente dagli ingredienti
+     * OTTIMIZZATO: usa relazioni già caricate se disponibili
      */
     public function getAutomaticAllergens(): Collection
     {
+        // Se gli ingredienti e i loro allergeni sono già caricati, usali
+        if ($this->relationLoaded('ingredients')) {
+            return $this->ingredients
+                ->pluck('allergens')
+                ->flatten()
+                ->unique('id');
+        }
+        
+        // Fallback: query normale (solo se non in eager loading)
         return $this->ingredients()
             ->with('allergens')
             ->get()
@@ -44,6 +54,7 @@ class Pizza extends Model
 
     /**
      * Ottieni gli allergeni aggiunti manualmente
+     * OTTIMIZZATO: usa cache locale
      */
     public function getManualAllergens(): Collection
     {
@@ -51,18 +62,28 @@ class Pizza extends Model
             return collect();
         }
 
-        return Allergen::whereIn('id', $this->manual_allergens)->get();
+        // Cache locale per evitare query ripetute
+        if (!isset($this->_cached_manual_allergens)) {
+            $this->_cached_manual_allergens = Allergen::whereIn('id', $this->manual_allergens)->get();
+        }
+        
+        return $this->_cached_manual_allergens;
     }
 
     /**
      * Ottieni tutti gli allergeni finali (automatici + manuali, senza duplicati)
+     * OTTIMIZZATO: usa cache e relazioni precaricate
      */
     public function getAllAllergens(): Collection
     {
-        $automatic = $this->getAutomaticAllergens();
-        $manual = $this->getManualAllergens();
+        // Cache locale per evitare ricalcoli multipli
+        if (!isset($this->_cached_all_allergens)) {
+            $automatic = $this->getAutomaticAllergens();
+            $manual = $this->getManualAllergens();
+            $this->_cached_all_allergens = $automatic->merge($manual)->unique('id')->sortBy('name');
+        }
 
-        return $automatic->merge($manual)->unique('id')->sortBy('name');
+        return $this->_cached_all_allergens;
     }
 
     /**

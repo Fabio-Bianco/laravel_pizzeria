@@ -109,7 +109,80 @@ document.addEventListener('DOMContentLoaded', () => {
   updateDisabled();
 });
 
-// Layout Toggle per Vista Pizze (Card/List)
+/**
+ * Gestione toggle vista pizzas con accessibilità WCAG 2.1 AAA
+ */
+
+document.addEventListener('DOMContentLoaded', function() {
+    const pizzasListBtn = document.getElementById('pizzasListView');
+    const pizzasCardBtn = document.getElementById('pizzasCardView');
+    const listView = document.getElementById('list-view');
+    const cardView = document.getElementById('card-view');
+    const announcer = document.getElementById('view-change-announce');
+
+    if (!pizzasListBtn || !pizzasCardBtn || !listView || !cardView) {
+        console.log('⚠️ Elementi toggle pizzas non trovati');
+        return;
+    }
+
+    // Carica preferenza salvata
+    const savedView = localStorage.getItem('pizzasView') || 'list';
+    switchView(savedView, false); // false = non annunciare al caricamento
+
+    // Event listeners per i toggle
+    pizzasListBtn.addEventListener('change', function() {
+        if (this.checked) {
+            switchView('list', true);
+        }
+    });
+
+    pizzasCardBtn.addEventListener('change', function() {
+        if (this.checked) {
+            switchView('card', true);
+        }
+    });
+
+    function switchView(viewType, shouldAnnounce = true) {
+        const isListView = viewType === 'list';
+        
+        // Aggiorna radio buttons
+        pizzasListBtn.checked = isListView;
+        pizzasCardBtn.checked = !isListView;
+        
+        // Aggiorna aria-pressed
+        pizzasListBtn.nextElementSibling.setAttribute('aria-pressed', isListView);
+        pizzasCardBtn.nextElementSibling.setAttribute('aria-pressed', !isListView);
+        
+        // Cambia viste con transizione accessibile
+        if (isListView) {
+            listView.style.display = 'block';
+            cardView.style.display = 'none';
+            listView.setAttribute('aria-hidden', 'false');
+            cardView.setAttribute('aria-hidden', 'true');
+        } else {
+            listView.style.display = 'none';
+            cardView.style.display = 'block';
+            listView.setAttribute('aria-hidden', 'true');
+            cardView.setAttribute('aria-hidden', 'false');
+        }
+        
+        // Annuncia il cambio agli screen reader
+        if (shouldAnnounce && announcer) {
+            const viewName = isListView ? 'elenco dettagliato' : 'griglia con card';
+            announcer.textContent = `Vista cambiata in: ${viewName}`;
+            
+            // Pulisci l'annuncio dopo 3 secondi
+            setTimeout(() => {
+                announcer.textContent = '';
+            }, 3000);
+        }
+        
+        // Salva preferenza
+        localStorage.setItem('pizzasView', viewType);
+        
+        console.log(`🍕 Vista pizzas cambiata in: ${viewType}`);
+    }
+});
 document.addEventListener('DOMContentLoaded', () => {
   const cardViewToggle = document.getElementById('cardView');
   const listViewToggle = document.getElementById('listView');

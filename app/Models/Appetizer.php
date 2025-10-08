@@ -68,4 +68,12 @@ class Appetizer extends Model
     {
         return $this->getAllAllergens()->contains('id', $allergenId);
     }
+
+    /**
+     * Relazione molti-a-molti con Allergen
+     */
+    public function allergens(): BelongsToMany
+    {
+        return $this->belongsToMany(Allergen::class)->withTimestamps();
+    }
 }

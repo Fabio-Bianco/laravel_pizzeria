@@ -76,10 +76,10 @@ class DessertController extends Controller
 
     public function edit(Dessert $dessert): View
     {
-        $ingredients = Ingredient::orderBy('name')->get();
-        $allergens = Allergen::orderBy('name')->get();
-        $dessert->load('ingredients');
-        return view('admin.desserts.edit', compact('dessert', 'ingredients', 'allergens'));
+    $ingredients = Ingredient::orderBy('name')->get();
+    $allergens = Allergen::orderBy('name')->get();
+    $dessert->load(['ingredients', 'allergens']);
+    return view('admin.desserts.edit', compact('dessert', 'ingredients', 'allergens'));
     }
 
     public function update(UpdateDessertRequest $request, Dessert $dessert): RedirectResponse

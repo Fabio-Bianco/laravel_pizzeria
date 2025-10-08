@@ -187,6 +187,8 @@ import { initCommandPalette } from './features/commandPalette';
 import './features/appetizers';
 import './features/beverages';
 import './features/desserts';
+import './components/focus-trap';
+import './components/delete-confirmation';
 
 document.addEventListener('DOMContentLoaded', () => {
 initPizzaIngredientQuickCreate();

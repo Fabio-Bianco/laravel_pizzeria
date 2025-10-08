@@ -76,10 +76,10 @@ class AppetizerController extends Controller
 
     public function edit(Appetizer $appetizer): View
     {
-        $ingredients = Ingredient::orderBy('name')->get();
-        $allergens = Allergen::orderBy('name')->get();
-        $appetizer->load('ingredients');
-        return view('admin.appetizers.edit', compact('appetizer', 'ingredients', 'allergens'));
+    $ingredients = Ingredient::orderBy('name')->get();
+    $allergens = Allergen::orderBy('name')->get();
+    $appetizer->load(['ingredients', 'allergens']);
+    return view('admin.appetizers.edit', compact('appetizer', 'ingredients', 'allergens'));
     }
 
     public function update(UpdateAppetizerRequest $request, Appetizer $appetizer): RedirectResponse

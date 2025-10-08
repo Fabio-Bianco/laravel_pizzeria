@@ -103,6 +103,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('categories', CategoryController::class)->names('admin.categories');
     Route::resource('pizzas', PizzaController::class)->names('admin.pizzas');
+    
+    // DEBUG: Route temporanea per testare performance
+    Route::get('/pizzas-debug', [\App\Http\Controllers\PizzaDebugController::class, 'indexDebug'])->name('pizzas.debug');
+    
     Route::resource('ingredients', IngredientController::class)->names('admin.ingredients');
     Route::resource('allergens', AllergenController::class)->names('admin.allergens');
     Route::resource('appetizers', AppetizerController::class)->names('admin.appetizers');
