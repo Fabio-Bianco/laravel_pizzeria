@@ -28,15 +28,6 @@
 
         <div class="d-flex align-items-center gap-3">
             <x-primary-button class="btn btn-primary">Salva</x-primary-button>
-            @if (session('status') === 'password-updated')
-                <span
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-muted small"
-                >Salvata.</span>
-            @endif
         </div>
     </form>
 </section>

@@ -1,3 +1,46 @@
+/* =============================
+   SIDEBAR PROFILE AREA
+============================= */
+.sidebar-profile-area {
+  background: var(--color-neutral-light);
+  border-top: 1px solid #e2e8f0;
+  min-height: 90px;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.03);
+  margin-top: auto;
+}
+.sidebar-profile-avatar > div {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 2px solid #fff;
+}
+.sidebar-profile-info {
+  margin-bottom: 0.25rem;
+}
+.sidebar-profile-actions .btn {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.1rem;
+}
+.sidebar-profile-actions .btn-outline-secondary {
+  border-color: var(--color-info-light);
+}
+.sidebar-profile-actions .btn-outline-danger {
+  border-color: var(--color-danger-light);
+}
+@media (max-width: 768px) {
+  .sidebar-profile-area {
+    background: transparent;
+    box-shadow: none;
+    border-top: none;
+    min-height: 0;
+    margin-top: 0;
+    padding: 0.5rem 0 0 0;
+  }
+  .sidebar-profile-avatar > div {
+    border: 2px solid var(--color-primary, #28a745);
+    box-shadow: 0 0 0 2px var(--color-primary, #28a745);
+  }
+}
 /*
 ================================================================================
 SISTEMA COLORI SEMANTICO PER RISTORATORI ANALFABETI DIGITALI

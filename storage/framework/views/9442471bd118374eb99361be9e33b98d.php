@@ -217,15 +217,6 @@
 <?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
 <?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
 <?php endif; ?>
-            <?php if(session('status') === 'password-updated'): ?>
-                <span
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-muted small"
-                >Salvata.</span>
-            <?php endif; ?>
         </div>
     </form>
 </section>

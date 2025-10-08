@@ -3,47 +3,9 @@
   <!-- Mobile overlay -->
   <div class="mobile-overlay" onclick="closeSidebar()"></div>
   
-  <div class="sidebar bg-white shadow-sm border-end">
-    {{-- User Header con Menu --}}
-    <div class="sidebar-header p-3 border-bottom">
-      <div class="d-flex align-items-center">
-        <div class="user-avatar me-3">
-          <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 1.2rem;">
-            {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
-          </div>
-        </div>
-        <div class="flex-grow-1">
-          <div class="fw-semibold text-dark">{{ auth()->user()->name ?? 'Utente' }}</div>
-          <div class="small text-muted">{{ auth()->user()->email ?? 'admin@pizzeria.com' }}</div>
-        </div>
-        <div class="dropdown">
-          <button class="btn btn-sm btn-outline-secondary dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-ellipsis-v"></i>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow">
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.edit') }}">
-                <i class="fas fa-user-edit me-2 text-muted"></i>
-                Profilo
-              </a>
-            </li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
-              <form method="POST" action="{{ route('logout') }}" class="m-0">
-                @csrf
-                <button type="submit" class="dropdown-item d-flex align-items-center text-danger">
-                  <i class="fas fa-sign-out-alt me-2"></i>
-                  Logout
-                </button>
-              </form>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    {{-- Navigation principale --}}
-    <nav class="sidebar-nav p-2">
+  <div class="sidebar bg-white shadow-sm border-end d-flex flex-column">
+    {{-- Navigazione principale in alto --}}
+    <nav class="sidebar-nav p-2 flex-grow-1">
       {{-- Dashboard Link --}}
       <div class="nav-section mb-2">
         <a href="{{ route('dashboard') }}" 
@@ -184,6 +146,25 @@
         </div>
       </div>
     </nav>
+    {{-- Area profilo/logout in basso --}}
+    <div class="sidebar-profile-area border-top p-3 d-flex flex-column align-items-center">
+      <div class="sidebar-profile-avatar mb-2">
+        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; font-size: 1.3rem;">
+          {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+        </div>
+      </div>
+      <div class="sidebar-profile-info text-center mb-2">
+        <div class="fw-semibold text-dark small">{{ auth()->user()->name ?? 'Utente' }}</div>
+        <div class="tiny text-muted">{{ auth()->user()->email ?? 'admin@pizzeria.com' }}</div>
+      </div>
+      <div class="sidebar-profile-actions d-flex gap-2">
+        <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-secondary px-3" title="Profilo"><i class="fas fa-user-edit"></i></a>
+        <form method="POST" action="{{ route('logout') }}" class="m-0">
+          @csrf
+          <button type="submit" class="btn btn-sm btn-outline-danger px-3" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -384,17 +365,48 @@
   .sidebar-wrapper {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
+    width: 72px;
   }
-  
+  .sidebar {
+    width: 72px;
+    min-width: 72px;
+    padding: 0;
+    align-items: center;
+  }
+  .sidebar-nav, .sidebar-profile-info, .sidebar-profile-actions {
+    display: none !important;
+  }
+  .sidebar-profile-area {
+    border-top: none;
+    padding: 0.5rem 0;
+    width: 100%;
+    justify-content: center;
+  }
+  .sidebar-profile-avatar {
+    margin-bottom: 0;
+  }
+  .sidebar-profile-avatar > div {
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
+  }
   .sidebar-wrapper.show {
     transform: translateX(0);
+    width: 280px;
   }
-  
+  .sidebar-wrapper.show .sidebar {
+    width: 280px;
+    min-width: 280px;
+  }
+  .sidebar-wrapper.show .sidebar-nav,
+  .sidebar-wrapper.show .sidebar-profile-info,
+  .sidebar-wrapper.show .sidebar-profile-actions {
+    display: block !important;
+  }
   .sidebar-wrapper.show .mobile-overlay {
     display: block;
     opacity: 1;
   }
-  
   .mobile-overlay {
     display: block;
   }

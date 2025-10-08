@@ -57,8 +57,8 @@
                       <div class="d-flex align-items-center flex-row flex-wrap" style="min-width:0;">
                         <span class="fw-bold fs-5 text-dark d-inline-block" style="max-width:320px;"><?php echo e($pizza->name); ?></span>
                         <?php if(!empty($pizza->is_vegan)): ?>
-                          <span class="badge badge-success rounded-pill align-middle ms-2 veg-badge">
-                            <i class="fas fa-leaf me-1 veg-leaf"></i>Veg
+                          <span class="badge rounded-pill align-middle ms-2" style="border:1.5px solid #6bbf59;color:#388e3c;background:#e6f4ea;font-size:0.85em;font-weight:600;padding:0.18em 0.7em;vertical-align:middle;letter-spacing:0.02em;">
+                            <i class="fas fa-leaf me-1" style="color:#388e3c;"></i>Veg
                           </span>
                         <?php endif; ?>
                       </div>
