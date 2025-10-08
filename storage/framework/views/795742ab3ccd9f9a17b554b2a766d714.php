@@ -30,6 +30,27 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
+  
+  <?php if (isset($component)) { $__componentOriginale721a0f56e20dd0a547a936533f60514 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginale721a0f56e20dd0a547a936533f60514 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.filter-toolbar','data' => ['search' => true,'searchPlaceholder' => 'Cerca per nome o descrizione…','sortOptions' => ['' => 'Più recenti', 'name_asc' => 'Nome A→Z', 'name_desc' => 'Nome Z→A'],'resetUrl' => route('admin.ingredients.index')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('filter-toolbar'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['search' => true,'searchPlaceholder' => 'Cerca per nome o descrizione…','sort-options' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['' => 'Più recenti', 'name_asc' => 'Nome A→Z', 'name_desc' => 'Nome Z→A']),'reset-url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.ingredients.index'))]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginale721a0f56e20dd0a547a936533f60514)): ?>
+<?php $attributes = $__attributesOriginale721a0f56e20dd0a547a936533f60514; ?>
+<?php unset($__attributesOriginale721a0f56e20dd0a547a936533f60514); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginale721a0f56e20dd0a547a936533f60514)): ?>
+<?php $component = $__componentOriginale721a0f56e20dd0a547a936533f60514; ?>
+<?php unset($__componentOriginale721a0f56e20dd0a547a936533f60514); ?>
+<?php endif; ?>
   <?php if(($ingredients->count() ?? 0) === 0): ?>
     <div class="row justify-content-center">
       <div class="col-lg-6">
@@ -52,22 +73,13 @@
           <div class="flex-grow-1">
             <div class="d-flex align-items-center gap-2 mb-1">
               <h6 class="mb-0 text-truncate"><?php echo e($ingredient->name); ?></h6>
-              <?php if($ingredient->allergens && $ingredient->allergens->count() > 0): ?>
-                <span class="badge badge-warning" title="Contiene allergeni"><?php echo e($ingredient->allergens->count()); ?> allergeni</span>
-              <?php endif; ?>
             </div>
             <?php if(!empty($ingredient->description)): ?>
               <div class="text-muted small mb-1"><?php echo e(\Illuminate\Support\Str::limit($ingredient->description, 100)); ?></div>
             <?php endif; ?>
             <?php if($ingredient->allergens && $ingredient->allergens->count() > 0): ?>
               <div class="mb-1">
-                <small class="text-muted">Allergeni:</small>
-                <?php $__currentLoopData = $ingredient->allergens->take(3); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $allergen): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                  <span class="badge badge-danger me-1 mb-1"><?php echo e($allergen->name); ?></span>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                <?php if($ingredient->allergens->count() > 3): ?>
-                  <span class="badge badge-neutral">+<?php echo e($ingredient->allergens->count() - 3); ?></span>
-                <?php endif; ?>
+                <span class="badge badge-neutral small">Allergeni: <?php echo e($ingredient->allergens->pluck('name')->implode(', ')); ?></span>
               </div>
             <?php endif; ?>
           </div>

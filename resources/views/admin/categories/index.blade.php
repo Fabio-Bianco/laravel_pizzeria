@@ -1,14 +1,30 @@
-<x-app-layout>
-    <x-slot name="header">
-        <x-page-header title="Categorie" :items="[['label' => 'Categorie']]">
-            <x-slot name="actions">
-                <a class="btn btn-primary" href="{{ route('admin.categories.create') }}">+ Nuova categoria</a>
-            </x-slot>
-        </x-page-header>
-    </x-slot>
+@extends('layouts.app-modern')
+
+@section('title', 'Categorie')
+
+@section('header')
+<div class="text-center py-4">
+    <div class="mb-2" style="font-size:3rem;">🏷️</div>
+    <h1 class="display-6 fw-bold text-dark mb-2">Categorie</h1>
+    <p class="lead text-muted mb-4">Gestisci le categorie delle pizze e dei prodotti</p>
+
+    {{-- Bottone Aggiungi centrato --}}
+    <div class="d-flex justify-content-center mb-4">
+        <a href="{{ route('admin.categories.create') }}"
+             class="btn btn-create btn-lg px-4 py-3"
+             role="button"
+             aria-label="Aggiungi una nuova categoria"
+             data-bs-toggle="tooltip" 
+             title="Crea una nuova categoria">
+            <i class="fas fa-plus me-2" aria-hidden="true"></i> Aggiungi Nuova Categoria
+        </a>
+    </div>
 
     @include('partials.flash')
+</div>
+@endsection
 
+@section('content')
     <x-filter-toolbar
         search
         searchPlaceholder="Cerca per nome o descrizione…"
@@ -16,11 +32,22 @@
         :reset-url="route('admin.categories.index')"
     />
 
-    <div class="container py-4">
-
-
+    @if($categories->count() === 0)
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="text-center py-5">
+                    <div class="mb-4" style="font-size:5rem;opacity:.5;">🏷️</div>
+                    <h3 class="fw-bold text-dark mb-3">Nessuna categoria presente</h3>
+                    <p class="text-muted mb-4">Crea la tua prima categoria per iniziare.</p>
+                    <a class="btn btn-create btn-lg px-4 py-3" href="{{ route('admin.categories.create') }}">
+                        <i class="fas fa-rocket me-2" aria-hidden="true"></i> Crea la Prima Categoria
+                    </a>
+                </div>
+            </div>
+        </div>
+    @else
         <div class="list-container">
-            @forelse ($categories as $category)
+            @foreach($categories as $category)
                 <div class="d-flex align-items-center list-item-pizza">
                     <div class="flex-grow-1">
                         <div class="d-flex align-items-center gap-2 mb-1">
@@ -35,26 +62,28 @@
                     </div>
                     <div class="d-flex align-items-center gap-2 ms-3 flex-shrink-0">
                         <a href="{{ route('admin.categories.edit', $category) }}"
-                           class="btn btn-success btn-sm d-flex align-items-center gap-1"
-                           title="Modifica categoria">
+                             class="btn btn-success btn-sm d-flex align-items-center gap-1"
+                             title="Modifica categoria">
                             <i class="fas fa-edit me-1" aria-hidden="true"></i> <span>Modifica</span>
                         </a>
                         <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" data-confirm="Sicuro?" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-danger btn-sm d-flex align-items-center gap-1" type="submit" title="Elimina categoria">
+                            <button type="submit"
+                                            class="btn btn-danger btn-sm d-flex align-items-center gap-1"
+                                            title="Elimina categoria">
                                 <i class="fas fa-trash me-1" aria-hidden="true"></i> <span>Elimina</span>
                             </button>
                         </form>
                     </div>
                 </div>
-            @empty
-                <div class="alert alert-info mb-0">Nessuna categoria.</div>
-            @endforelse
+            @endforeach
         </div>
 
-        <nav class="mt-4 d-flex justify-content-center" aria-label="Paginazione categorie">
-            {{ $categories->links('pagination.custom') }}
-        </nav>
-    </div>
-</x-app-layout>
+        @if(method_exists($categories,'hasPages') && $categories->hasPages())
+            <div class="d-flex justify-content-center mt-5">
+                {{ $categories->links() }}
+            </div>
+        @endif
+    @endif
+@endsection

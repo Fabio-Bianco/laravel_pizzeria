@@ -30,6 +30,13 @@
 @endsection
 
 @section('content')
+  {{-- Barra filtri: ricerca e ordinamento --}}
+  <x-filter-toolbar
+    search
+    searchPlaceholder="Cerca per nome o descrizione…"
+    :sort-options="['' => 'Più recenti', 'name_asc' => 'Nome A→Z', 'name_desc' => 'Nome Z→A']"
+    :reset-url="route('admin.ingredients.index')"
+  />
   @if(($ingredients->count() ?? 0) === 0)
     <div class="row justify-content-center">
       <div class="col-lg-6">
@@ -52,22 +59,13 @@
           <div class="flex-grow-1">
             <div class="d-flex align-items-center gap-2 mb-1">
               <h6 class="mb-0 text-truncate">{{ $ingredient->name }}</h6>
-              @if($ingredient->allergens && $ingredient->allergens->count() > 0)
-                <span class="badge badge-warning" title="Contiene allergeni">{{ $ingredient->allergens->count() }} allergeni</span>
-              @endif
             </div>
             @if(!empty($ingredient->description))
               <div class="text-muted small mb-1">{{ \Illuminate\Support\Str::limit($ingredient->description, 100) }}</div>
             @endif
             @if($ingredient->allergens && $ingredient->allergens->count() > 0)
               <div class="mb-1">
-                <small class="text-muted">Allergeni:</small>
-                @foreach($ingredient->allergens->take(3) as $allergen)
-                  <span class="badge badge-danger me-1 mb-1">{{ $allergen->name }}</span>
-                @endforeach
-                @if($ingredient->allergens->count() > 3)
-                  <span class="badge badge-neutral">+{{ $ingredient->allergens->count() - 3 }}</span>
-                @endif
+                <span class="badge badge-neutral small">Allergeni: {{ $ingredient->allergens->pluck('name')->implode(', ') }}</span>
               </div>
             @endif
           </div>

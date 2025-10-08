@@ -27,11 +27,23 @@
                                 <p class="card-text text-muted small mb-3">Allergeni: {{ $names->join(', ') }}</p>
                             @endif
                             <div class="mt-auto d-flex gap-2 justify-content-end">
-                                <a href="{{ route('admin.ingredients.edit', $ingredient) }}" class="btn btn-sm btn-warning">Modifica</a>
-                                <form action="{{ route('admin.ingredients.destroy', $ingredient) }}" method="POST" data-confirm="Sicuro?">
+                                <a href="{{ route('admin.ingredients.edit', $ingredient) }}"
+                                   class="btn btn-success btn-sm d-flex align-items-center gap-1"
+                                   style="min-width: 110px;"
+                                   title="Modifica ingrediente">
+                                    <i class="fas fa-edit me-1" aria-hidden="true"></i>
+                                    <span>Modifica</span>
+                                </a>
+                                <form action="{{ route('admin.ingredients.destroy', $ingredient) }}" method="POST" data-confirm="Sicuro?" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-sm btn-danger" type="submit">Elimina</button>
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm d-flex align-items-center gap-1"
+                                            style="min-width: 110px;"
+                                            title="Elimina ingrediente">
+                                        <i class="fas fa-trash me-1" aria-hidden="true"></i>
+                                        <span>Elimina</span>
+                                    </button>
                                 </form>
                             </div>
                         </div>
