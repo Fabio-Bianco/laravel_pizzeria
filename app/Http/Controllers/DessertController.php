@@ -88,10 +88,16 @@ class DessertController extends Controller
 
     public function edit(Dessert $dessert): View
     {
+        $categories = \App\Models\Category::all()->sortBy(function($cat) {
+            if (strtolower($cat->name) === 'classiche') return 0;
+            if ($cat->is_white) return 1;
+            if (strtolower($cat->name) === 'speciali') return 2;
+            return 3;
+        })->values();
         $ingredients = Ingredient::orderBy('name')->get();
         $allergens = Allergen::orderBy('name')->get();
         $dessert->load(['ingredients', 'allergens']);
-        return view('admin.desserts.edit', compact('dessert', 'ingredients', 'allergens'));
+        return view('admin.desserts.edit', compact('dessert', 'categories', 'ingredients', 'allergens'));
     }
 
     public function update(UpdateDessertRequest $request, Dessert $dessert): RedirectResponse

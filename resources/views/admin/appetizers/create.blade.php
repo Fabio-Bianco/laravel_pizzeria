@@ -194,6 +194,29 @@
                                         Gli allergeni verranno calcolati automaticamente in base agli ingredienti selezionati
                                     </small>
                                 </div>
+                                <div class="mt-3">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-hand-paper me-1 text-warning"></i>
+                                        Allergeni Aggiuntivi
+                                    </label>
+                                    <div class="row g-1" id="manual-allergens-container">
+                                        @foreach(($allergens ?? []) as $allergen)
+                                            <div class="col-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                           name="manual_allergens[]"
+                                                           value="{{ $allergen->id }}"
+                                                           id="allergen_{{ $allergen->id }}"
+                                                           @checked(collect(old('manual_allergens',[]))->contains($allergen->id))>
+                                                    <label class="form-check-label small" for="allergen_{{ $allergen->id }}">
+                                                        {{ $allergen->name }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    @error('manual_allergens')<div class="text-danger mt-1 small">{{ $message }}</div>@enderror
+                                </div>
                             </div>
                         </div>
                     </div>
