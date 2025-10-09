@@ -20,6 +20,9 @@ class BeverageResource extends JsonResource
             'slug'        => $this->slug,
             'price'       => $this->price,
             'is_gluten_free' => (bool) ($this->is_gluten_free ?? false),
+            'formato'     => $this->formato,
+            'tipologia'   => $this->tipologia,
+            'gradazione_alcolica' => $this->gradazione_alcolica,
         ];
     }
 }

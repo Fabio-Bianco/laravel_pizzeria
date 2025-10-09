@@ -83,9 +83,9 @@
                                                   class="form-control @error('description') is-invalid @enderror" 
                                                   placeholder="Descrivi l'antipasto...">{{ old('description', $appetizer->description) }}</textarea>
                                         @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                                     alt="{{ $appetizer->name }}" 
-                                                     class="img-thumbnail" 
-                                                     style="max-height: 80px;">
+                                        @if($appetizer->image_path)
+                                            <div class="mt-2">
+                                                <img src="{{ asset('storage/' . $appetizer->image_path) }}" alt="{{ $appetizer->name }}" class="img-thumbnail" style="max-height: 80px;">
                                                 <div class="form-text">Immagine attuale</div>
                                             </div>
                                         @endif
@@ -93,17 +93,6 @@
                                                class="form-control @error('image') is-invalid @enderror" 
                                                accept=".jpg,.jpeg,.png,.webp">
                                         @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label for="notes" class="form-label fw-semibold">
-                                            <i class="fas fa-sticky-note me-1"></i>
-                                            Note
-                                        </label>
-                                        <textarea id="notes" name="notes" rows="2" 
-                                                  class="form-control @error('notes') is-invalid @enderror" 
-                                                  placeholder="Note aggiuntive...">{{ old('notes', $appetizer->notes) }}</textarea>
-                                        @error('notes')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
                                 </div>
                             </div>
@@ -114,10 +103,15 @@
                     <div class="col-12 col-lg-6">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-header bg-white border-bottom">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-seedling text-success me-2"></i>
-                                    Ingredienti e Opzioni
-                                </h5>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-seedling text-success me-2"></i>
+                                        Ingredienti e Opzioni
+                                    </h5>
+                                    <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#newIngredientModal">
+                                        <i class="fas fa-plus me-1"></i> Nuovo
+                                    </button>
+                                </div>
                             </div>
                             <div class="card-body">
                                 {{-- Checkbox Vegano --}}
@@ -144,13 +138,14 @@
                                 {{-- Ingredienti --}}
                                 @if(isset($ingredients) && $ingredients->isNotEmpty())
                                 <div class="mb-3">
-                                    <label for="ingredients" class="form-label fw-semibold mb-3">
+                                    <label for="ingredients" class="form-label fw-semibold mb-0">
                                         <i class="fas fa-list me-1"></i>
                                         Ingredienti Principali
                                     </label>
                                     <select id="ingredients" name="ingredients[]" multiple 
                                             class="form-select @error('ingredients') is-invalid @enderror" 
                                             data-choices 
+                                            data-store-url="{{ route('admin.ingredients.store') }}"
                                             placeholder="Cerca e seleziona ingredienti...">
                                         @foreach ($ingredients as $ingredient)
                                             <option value="{{ $ingredient->id }}" 
@@ -169,6 +164,27 @@
                                     </div>
                                 </div>
                                 @endif
+                                <!-- Modal nuovo ingrediente (riuso markup pizze) -->
+                                <div class="modal fade" id="newIngredientModal" tabindex="-1" aria-labelledby="newIngredientModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="newIngredientModalLabel">
+                                                    <i class="fas fa-plus me-2 text-success"></i>Nuovo Ingrediente
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="ni_name" class="form-label fw-semibold">Nome Ingrediente</label>
+                                                <input type="text" id="ni_name" class="form-control mb-3" placeholder="Es. Prosciutto cotto, Olive nere..." tabindex="0" autofocus>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                                                <button type="button" class="btn btn-success" id="ni_save">Crea Ingrediente</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 {{-- Allergeni attuali --}}
                                 @if($appetizer->allergens->isNotEmpty())

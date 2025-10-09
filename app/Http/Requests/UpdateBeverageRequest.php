@@ -19,6 +19,9 @@ class UpdateBeverageRequest extends FormRequest
             'name' => ['required', 'string', 'max:255', Rule::unique('beverages', 'name')->ignore($id)],
             'description' => ['nullable', 'string', 'max:500'],
             'price' => ['required', 'numeric', 'min:0', 'max:99.99'],
+            'formato' => ['nullable', 'string', 'max:50'],
+            'tipologia' => ['nullable', 'string', 'max:50'],
+            'gradazione_alcolica' => ['nullable', 'numeric', 'min:0', 'max:99.9'],
             'image' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
         ];
     }

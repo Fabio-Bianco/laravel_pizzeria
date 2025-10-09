@@ -139,31 +139,47 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-12">
-                                        <label for="alcohol_content" class="form-label fw-semibold">
+                                        <label for="gradazione_alcolica" class="form-label fw-semibold">
                                             <i class="fas fa-percentage me-1"></i>
                                             Gradazione Alcolica
                                         </label>
                                         <div class="input-group">
-                                            <input id="alcohol_content" name="alcohol_content" type="number" step="0.1" 
-                                                   class="form-control @error('alcohol_content') is-invalid @enderror" 
-                                                   value="{{ old('alcohol_content') }}" 
+                                            <input id="gradazione_alcolica" name="gradazione_alcolica" type="number" step="0.1" 
+                                                   class="form-control @error('gradazione_alcolica') is-invalid @enderror" 
+                                                   value="{{ old('gradazione_alcolica') }}" 
                                                    placeholder="5.0">
                                             <span class="input-group-text">% Vol.</span>
                                         </div>
-                                        @error('alcohol_content')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                        @error('gradazione_alcolica')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                         <div class="form-text">Lascia vuoto se analcolica</div>
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="size" class="form-label fw-semibold">
+                                        <label for="formato" class="form-label fw-semibold">
                                             <i class="fas fa-ruler me-1"></i>
                                             Formato
                                         </label>
-                                        <input id="size" name="size" type="text" 
-                                               class="form-control @error('size') is-invalid @enderror" 
-                                               value="{{ old('size') }}" 
+                                        <input id="formato" name="formato" type="text" 
+                                               class="form-control @error('formato') is-invalid @enderror" 
+                                               value="{{ old('formato') }}" 
                                                placeholder="Es. 330ml, 0.5L, 75cl...">
-                                        @error('size')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                        @error('formato')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="tipologia" class="form-label fw-semibold">
+                                            <i class="fas fa-wine-glass me-1"></i>
+                                            Tipologia
+                                        </label>
+                                        <select id="tipologia" name="tipologia" class="form-select @error('tipologia') is-invalid @enderror">
+                                            <option value="">Seleziona tipologia...</option>
+                                            <option value="analcolica" @selected(old('tipologia') == 'analcolica')>Analcolica</option>
+                                            <option value="birra" @selected(old('tipologia') == 'birra')>Birra</option>
+                                            <option value="vino" @selected(old('tipologia') == 'vino')>Vino</option>
+                                            <option value="liquore" @selected(old('tipologia') == 'liquore')>Liquore</option>
+                                            <option value="altro" @selected(old('tipologia') == 'altro')>Altro</option>
+                                        </select>
+                                        @error('tipologia')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
 
                                     <div class="col-12">

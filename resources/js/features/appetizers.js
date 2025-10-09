@@ -1,7 +1,11 @@
 /**
  * Gestione toggle vista antipasti con accessibilità WCAG 2.1 AAA
  */
+import { initPizzaIngredientQuickCreate } from './pizzas';
+
 document.addEventListener('DOMContentLoaded', () => {
+  // Inizializza la modale nuovo ingrediente come per le pizze
+  initPizzaIngredientQuickCreate();
   const cardViewToggle = document.getElementById('appetizersCardView');
   const listViewToggle = document.getElementById('appetizersListView');
   const cardContainer = document.getElementById('appetizers-card-view');

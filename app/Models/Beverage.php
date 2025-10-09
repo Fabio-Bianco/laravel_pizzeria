@@ -11,9 +11,11 @@ class Beverage extends Model
 
     protected $fillable = [
         'name', 'slug', 'price', 'description', 'manual_allergens', 'image_path',
+        'formato', 'tipologia', 'gradazione_alcolica',
     ];
 
     protected $casts = [
         'image_path' => 'string',
+        'is_gluten_free' => 'boolean',
     ];
 }

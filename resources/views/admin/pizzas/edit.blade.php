@@ -138,17 +138,17 @@
                     <div class="col-12 col-lg-6">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-header bg-white border-bottom">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">
-                                        <i class="fas fa-seedling text-success me-2"></i>
-                                        Ingredienti
-                                    </h5>
-                                    <button type="button" class="btn btn-outline-success btn-sm" 
-                                            data-bs-toggle="modal" data-bs-target="#newIngredientModal">
-                                        <i class="fas fa-plus me-1"></i>
-                                        Nuovo
-                                    </button>
-                                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <h5 class="card-title mb-0">
+                    <i class="fas fa-seedling text-success me-2"></i>
+                    Ingredienti e Opzioni
+                  </h5>
+                  <button type="button" class="btn btn-outline-success btn-sm" 
+                      data-bs-toggle="modal" data-bs-target="#newIngredientModal">
+                    <i class="fas fa-plus me-1"></i>
+                    Nuovo
+                  </button>
+                </div>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">

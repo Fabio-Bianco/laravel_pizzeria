@@ -18,7 +18,7 @@ class BeverageController extends Controller
             $cacheKey = 'api.beverages.' . md5(json_encode($request->query()));
             $result = \Cache::remember($cacheKey, 30, function () use ($request, $perPage) {
                 $query = Beverage::query()
-                    ->select(['id','name','slug','price','description'])
+                    ->select(['id','name','slug','price','description','formato','tipologia','gradazione_alcolica','is_gluten_free'])
                     ->when($request->filled('search'), function ($q) use ($request) {
                         $term = '%'.$request->string('search')->trim().'%';
                         $q->where('name', 'like', $term);

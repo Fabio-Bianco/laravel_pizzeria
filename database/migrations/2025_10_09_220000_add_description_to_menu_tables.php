@@ -12,16 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pizzas', function (Blueprint $table) {
-            $table->text('description')->nullable()->after('name');
+            if (!Schema::hasColumn('pizzas', 'description')) {
+                $table->text('description')->nullable()->after('name');
+            }
         });
         Schema::table('appetizers', function (Blueprint $table) {
-            $table->text('description')->nullable()->after('name');
+            if (!Schema::hasColumn('appetizers', 'description')) {
+                $table->text('description')->nullable()->after('name');
+            }
         });
         Schema::table('beverages', function (Blueprint $table) {
-            $table->text('description')->nullable()->after('name');
+            if (!Schema::hasColumn('beverages', 'description')) {
+                $table->text('description')->nullable()->after('name');
+            }
         });
         Schema::table('desserts', function (Blueprint $table) {
-            $table->text('description')->nullable()->after('name');
+            if (!Schema::hasColumn('desserts', 'description')) {
+                $table->text('description')->nullable()->after('name');
+            }
         });
     }
 

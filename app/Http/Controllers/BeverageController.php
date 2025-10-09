@@ -68,6 +68,10 @@ class BeverageController extends Controller
         if ($request->hasFile('image')) {
             $data['image_path'] = $request->file('image')->store('beverages', 'public');
         }
+        // Assicura che i nuovi campi siano sempre presenti anche se null
+        $data['formato'] = $data['formato'] ?? null;
+        $data['tipologia'] = $data['tipologia'] ?? null;
+        $data['gradazione_alcolica'] = $data['gradazione_alcolica'] ?? null;
         Beverage::create($data);
         $qs = session('beverages.index.query', []);
         return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda creata.');
@@ -94,6 +98,10 @@ class BeverageController extends Controller
             }
             $data['image_path'] = $request->file('image')->store('beverages', 'public');
         }
+        // Assicura che i nuovi campi siano sempre presenti anche se null
+        $data['formato'] = $data['formato'] ?? null;
+        $data['tipologia'] = $data['tipologia'] ?? null;
+        $data['gradazione_alcolica'] = $data['gradazione_alcolica'] ?? null;
         $beverage->update($data);
         $qs = session('beverages.index.query', []);
         return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda aggiornata.');

@@ -147,16 +147,22 @@
                                 {{-- Ingredienti --}}
                                 @if(isset($ingredients) && $ingredients->isNotEmpty())
                                 <div class="mb-3">
-                                    <label for="ingredients" class="form-label fw-semibold mb-3">
-                                        <i class="fas fa-list me-1"></i>
-                                        Ingredienti Principali
-                                    </label>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <label for="ingredients" class="form-label fw-semibold mb-0">
+                                            <i class="fas fa-list me-1"></i>
+                                            Ingredienti Principali
+                                        </label>
+                                        <button type="button" class="btn btn-sm btn-outline-warning px-2 py-1 ms-2 d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newIngredientModal">
+                                            <i class="fas fa-plus me-1"></i> Aggiungi ingrediente
+                                        </button>
+                                    </div>
                                     @php
                                         $selectedIngredients = old('ingredients', $dessert->ingredients->pluck('id')->toArray());
                                     @endphp
                                     <select id="ingredients" name="ingredients[]" multiple 
                                             class="form-select @error('ingredients') is-invalid @enderror" 
                                             data-choices 
+                                            data-store-url="{{ route('admin.ingredients.store') }}"
                                             placeholder="Cerca e seleziona ingredienti...">
                                         @foreach ($ingredients as $ingredient)
                                             <option value="{{ $ingredient->id }}" 
@@ -169,6 +175,27 @@
                                     <div class="form-text">
                                         <i class="fas fa-info-circle me-1"></i>
                                         Aiuta a calcolare automaticamente gli allergeni
+                                    </div>
+                                </div>
+                                <!-- Modal nuovo ingrediente (riuso markup pizze) -->
+                                <div class="modal fade" id="newIngredientModal" tabindex="-1" aria-labelledby="newIngredientModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="newIngredientModalLabel">
+                                                    <i class="fas fa-plus me-2 text-warning"></i>Nuovo Ingrediente
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="ni_name" class="form-label fw-semibold">Nome Ingrediente</label>
+                                                <input type="text" id="ni_name" class="form-control mb-3" placeholder="Es. Nocciole, Cacao, Panna...">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                                                <button type="button" class="btn btn-warning" id="ni_save">Crea Ingrediente</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 @endif
