@@ -19,7 +19,7 @@ class AppetizerController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name']);
-        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+    $data['is_gluten_free'] = $request->has('is_gluten_free');
         if ($request->hasFile('image')) {
             $data['image_path'] = $request->file('image')->store('appetizers', 'public');
         }
@@ -94,7 +94,7 @@ class AppetizerController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name'], $appetizer->id);
-        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+    $data['is_gluten_free'] = $request->has('is_gluten_free');
         if ($request->hasFile('image')) {
             if ($appetizer->image_path) {
                 \Storage::disk('public')->delete($appetizer->image_path);

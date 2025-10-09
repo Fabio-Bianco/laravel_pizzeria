@@ -71,7 +71,7 @@ class DessertController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name']);
-        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+    $data['is_gluten_free'] = $request->has('is_gluten_free');
         if ($request->hasFile('image')) {
             $data['image_path'] = $request->file('image')->store('desserts', 'public');
         }
@@ -98,7 +98,7 @@ class DessertController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name'], $dessert->id);
-        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+    $data['is_gluten_free'] = $request->has('is_gluten_free');
         if ($request->hasFile('image')) {
             if ($dessert->image_path) {
                 \Storage::disk('public')->delete($dessert->image_path);

@@ -64,7 +64,7 @@ class BeverageController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name']);
-        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+    $data['is_gluten_free'] = $request->has('is_gluten_free');
         if ($request->hasFile('image')) {
             $data['image_path'] = $request->file('image')->store('beverages', 'public');
         }
@@ -91,7 +91,7 @@ class BeverageController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name'], $beverage->id);
-        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+    $data['is_gluten_free'] = $request->has('is_gluten_free');
         if ($request->hasFile('image')) {
             if ($beverage->image_path) {
                 \Storage::disk('public')->delete($beverage->image_path);

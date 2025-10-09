@@ -21,6 +21,7 @@ class StoreBeverageRequest extends FormRequest
             'formato' => ['nullable', 'string', 'max:50'],
             'tipologia' => ['nullable', 'string', 'max:50'],
             'gradazione_alcolica' => ['nullable', 'numeric', 'min:0', 'max:99.9'],
+            'is_gluten_free' => ['nullable', 'boolean'],
             'image' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
         ];
     }
