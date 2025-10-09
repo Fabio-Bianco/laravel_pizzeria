@@ -26,7 +26,7 @@ class PizzaController extends Controller
 {
     /**
      * Elenco pizze con filtri, ordinamenti e paginazione.
-     * 🚀 OTTIMIZZATO: eager loading completo e caching intelligente
+     * 
      *
      * Filtri supportati via query string:
      * - search: testo su name/notes
