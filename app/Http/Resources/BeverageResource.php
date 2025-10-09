@@ -23,6 +23,16 @@ class BeverageResource extends JsonResource
             'formato'     => $this->formato,
             'tipologia'   => $this->tipologia,
             'gradazione_alcolica' => $this->gradazione_alcolica,
+            // URL immagine
+            'image_url' => (function () {
+                $imgName = strtolower(str_replace([' ', "'"], ['-', ''], $this->name)) . '.jpeg';
+                $imgPath = 'img/beverages/' . $imgName;
+                if (file_exists(public_path($imgPath))) {
+                    return asset($imgPath);
+                }
+                return asset('img/beverages/default.jpg');
+            })(),
+            'image_debug_name' => strtolower(str_replace([' ', "'"], ['-', ''], $this->name)) . '.jpeg',
         ];
     }
 }

@@ -39,6 +39,21 @@ class PizzaResource extends JsonResource
                 $request->has('include_allergen_breakdown'),
                 fn() => AllergenResource::collection($this->getManualAllergens())
             ),
+            // URL immagine sempre come stringa valida
+            'image_url' => (function () {
+                $pizzaName = strtolower(str_replace([' ', "'"], ['-', ''], $this->name));
+                $imgMap = [
+                    'capricciosa' => 'capricciosa.jpg',
+                    'margherita' => 'margherita.jpg',
+                    'quattro-formaggi' => 'quattro-formaggi.jpg',
+                ];
+                $imgFile = $imgMap[$pizzaName] ?? null;
+                if ($imgFile && file_exists(public_path('img/pizzas/' . $imgFile))) {
+                    return asset('img/pizzas/' . $imgFile);
+                }
+                return asset('img/pizzas/default.jpg');
+            })(),
+            // Se vuoi invece un oggetto: 'image' => [ 'url' => ... ]
         ];
     }
 }

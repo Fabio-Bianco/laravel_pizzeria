@@ -36,6 +36,16 @@ class AppetizerResource extends JsonResource
                 $request->has('include_allergen_breakdown'),
                 fn() => AllergenResource::collection($this->getManualAllergens())
             ),
+            // URL immagine
+            'image_url' => (function () {
+                $imgName = strtolower(str_replace([' ', "'"], ['-', ''], $this->name)) . '.jpeg';
+                $imgPath = 'img/appetizers/' . $imgName;
+                if (file_exists(public_path($imgPath))) {
+                    return asset($imgPath);
+                }
+                return asset('img/appetizers/default.jpg');
+            })(),
+            'image_debug_name' => strtolower(str_replace([' ', "'"], ['-', ''], $this->name)) . '.jpeg',
         ];
     }
 }

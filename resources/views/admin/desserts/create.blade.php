@@ -85,16 +85,7 @@
                                         @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
 
-                                    <div class="col-12">
-                                        <label for="notes" class="form-label fw-semibold">
-                                            <i class="fas fa-sticky-note me-1"></i>
-                                            Note
-                                        </label>
-                                        <textarea id="notes" name="notes" rows="2" 
-                                                  class="form-control @error('notes') is-invalid @enderror" 
-                                                  placeholder="Note aggiuntive...">{{ old('notes') }}</textarea>
-                                        @error('notes')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                    </div>
+                                    {{-- Campo note rimosso su richiesta --}}
                                 </div>
                             </div>
                         </div>
@@ -103,11 +94,14 @@
                     {{-- Ingredienti e Opzioni (colonna destra) --}}
                     <div class="col-12 col-lg-6">
                         <div class="card border-0 shadow-sm h-100">
-                            <div class="card-header bg-white border-bottom">
-                                <h5 class="card-title mb-0">
+                            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0 d-flex align-items-center gap-2">
                                     <i class="fas fa-seedling text-warning me-2"></i>
                                     Ingredienti e Opzioni
                                 </h5>
+                                <button type="button" class="btn btn-outline-success btn-sm px-2 py-1 d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newIngredientModal">
+                                    <i class="fas fa-plus me-1"></i> <span class="text-success">Nuovo</span>
+                                </button>
                             </div>
                             <div class="card-body">
                                 {{-- Checkbox Vegano --}}
@@ -134,14 +128,11 @@
                                 {{-- Ingredienti --}}
                                 @if(isset($ingredients) && $ingredients->isNotEmpty())
                                 <div class="mb-3">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="mb-2">
                                         <label for="ingredients" class="form-label fw-semibold mb-0">
                                             <i class="fas fa-list me-1"></i>
                                             Ingredienti Principali
                                         </label>
-                                        <button type="button" class="btn btn-sm btn-outline-warning px-2 py-1 ms-2 d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newIngredientModal">
-                                            <i class="fas fa-plus me-1"></i> Aggiungi ingrediente
-                                        </button>
                                     </div>
                                     <select id="ingredients" name="ingredients[]" multiple 
                                             class="form-select @error('ingredients') is-invalid @enderror" 

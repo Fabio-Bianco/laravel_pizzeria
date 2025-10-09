@@ -1,6 +1,13 @@
 <?php
 return [
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => [
+        'api/*',
+        'img/*',
+        'img/appetizers/*',
+        'img/dessert/*',
+        'img/beverages/*',
+        'sanctum/csrf-cookie',
+    ],
     'allowed_methods' => ['*'],
     'allowed_origins' => [
         env('FRONTEND_URL', 'http://localhost:5173'),

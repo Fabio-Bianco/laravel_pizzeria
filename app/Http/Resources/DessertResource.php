@@ -37,6 +37,15 @@ class DessertResource extends JsonResource
                 $request->has('include_allergen_breakdown'),
                 fn() => AllergenResource::collection($this->getManualAllergens())
             ),
+            // URL immagine
+            'image_url' => (function () {
+                $imgName = strtolower(str_replace([' ', "'"], ['-', ''], $this->name)) . '.jpeg';
+                $imgPath = 'img/dessert/' . $imgName;
+                if (file_exists(public_path($imgPath))) {
+                    return asset($imgPath);
+                }
+                return asset('img/dessert/default.jpg');
+            })(),
         ];
     }
 }

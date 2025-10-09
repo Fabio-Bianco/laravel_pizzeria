@@ -48,8 +48,22 @@
           <div class="pizza-card card shadow-sm border-0 mb-3">
             <div class="card-body py-3 px-3">
               <div class="d-flex align-items-center gap-3 flex-wrap flex-md-nowrap">
-                <div class="pizza-icon flex-shrink-0 d-flex align-items-center justify-content-center bg-light rounded-circle" style="height:56px;width:56px;">
-                  <i class="fas fa-pizza-slice text-warning fs-3" aria-hidden="true"></i>
+                <div class="pizza-icon flex-shrink-0 d-flex align-items-center justify-content-center bg-light rounded-circle overflow-hidden" style="height:56px;width:56px;">
+                  @php
+                    $pizzaName = strtolower(str_replace([' ', "'"], ['-', ''], $pizza->name));
+                    $imgMap = [
+                      'capricciosa' => 'capricciosa.jpg',
+                      'margherita' => 'margherita.jpg',
+                      'quattro-formaggi' => 'quattro-formaggi.jpg',
+                    ];
+                    $imgFile = $imgMap[$pizzaName] ?? null;
+                  @endphp
+                  @if($imgFile && file_exists(public_path('img/pizzas/' . $imgFile)))
+                    <img src="{{ asset('img/pizzas/' . $imgFile) }}" alt="{{ $pizza->name }}" style="max-width:100%;max-height:100%;object-fit:cover;">
+                  @else
+                    <img src="{{ asset('img/pizzas/default.jpg') }}" alt="Nessuna immagine" style="max-width:100%;max-height:100%;object-fit:cover;opacity:0.5;">
+                  @endif
+                  <span class="d-none">{{ $imgFile }}</span>
                 </div>
                 <div class="flex-grow-1 min-w-0">
                   <div class="d-flex align-items-center gap-2 mb-1">
