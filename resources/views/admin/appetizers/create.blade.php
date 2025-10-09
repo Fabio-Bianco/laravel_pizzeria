@@ -82,16 +82,6 @@
                                                   class="form-control @error('description') is-invalid @enderror" 
                                                   placeholder="Descrivi l'antipasto...">{{ old('description') }}</textarea>
                                         @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label for="image" class="form-label fw-semibold">
-                                            <i class="fas fa-image me-1"></i>
-                                            Immagine
-                                        </label>
-                                        <input id="image" name="image" type="file" 
-                                               class="form-control @error('image') is-invalid @enderror" 
-                                               accept=".jpg,.jpeg,.png,.webp">
                                         @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
 

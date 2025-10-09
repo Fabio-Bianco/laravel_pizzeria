@@ -73,8 +73,14 @@ class PizzaController extends Controller
 
         // 🚀 OTTIMIZZAZIONE: Cache per filtri con TTL di 10 minuti
         $filters = \Illuminate\Support\Facades\Cache::remember('pizza_filters', 600, function () {
+            $categories = Category::all()->sortBy(function($cat) {
+                if (strtolower($cat->name) === 'classiche') return 0;
+                if ($cat->is_white) return 1;
+                if (strtolower($cat->name) === 'speciali') return 2;
+                return 3;
+            })->pluck('name','id');
             return [
-                'categories'  => Category::orderBy('name')->pluck('name','id'),
+                'categories'  => $categories,
                 'ingredients' => Ingredient::orderBy('name')->pluck('name','id'),
             ];
         });
@@ -87,7 +93,12 @@ class PizzaController extends Controller
      */
     public function create(): View
     {
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::all()->sortBy(function($cat) {
+            if (strtolower($cat->name) === 'classiche') return 0;
+            if ($cat->is_white) return 1;
+            if (strtolower($cat->name) === 'speciali') return 2;
+            return 3;
+        })->values();
         $ingredients = Ingredient::orderBy('name')->get();
         $allergens = Allergen::orderBy('name')->get();
         return view('admin.pizzas.create', compact('categories','ingredients','allergens'));
@@ -131,7 +142,12 @@ class PizzaController extends Controller
      */
     public function edit(Pizza $pizza): View
     {
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::all()->sortBy(function($cat) {
+            if (strtolower($cat->name) === 'classiche') return 0;
+            if ($cat->is_white) return 1;
+            if (strtolower($cat->name) === 'speciali') return 2;
+            return 3;
+        })->values();
         $ingredients = Ingredient::orderBy('name')->get();
         $allergens = Allergen::orderBy('name')->get();
         $pizza->load('ingredients'); // per preselezionare ingredienti nel form

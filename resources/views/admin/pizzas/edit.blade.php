@@ -120,14 +120,14 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="notes" class="form-label fw-semibold">
-                                            <i class="fas fa-sticky-note me-1"></i>
-                                            Note Aggiuntive
-                                        </label>
-                                        <textarea id="notes" name="notes" rows="3" 
-                                                  class="form-control @error('notes') is-invalid @enderror" 
-                                                  placeholder="Note speciali...">{{ old('notes', $pizza->notes) }}</textarea>
-                                        @error('notes')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    <label for="description" class="form-label fw-semibold">
+                      <i class="fas fa-align-left me-1"></i>
+                      Descrizione
+                    </label>
+                    <textarea id="description" name="description" rows="3"
+                          class="form-control @error('description') is-invalid @enderror"
+                          placeholder="Descrizione della pizza...">{{ old('description', $pizza->description) }}</textarea>
+                    @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
                                 </div>
                             </div>

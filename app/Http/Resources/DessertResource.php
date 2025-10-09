@@ -16,9 +16,9 @@ class DessertResource extends JsonResource
         return [
             'id'                => $this->id,
             'name'              => $this->name,
+            'description'       => $this->description,
             'slug'              => $this->slug,
             'price'             => $this->price,
-            'description'       => $this->description,
             'is_vegan'          => $this->is_vegan,
             'is_gluten_free'    => (bool) ($this->is_gluten_free ?? false),
             'ingredients_count' => $this->when(isset($this->ingredients_count), (int) $this->ingredients_count),

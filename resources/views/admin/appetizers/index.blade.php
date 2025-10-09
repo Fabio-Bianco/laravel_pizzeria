@@ -125,7 +125,7 @@
                   <a href="{{ route('admin.appetizers.edit', $a) }}" class="btn btn-outline-success btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Modifica" style="border:1.5px solid #388e3c;color:#388e3c;background:transparent;">
                     <i class="fas fa-edit me-1" style="color:#388e3c;"></i><span class="d-none d-md-inline" style="color:#388e3c;">Modifica</span>
                   </a>
-                  <form method="POST" action="{{ route('admin.appetizers.destroy', $a) }}" onsubmit="return confirm('Eliminare definitivamente {{ $a->name }}?')">
+                  <form method="POST" action="{{ route('admin.appetizers.destroy', $a) }}">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center w-100" data-bs-toggle="tooltip" title="Elimina" style="border:1.5px solid #d32f2f;color:#d32f2f;background:transparent;">
                       <i class="fas fa-trash me-1" style="color:#d32f2f;"></i><span class="d-none d-md-inline" style="color:#d32f2f;">Elimina</span>

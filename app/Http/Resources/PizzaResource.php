@@ -16,6 +16,7 @@ class PizzaResource extends JsonResource
         return [
             'id'                => $this->id,
             'name'              => $this->name,
+            'description'       => $this->description,
             'slug'              => $this->slug,
             'price'             => $this->price,
             'notes'             => $this->notes,

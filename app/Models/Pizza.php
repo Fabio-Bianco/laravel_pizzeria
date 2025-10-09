@@ -12,7 +12,7 @@ class Pizza extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['category_id', 'name', 'slug', 'price', 'notes', 'manual_allergens', 'is_vegan', 'image_path'];
+    protected $fillable = ['category_id', 'name', 'slug', 'price', 'description', 'notes', 'manual_allergens', 'is_vegan', 'image_path'];
 
     protected $casts = [
         'manual_allergens' => 'array',

@@ -94,9 +94,10 @@
                       @endif
                     </div>
                     <div class="collapse mt-2 w-100" id="{{ $collapseAllergenId }}">
-                      @if($pizza->allergens && $pizza->allergens->count() > 0)
+                      @php $allAllergens = $pizza->getAllAllergens(); @endphp
+                      @if($allAllergens->count() > 0)
                         <ul class="list-unstyled mb-0 ps-2 small">
-                          @foreach($pizza->allergens as $allergen)
+                          @foreach($allAllergens as $allergen)
                             <li class="py-1 d-flex align-items-center gap-2">
                               <span>{{ $allergen->name }}</span>
                             </li>
@@ -115,7 +116,7 @@
                   <a href="{{ route('admin.pizzas.edit', $pizza) }}" class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" title="Modifica">
                     <i class="fas fa-edit me-1 text-success"></i><span class="d-none d-md-inline text-success">Modifica</span>
                   </a>
-                  <form method="POST" action="{{ route('admin.pizzas.destroy', $pizza) }}" onsubmit="return confirm('Eliminare definitivamente {{ $pizza->name }}?')">
+                  <form method="POST" action="{{ route('admin.pizzas.destroy', $pizza) }}">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center w-100" data-bs-toggle="tooltip" title="Elimina">
                       <i class="fas fa-trash me-1 text-danger"></i><span class="d-none d-md-inline text-danger">Elimina</span>

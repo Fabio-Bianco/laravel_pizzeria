@@ -10,7 +10,23 @@ class AllergenSeeder extends Seeder
 {
     public function run(): void
     {
-        $items = ['Glutine', 'Lattosio', 'Noci', 'Uova'];
+        $items = [
+            'Glutine',
+            'Lattosio',
+            'Uova',
+            'Soia',
+            'Arachidi',
+            'Frutta a guscio',
+            'Pesce',
+            'Crostacei',
+            'Molluschi',
+            'Sesamo',
+            'Sedano',
+            'Senape',
+            'Solfiti',
+            'Lupini',
+            'Nichel',
+        ];
         foreach ($items as $name) {
             Allergen::firstOrCreate(
                 ['slug' => Str::slug($name)],

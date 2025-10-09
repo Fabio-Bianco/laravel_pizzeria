@@ -17,36 +17,71 @@ class PizzaSeeder extends Seeder
                 'name' => 'Margherita',
                 'category' => 'Classiche',
                 'price' => 6.50,
-                'notes' => 'La pizza più amata di sempre',
+                'notes' => 'Pomodoro San Marzano DOP, mozzarella fior di latte, basilico fresco, olio EVO.',
                 'ingredients' => ['Pomodoro', 'Mozzarella', 'Basilico'],
             ],
             [
-                'name' => 'Prosciutto e Funghi',
+                'name' => 'Marinara',
+                'category' => 'Classiche',
+                'price' => 5.50,
+                'notes' => 'Pomodoro, aglio, origano, olio EVO.',
+                'ingredients' => ['Pomodoro'],
+            ],
+            [
+                'name' => 'Diavola',
                 'category' => 'Classiche',
                 'price' => 8.00,
-                'notes' => 'Un classico intramontabile',
-                'ingredients' => ['Pomodoro', 'Mozzarella', 'Prosciutto', 'Funghi'],
+                'notes' => 'Pomodoro, mozzarella, salame piccante.',
+                'ingredients' => ['Pomodoro', 'Mozzarella', 'Salame'],
             ],
             [
                 'name' => 'Quattro Formaggi',
                 'category' => 'Bianche',
                 'price' => 8.50,
-                'notes' => 'Per gli amanti del formaggio',
+                'notes' => 'Mozzarella, gorgonzola, parmigiano, formaggio dolce.',
                 'ingredients' => ['Mozzarella', 'Gorgonzola', 'Parmigiano'],
             ],
             [
                 'name' => 'Capricciosa',
-                'category' => 'Classiche', 
+                'category' => 'Classiche',
                 'price' => 9.00,
-                'notes' => 'Ricca di sapori',
+                'notes' => 'Pomodoro, mozzarella, prosciutto cotto, funghi, olive, carciofi, uovo.',
                 'ingredients' => ['Pomodoro', 'Mozzarella', 'Prosciutto', 'Funghi', 'Olive', 'Uova'],
             ],
             [
                 'name' => 'Quattro Stagioni',
                 'category' => 'Classiche',
                 'price' => 9.50,
-                'notes' => 'Come le stagioni dell\'anno',
+                'notes' => 'Pomodoro, mozzarella, prosciutto cotto, funghi, olive, carciofi.',
                 'ingredients' => ['Pomodoro', 'Mozzarella', 'Prosciutto', 'Funghi', 'Olive'],
+            ],
+            [
+                'name' => 'Bufalina',
+                'category' => 'Speciali',
+                'price' => 10.00,
+                'notes' => 'Pomodoro, mozzarella di bufala DOP, basilico, olio EVO.',
+                'ingredients' => ['Pomodoro', 'Mozzarella', 'Basilico'],
+            ],
+            [
+                'name' => 'Tonno e Cipolla',
+                'category' => 'Classiche',
+                'price' => 8.50,
+                'notes' => 'Pomodoro, mozzarella, tonno, cipolla rossa.',
+                'ingredients' => ['Pomodoro', 'Mozzarella', 'Tonno'],
+            ],
+            [
+                'name' => 'Vegetariana',
+                'category' => 'Speciali',
+                'price' => 9.00,
+                'notes' => 'Pomodoro, mozzarella, verdure grigliate di stagione.',
+                'ingredients' => ['Pomodoro', 'Mozzarella'],
+            ],
+            [
+                'name' => 'Rucola e Grana',
+                'category' => 'Bianche',
+                'price' => 9.00,
+                'notes' => 'Mozzarella, rucola fresca, scaglie di parmigiano, olio EVO.',
+                'ingredients' => ['Mozzarella', 'Rucola', 'Parmigiano'],
             ],
         ];
 
@@ -64,26 +99,6 @@ class PizzaSeeder extends Seeder
 
             $ingredientIds = Ingredient::whereIn('name', $recipe['ingredients'])->pluck('id');
             $pizza->ingredients()->sync($ingredientIds);
-        }
-
-        // Aggiungi almeno 10 pizze totali (se ne abbiamo meno, creiamo pizze random)
-        $targetTotal = 10;
-        $current = Pizza::count();
-        if ($current < $targetTotal) {
-            $toCreate = $targetTotal - $current;
-            $categories = Category::pluck('id');
-            $allIngredientIds = Ingredient::pluck('id');
-
-            Pizza::factory()->count($toCreate)->make()->each(function (Pizza $pizza) use ($categories, $allIngredientIds) {
-                $pizza->category_id = $categories->random();
-                // Prezzo random ragionevole
-                if (!$pizza->price || $pizza->price < 4) {
-                    $pizza->price = fake()->randomFloat(2, 5, 16);
-                }
-                $pizza->save();
-                $ingredientsToAttach = $allIngredientIds->shuffle()->take(rand(3, 6));
-                $pizza->ingredients()->sync($ingredientsToAttach);
-            });
         }
     }
 }

@@ -83,16 +83,6 @@
                                                   class="form-control @error('description') is-invalid @enderror" 
                                                   placeholder="Descrivi l'antipasto...">{{ old('description', $appetizer->description) }}</textarea>
                                         @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label for="image" class="form-label fw-semibold">
-                                            <i class="fas fa-image me-1"></i>
-                                            Immagine
-                                        </label>
-                                        @if($appetizer->image_path)
-                                            <div class="mb-2">
-                                                <img src="{{ asset('storage/'.$appetizer->image_path) }}" 
                                                      alt="{{ $appetizer->name }}" 
                                                      class="img-thumbnail" 
                                                      style="max-height: 80px;">
