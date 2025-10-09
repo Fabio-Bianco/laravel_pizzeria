@@ -30,7 +30,9 @@ class AppetizerController extends Controller
                 });
             })
             ->when($request->filled('ingredient'), function ($q) use ($request) {
-                $q->whereHas('ingredients', fn ($w) => $w->where('ingredients.id', $request->integer('ingredient')));
+                $q->whereHas('ingredients', function ($w) use ($request) {
+                    $w->where('ingredients.id', $request->integer('ingredient'));
+                });
             })
             ->when($request->filled('sort'), function ($q) use ($request) {
                 return match ($request->string('sort')->toString()) {
@@ -40,7 +42,9 @@ class AppetizerController extends Controller
                     'name_desc'  => $q->orderBy('name', 'desc'),
                     default      => $q->latest('id'),
                 };
-            }, fn ($q) => $q->latest('id'));
+            }, function ($q) {
+                return $q->latest('id');
+            });
 
         $appetizers = $query->paginate(10)->withQueryString();
 
@@ -67,26 +71,10 @@ class AppetizerController extends Controller
         return view('admin.appetizers.create', compact('ingredients', 'allergens'));
     }
 
-    public function store(StoreAppetizerRequest $request): RedirectResponse
-    {
-        $data = $request->validated();
-        $data['slug'] = $this->generateUniqueSlug($data['name']);
-        $appetizer = Appetizer::create($data);
-        $appetizer->ingredients()->sync($request->input('ingredients', []));
-        return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto creato.');
-    }
-
-    public function show(Appetizer $appetizer): View
-    {
-        $appetizer->load('ingredients');
-        return view('admin.appetizers.show', compact('appetizer'));
-    }
-
     public function edit(Appetizer $appetizer): View
     {
         $ingredients = Ingredient::orderBy('name')->get();
         $allergens = Allergen::orderBy('name')->get();
-        $appetizer->load(['ingredients', 'allergens']);
         return view('admin.appetizers.edit', compact('appetizer', 'ingredients', 'allergens'));
     }
 
@@ -97,12 +85,6 @@ class AppetizerController extends Controller
         $appetizer->update($data);
         $appetizer->ingredients()->sync($request->input('ingredients', []));
         return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto aggiornato.');
-    }
-
-    public function destroy(Appetizer $appetizer): RedirectResponse
-    {
-        $appetizer->delete();
-        return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto eliminato.');
     }
 
     /**
