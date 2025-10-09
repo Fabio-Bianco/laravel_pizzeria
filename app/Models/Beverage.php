@@ -10,6 +10,10 @@ class Beverage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'price', 'description', 'manual_allergens',
+        'name', 'slug', 'price', 'description', 'manual_allergens', 'image_path',
+    ];
+
+    protected $casts = [
+        'image_path' => 'string',
     ];
 }

@@ -65,6 +65,9 @@ class BeverageController extends Controller
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name']);
         $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('beverages', 'public');
+        }
         Beverage::create($data);
         $qs = session('beverages.index.query', []);
         return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda creata.');
@@ -85,6 +88,12 @@ class BeverageController extends Controller
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name'], $beverage->id);
         $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+        if ($request->hasFile('image')) {
+            if ($beverage->image_path) {
+                \Storage::disk('public')->delete($beverage->image_path);
+            }
+            $data['image_path'] = $request->file('image')->store('beverages', 'public');
+        }
         $beverage->update($data);
         $qs = session('beverages.index.query', []);
         return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda aggiornata.');
@@ -92,6 +101,9 @@ class BeverageController extends Controller
 
     public function destroy(Beverage $beverage): RedirectResponse
     {
+        if ($beverage->image_path) {
+            \Storage::disk('public')->delete($beverage->image_path);
+        }
         $beverage->delete();
         $qs = session('beverages.index.query', []);
         return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda eliminata.');

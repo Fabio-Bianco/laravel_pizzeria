@@ -15,6 +15,18 @@ use Illuminate\Support\Str;
 
 class AppetizerController extends Controller
 {
+    public function store(StoreAppetizerRequest $request): RedirectResponse
+    {
+        $data = $request->validated();
+        $data['slug'] = $this->generateUniqueSlug($data['name']);
+        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('appetizers', 'public');
+        }
+        $appetizer = Appetizer::create($data);
+        $appetizer->ingredients()->sync($request->input('ingredients', []));
+        return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto creato.');
+    }
     public function index(Request $request): View
     {
         \DB::enableQueryLog();
@@ -80,12 +92,26 @@ class AppetizerController extends Controller
 
     public function update(UpdateAppetizerRequest $request, Appetizer $appetizer): RedirectResponse
     {
-    $data = $request->validated();
-    $data['slug'] = $this->generateUniqueSlug($data['name'], $appetizer->id);
-    $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
-    $appetizer->update($data);
-    $appetizer->ingredients()->sync($request->input('ingredients', []));
-    return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto aggiornato.');
+        $data = $request->validated();
+        $data['slug'] = $this->generateUniqueSlug($data['name'], $appetizer->id);
+        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+        if ($request->hasFile('image')) {
+            if ($appetizer->image_path) {
+                \Storage::disk('public')->delete($appetizer->image_path);
+            }
+            $data['image_path'] = $request->file('image')->store('appetizers', 'public');
+        }
+        $appetizer->update($data);
+        $appetizer->ingredients()->sync($request->input('ingredients', []));
+        return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto aggiornato.');
+    }
+    public function destroy(Appetizer $appetizer): RedirectResponse
+    {
+        if ($appetizer->image_path) {
+            \Storage::disk('public')->delete($appetizer->image_path);
+        }
+        $appetizer->delete();
+        return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto eliminato.');
     }
 
     /**

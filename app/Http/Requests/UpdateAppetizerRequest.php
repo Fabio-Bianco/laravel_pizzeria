@@ -24,12 +24,16 @@ class UpdateAppetizerRequest extends FormRequest
             'manual_allergens' => ['array'],
             'manual_allergens.*' => ['integer', 'exists:allergens,id'],
             'is_vegan' => ['boolean'],
+            'image' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
         ];
     }
 
     public function messages(): array
     {
         return [
+            'image.image' => 'Il file caricato deve essere un\'immagine.',
+            'image.mimes' => 'L\'immagine deve essere in formato JPG, JPEG, PNG o WEBP.',
+            'image.max' => 'L\'immagine non pu\' superare i 2MB.',
             'name.required' => 'Il nome dell\'antipasto è obbligatorio.',
             'name.unique' => 'Esiste già un antipasto con questo nome.',
             'price.required' => 'Il prezzo è obbligatorio.',

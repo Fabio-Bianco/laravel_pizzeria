@@ -12,13 +12,14 @@ class Appetizer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'price', 'description', 'manual_allergens', 'is_vegan', 'is_gluten_free'
+        'name', 'slug', 'price', 'description', 'manual_allergens', 'is_vegan', 'is_gluten_free', 'image_path'
     ];
 
     protected $casts = [
         'manual_allergens' => 'array',
         'is_vegan' => 'boolean',
         'is_gluten_free' => 'boolean',
+        'image_path' => 'string',
     ];
 
     public function ingredients(): BelongsToMany

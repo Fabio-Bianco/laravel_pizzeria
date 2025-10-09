@@ -12,11 +12,12 @@ class Pizza extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['category_id', 'name', 'slug', 'price', 'notes', 'manual_allergens', 'is_vegan'];
+    protected $fillable = ['category_id', 'name', 'slug', 'price', 'notes', 'manual_allergens', 'is_vegan', 'image_path'];
 
     protected $casts = [
         'manual_allergens' => 'array',
         'is_vegan' => 'boolean',
+        'image_path' => 'string',
     ];
 
     public function category(): BelongsTo

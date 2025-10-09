@@ -16,12 +16,14 @@ class Dessert extends Model
         'slug', 
         'price',
         'description',
-        'is_vegan'
+        'is_vegan',
+        'image_path'
     ];
 
     protected $casts = [
         'is_vegan' => 'boolean',
         'manual_allergens' => 'array',
+        'image_path' => 'string',
     ];
 
     public function ingredients(): BelongsToMany

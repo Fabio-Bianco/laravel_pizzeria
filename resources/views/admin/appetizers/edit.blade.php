@@ -90,13 +90,19 @@
                                             <i class="fas fa-image me-1"></i>
                                             Immagine
                                         </label>
+                                        @if($appetizer->image_path)
+                                            <div class="mb-2">
+                                                <img src="{{ asset('storage/'.$appetizer->image_path) }}" 
+                                                     alt="{{ $appetizer->name }}" 
+                                                     class="img-thumbnail" 
+                                                     style="max-height: 80px;">
+                                                <div class="form-text">Immagine attuale</div>
+                                            </div>
+                                        @endif
                                         <input id="image" name="image" type="file" 
                                                class="form-control @error('image') is-invalid @enderror" 
                                                accept=".jpg,.jpeg,.png,.webp">
                                         @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                        @if($appetizer->image)
-                                            <div class="form-text">Immagine attuale: {{ basename($appetizer->image) }}</div>
-                                        @endif
                                     </div>
 
                                     <div class="col-12">

@@ -18,12 +18,16 @@ class StoreBeverageRequest extends FormRequest
             'name' => ['required', 'string', 'max:255', Rule::unique('beverages', 'name')],
             'description' => ['nullable', 'string', 'max:500'],
             'price' => ['required', 'numeric', 'min:0', 'max:99.99'],
+            'image' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
         ];
     }
 
     public function messages(): array
     {
         return [
+            'image.image' => 'Il file caricato deve essere un\'immagine.',
+            'image.mimes' => 'L\'immagine deve essere in formato JPG, JPEG, PNG o WEBP.',
+            'image.max' => 'L\'immagine non pu\' superare i 2MB.',
             'name.required' => 'Il nome della bevanda è obbligatorio.',
             'name.unique' => 'Esiste già una bevanda con questo nome.',
             'price.required' => 'Il prezzo è obbligatorio.',
