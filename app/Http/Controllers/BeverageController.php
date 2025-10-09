@@ -64,9 +64,10 @@ class BeverageController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name']);
-    Beverage::create($data);
-    $qs = session('beverages.index.query', []);
-    return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda creata.');
+        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+        Beverage::create($data);
+        $qs = session('beverages.index.query', []);
+        return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda creata.');
     }
 
     public function show(Beverage $beverage): View
@@ -83,9 +84,10 @@ class BeverageController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name'], $beverage->id);
-    $beverage->update($data);
-    $qs = session('beverages.index.query', []);
-    return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda aggiornata.');
+        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+        $beverage->update($data);
+        $qs = session('beverages.index.query', []);
+        return redirect()->route('admin.beverages.index', $qs)->with('status', 'Bevanda aggiornata.');
     }
 
     public function destroy(Beverage $beverage): RedirectResponse

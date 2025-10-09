@@ -142,6 +142,16 @@
                                     </div>
                                     <small class="text-muted">Contrassegna se il dessert è adatto ai vegani</small>
                                 </div>
+                                    <div class="mb-4">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="is_gluten_free" name="is_gluten_free" value="1" 
+                                                {{ old('is_gluten_free', $dessert->is_gluten_free) ? 'checked' : '' }}>
+                                            <label class="form-check-label fw-semibold" for="is_gluten_free">
+                                                Senza glutine
+                                            </label>
+                                        </div>
+                                        <small class="text-muted">Contrassegna se il dessert è adatto a chi è intollerante al glutine</small>
+                                    </div>
 
                                 {{-- Ingredienti --}}
                                 @if(isset($ingredients) && $ingredients->isNotEmpty())

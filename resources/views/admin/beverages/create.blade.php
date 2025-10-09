@@ -112,6 +112,16 @@
                                                accept=".jpg,.jpeg,.png,.webp">
                                         @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
+                                    <div class="form-check form-switch mt-3">
+                                        <input class="form-check-input" type="checkbox" role="switch" 
+                                               id="is_gluten_free" name="is_gluten_free" value="1"
+                                               @checked(old('is_gluten_free'))>
+                                        <label class="form-check-label fw-semibold" for="is_gluten_free">
+                                            <i class="fas fa-bread-slice text-warning me-1"></i>
+                                            <span class="text-warning">Senza Glutine</span>
+                                        </label>
+                                    </div>
+                                    <small class="text-muted">Spunta se la bevanda è senza glutine</small>
                                 </div>
                             </div>
                         </div>

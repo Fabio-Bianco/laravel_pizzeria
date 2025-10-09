@@ -126,7 +126,7 @@
                             <div class="card-body">
                                 {{-- Checkbox Vegano --}}
                                 <div class="mb-4">
-                                    <div class="form-check form-switch">
+                                    <div class="form-check form-switch mb-2">
                                         <input class="form-check-input" type="checkbox" id="is_vegan" name="is_vegan" value="1" 
                                                @checked(old('is_vegan', $appetizer->is_vegan))>
                                         <label class="form-check-label fw-semibold" for="is_vegan">
@@ -134,7 +134,14 @@
                                             Vegano
                                         </label>
                                     </div>
-                                    <small class="text-muted">Contrassegna se l'antipasto è adatto ai vegani</small>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="is_gluten_free" name="is_gluten_free" value="1" 
+                                               @checked(old('is_gluten_free', $appetizer->is_gluten_free))>
+                                        <label class="form-check-label fw-semibold" for="is_gluten_free">
+                                            Senza glutine
+                                        </label>
+                                    </div>
+                                    <small class="text-muted">Contrassegna se l'antipasto è adatto ai vegani o a chi è intollerante al glutine</small>
                                 </div>
 
                                 {{-- Ingredienti --}}

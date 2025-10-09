@@ -71,6 +71,7 @@ class DessertController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name']);
+        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
         $dessert = Dessert::create($data);
         $dessert->ingredients()->sync($request->input('ingredients', []));
         return redirect()->route('admin.desserts.index')->with('status', 'Dessert creato.');
@@ -94,6 +95,7 @@ class DessertController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->generateUniqueSlug($data['name'], $dessert->id);
+        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
         $dessert->update($data);
         $dessert->ingredients()->sync($request->input('ingredients', []));
         return redirect()->route('admin.desserts.index')->with('status', 'Dessert aggiornato.');

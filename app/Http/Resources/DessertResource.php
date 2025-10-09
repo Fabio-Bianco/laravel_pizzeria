@@ -20,6 +20,7 @@ class DessertResource extends JsonResource
             'price'             => $this->price,
             'description'       => $this->description,
             'is_vegan'          => $this->is_vegan,
+            'is_gluten_free'    => $this->is_gluten_free,
             'ingredients_count' => $this->when(isset($this->ingredients_count), (int) $this->ingredients_count),
             'ingredients'       => IngredientResource::collection($this->whenLoaded('ingredients')),
             // Allergeni intelligenti (automatici + manuali)

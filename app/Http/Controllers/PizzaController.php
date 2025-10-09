@@ -101,6 +101,7 @@ class PizzaController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = SlugService::unique(new Pizza, $data['name']);
+        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
 
         if ($request->hasFile('image')) {
             $data['image_path'] = $request->file('image')->store('pizzas', 'public');
@@ -146,6 +147,7 @@ class PizzaController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = SlugService::unique(new Pizza, $data['name'], $pizza->id);
+        $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
 
         if ($request->hasFile('image')) {
             if ($pizza->image_path) {

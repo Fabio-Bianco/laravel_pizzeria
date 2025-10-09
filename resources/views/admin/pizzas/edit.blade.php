@@ -176,18 +176,27 @@
                                 </div>
 
                                 {{-- CHECKBOX VEGANO --}}
-                                <div class="mb-3">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" 
-                                               id="is_vegan" name="is_vegan" value="1"
-                                               @checked(old('is_vegan', $pizza->is_vegan))>
-                                        <label class="form-check-label fw-semibold" for="is_vegan">
-                                            <i class="fas fa-leaf text-success me-1"></i>
-                                            <span class="text-success">Vegano</span>
-                                        </label>
-                                    </div>
-                                    <small class="text-muted">Spunta se la pizza è adatta ai vegani</small>
-                                </div>
+                <div class="mb-3">
+                  <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" role="switch" 
+                         id="is_vegan" name="is_vegan" value="1"
+                         @checked(old('is_vegan', $pizza->is_vegan))>
+                    <label class="form-check-label fw-semibold" for="is_vegan">
+                      <i class="fas fa-leaf text-success me-1"></i>
+                      <span class="text-success">Vegano</span>
+                    </label>
+                  </div>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" 
+                         id="is_gluten_free" name="is_gluten_free" value="1"
+                         @checked(old('is_gluten_free', $pizza->is_gluten_free))>
+                    <label class="form-check-label fw-semibold" for="is_gluten_free">
+                      <i class="fas fa-bread-slice text-warning me-1"></i>
+                      <span class="text-warning">Senza Glutine</span>
+                    </label>
+                  </div>
+                  <small class="text-muted">Spunta se la pizza è senza glutine</small>
+                </div>
 
                                 {{-- Allergeni automatici compatti --}}
                                 <div class="mb-3">
