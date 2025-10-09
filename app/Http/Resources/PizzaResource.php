@@ -20,7 +20,7 @@ class PizzaResource extends JsonResource
             'price'             => $this->price,
             'notes'             => $this->notes,
             'is_vegan'          => $this->is_vegan,
-            'is_gluten_free'    => $this->is_gluten_free,
+            'is_gluten_free'    => (bool) ($this->is_gluten_free ?? false),
             'ingredients_count' => $this->when(isset($this->ingredients_count), (int) $this->ingredients_count),
             'category'          => new CategoryResource($this->whenLoaded('category')),
             'ingredients'       => IngredientResource::collection($this->whenLoaded('ingredients')),

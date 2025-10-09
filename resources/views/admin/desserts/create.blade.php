@@ -133,8 +133,9 @@
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="is_gluten_free" name="is_gluten_free" value="1" 
                                                @checked(old('is_gluten_free', false))>
-                                        <label class="form-check-label fw-semibold" for="is_gluten_free">
-                                            Senza glutine
+                                        <label class="form-check-label fw-semibold text-dark" for="is_gluten_free">
+                                            <i class="fas fa-bread-slice me-1 text-dark"></i>
+                                            <span class="text-dark">Senza Glutine</span>
                                         </label>
                                     </div>
                                     <small class="text-muted">Contrassegna se il dessert è adatto ai vegani o a chi è intollerante al glutine</small>

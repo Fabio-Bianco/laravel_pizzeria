@@ -21,7 +21,7 @@ class AppetizerResource extends JsonResource
             'description' => $this->when($this->description !== null, $this->description),
             'notes'       => $this->when($this->description !== null, $this->description), // alias per compatibilità
             'is_vegan'    => $this->is_vegan,
-            'is_gluten_free' => $this->is_gluten_free,
+            'is_gluten_free' => (bool) ($this->is_gluten_free ?? false),
             'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients')),
             // Allergeni intelligenti (automatici + manuali)
             'allergens'   => $this->when(

@@ -180,9 +180,9 @@
                                         <input class="form-check-input" type="checkbox" role="switch" 
                                                id="is_gluten_free" name="is_gluten_free" value="1"
                                                @checked(old('is_gluten_free'))>
-                                        <label class="form-check-label fw-semibold" for="is_gluten_free">
-                                            <i class="fas fa-bread-slice text-warning me-1"></i>
-                                            <span class="text-warning">Senza Glutine</span>
+                                        <label class="form-check-label fw-semibold text-dark" for="is_gluten_free">
+                                            <i class="fas fa-bread-slice me-1 text-dark"></i>
+                                            <span class="text-dark">Senza Glutine</span>
                                         </label>
                                     </div>
                                     <small class="text-muted">Spunta se la pizza è senza glutine</small>

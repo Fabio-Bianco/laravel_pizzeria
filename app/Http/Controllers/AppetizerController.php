@@ -80,11 +80,12 @@ class AppetizerController extends Controller
 
     public function update(UpdateAppetizerRequest $request, Appetizer $appetizer): RedirectResponse
     {
-        $data = $request->validated();
-        $data['slug'] = $this->generateUniqueSlug($data['name'], $appetizer->id);
-        $appetizer->update($data);
-        $appetizer->ingredients()->sync($request->input('ingredients', []));
-        return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto aggiornato.');
+    $data = $request->validated();
+    $data['slug'] = $this->generateUniqueSlug($data['name'], $appetizer->id);
+    $data['is_gluten_free'] = $request->boolean('is_gluten_free', false);
+    $appetizer->update($data);
+    $appetizer->ingredients()->sync($request->input('ingredients', []));
+    return redirect()->route('admin.appetizers.index')->with('status', 'Antipasto aggiornato.');
     }
 
     /**
