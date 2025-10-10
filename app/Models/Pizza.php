@@ -32,7 +32,8 @@ class Pizza extends Model
 
     /**
      * Ottieni tutti gli allergeni calcolati automaticamente dagli ingredienti
-     * OTTIMIZZATO: usa relazioni già caricate se disponibili
+     
+     * Restituisce tutti gli allergeni derivati dagli ingredienti della pizza, ottimizzando l’uso delle relazioni già caricate.
      */
     public function getAutomaticAllergens(): Collection
     {
@@ -55,7 +56,7 @@ class Pizza extends Model
 
     /**
      * Ottieni gli allergeni aggiunti manualmente
-     * OTTIMIZZATO: usa cache locale
+     * Restituisce gli allergeni aggiunti manualmente tramite l’attributo manual_allergens.
      */
     public function getManualAllergens(): Collection
     {
@@ -73,7 +74,7 @@ class Pizza extends Model
 
     /**
      * Ottieni tutti gli allergeni finali (automatici + manuali, senza duplicati)
-     * OTTIMIZZATO: usa cache e relazioni precaricate
+     * Unisce allergeni automatici e manuali, rimuove duplicati e li ordina per nome
      */
     public function getAllAllergens(): Collection
     {
